@@ -21,7 +21,7 @@ group :development, :test do
   gem 'spring-watcher-listen', '~> 2.0.0'
 
   ### Debugging
-  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'pry-byebug'
   gem 'pry-doc'
   gem 'pry-rails'

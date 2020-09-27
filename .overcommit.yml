@@ -1,0 +1,19 @@
+# NOTE: Before commands
+# $ bundle exec overcommit -s  # sign in
+# $ bundle exec overcommit -i  # Assign symbolic links to each file
+
+PreCommit:
+  RuboCop:
+    enabled: true
+    on_warn: fail
+    command: ['bundle', 'exec', 'rubocop', '-c', '.rubocop.yml', '--except', 'Metrics', 'app', 'config', 'db', 'lib', 'spec']
+  Reek:
+    enabled: true
+    on_warn: fail
+    command: ['./tools/.run_reek_for_overcommit.sh']
+
+PrePush:
+  Brakeman:
+    enabled: true
+    on_warn: fail
+    command: ['brakeman']

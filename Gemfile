@@ -34,6 +34,9 @@ group :development, :test do
   gem 'rspec'
   gem 'rspec-rails', github: 'rspec/rspec-rails', tag: 'v4.0.0.beta3' # NOTE: Temporary for Rails 6
 
+  ### Hooking
+  gem 'overcommit'
+
   ### Linter
   gem 'reek'
   gem 'rubocop'

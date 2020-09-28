@@ -52,3 +52,4 @@ production:
   database: coko_api_production
   username: coko_api
   password: <%= ENV['COKO_API_DATABASE_PASSWORD'] %>
+  host: us-cdbr-east-02.cleardb.com

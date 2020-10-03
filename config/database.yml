@@ -2,25 +2,22 @@ default: &default
   adapter: mysql2
   encoding: utf8mb4
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: root
+  password: password
+  host: db
 
 development:
   <<: *default
   database: coko_api_development
-  username: root
-  password: password
-  host: db
 
 test:
   <<: *default
   database: coko_api_test
-  username: root
-  password: password
-  host: db
 
 production:
   <<: *default
   adapter: mysql2
-  database: <%= ENV['DB_NAME'] %> # coko_api_production
-  username: <%= ENV['DB_USERNAME'] %> # coko_api
+  database: <%= ENV['DB_NAME'] %>
+  username: <%= ENV['DB_USERNAME'] %>
   password: <%= ENV['DB_PASSWORD'] %>
   host: <%= ENV['DB_HOSTNAME'] %>

@@ -65,7 +65,6 @@ jobs:
           path: /tmp/test-results
           destination: test-results
 
-  deploy:
     - deploy:
         name: Deploy Master to Heroku
         command: |

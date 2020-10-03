@@ -65,9 +65,9 @@ jobs:
           path: /tmp/test-results
           destination: test-results
 
-  - deploy:
-      name: Deploy Master to Heroku
-      command: |
-        if [ "${CIRCLE_BRANCH}" == "master" ]; then
-          git push https://heroku:1d7816ff-99ea-437c-9170-ceda4c732289@git.heroku.com/coko-api.git master
-        fi
+  # - deploy:
+  #     name: Deploy Master to Heroku
+  #     command: |
+  #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
+  #         git push https://heroku:1d7816ff-99ea-437c-9170-ceda4c732289@git.heroku.com/coko-api.git master
+  #       fi

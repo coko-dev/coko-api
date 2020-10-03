@@ -17,7 +17,7 @@ test:
 production:
   <<: *default
   adapter: mysql2
-  database: coko_api_production
-  username: coko_api
+  database: <%= ENV['DATABASE_URL'] %> # coko_api_production
+  username: <%= ENV['DB_USERNAME'] %> # coko_api
   password: <%= ENV['DB_PASSWORD'] %>
-  host: us-cdbr-east-02.cleardb.com
+  host: <%= ENV['DB_HOSTNAME'] %>

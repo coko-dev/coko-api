@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class RecipeCategoriesController < ApplicationController
+  api :GET, '/', 'Show the recipe category'
   def root
-    # TODO: Delete this comment later
     render json: { status: 'SUCCESS', message: 'API ROOT' }
   end
 end

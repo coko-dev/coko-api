@@ -16,6 +16,9 @@ gem 'rails', '~> 6.0.3', '>= 6.0.3.3'
 gem 'mysql2'
 gem 'ridgepole'
 
+# Monitoring
+gem 'newrelic_rpm'
+
 # HTTP Client
 gem 'typhoeus'
 

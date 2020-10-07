@@ -3,6 +3,6 @@
 class RecipeCategoriesController < ApplicationController
   api :GET, '/', 'Show the recipe category'
   def root
-    render json: { status: 'SUCCESS', message: 'API ROOT' }
+    render json: { status: 'SUCCESS', message: 'API Upgrade token' }
   end
 end

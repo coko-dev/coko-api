@@ -45,7 +45,7 @@ Successfully built xxxxxxxxxxx
 ```terminal
 ### Start all container
 $ docker-compose up
-・・・
+...
 api_1  | * Version 4.3.6 (ruby 2.6.6-p146), codename: Mysterious Traveller
 api_1  | * Min threads: 5, max threads: 5
 api_1  | * Environment: development

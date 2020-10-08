@@ -14,8 +14,8 @@ $ git clone git@github.com:coko-dev/coko-api.git
 
 ### Prerequisites
 - Install Docker (Need to sign up)
- - https://store.docker.com/editions/community/docker-ce-desktop-mac  (Mac)
- - https://docs.docker.com/docker-for-windows/install/  (Winodows)
+  - https://store.docker.com/editions/community/docker-ce-desktop-mac  (Mac)
+  - https://docs.docker.com/docker-for-windows/install/  (Winodows)
 
 - rbenv
 ```terminal
@@ -38,9 +38,9 @@ Successfully built xxxxxxxxxxx
 
 ### Run containers
 - api
- - Rails Web API server.
+  - Rails Web API server.
 - db
- - Database server (MySQL2)
+  - Database server (MySQL2)
 
 ```terminal
 ### Start all container

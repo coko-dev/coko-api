@@ -23,8 +23,10 @@ class RecipeCategoriesController < ApplicationController
   end
 
   def recipe_category_params
-    params.permit(
-      %i[name name_slug recipe_category_id]
+    params.require(:recipe_category).permit(
+      :name,
+      :name_slug,
+      :recipe_category_id
     )
   end
 end

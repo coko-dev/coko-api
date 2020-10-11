@@ -3,7 +3,9 @@
 Rails.application.routes.draw do
   apipie
 
-  resources :recipe_categories, only: %i[index create]
+  namespace 'v1' do
+    resources :recipe_categories, only: %i[index create]
+  end
 
   root 'recipe_categories#root'
 end

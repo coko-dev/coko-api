@@ -41,6 +41,8 @@ directories:
       enabled: false
     TooManyInstanceVariables:
       max_instance_variables: 12
+    UncommunicativeModuleName:
+      enabled: false
     DuplicateMethodCall:
       allow_calls:
         - 'Rails.cache'

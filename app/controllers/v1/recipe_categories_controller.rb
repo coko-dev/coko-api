@@ -1,19 +1,14 @@
 # frozen_string_literal: true
 
 module V1
-  class RecipeCategoriesController < ApplicationController
-    api :GET, '/', 'Nothing'
-    def root
-      render json: { status: 'SUCCESS', message: 'api root path' }
-    end
-
+  class RecipeCategoriesController < V1::ApplicationController
     api :GET, '/v1/recipe_categories', 'Show the recipe category'
     def index
       recipe_categories = RecipeCategory.all
       render json: { recipe_categories: recipe_categories }
     end
 
-    api :POST, '/v1/recipe_category', 'Create recipe categories'
+    api :POST, '/v1/recipe_categories', 'Create recipe categories'
     def create
       recipe_category = RecipeCategory.new(recipe_category_params)
       if recipe_category.save

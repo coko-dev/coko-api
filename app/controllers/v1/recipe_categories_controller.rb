@@ -13,7 +13,7 @@ module V1
       render json: { recipe_categories: recipe_categories }
     end
 
-    api :POST, '/v1/recipe_category', 'Create recipe categories'
+    api :POST, '/v1/recipe_categories', 'Create recipe categories'
     def create
       recipe_category = RecipeCategory.new(recipe_category_params)
       if recipe_category.save

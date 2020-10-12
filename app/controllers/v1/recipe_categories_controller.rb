@@ -2,11 +2,6 @@
 
 module V1
   class RecipeCategoriesController < V1::ApplicationController
-    api :GET, '/', 'Nothing'
-    def root
-      render json: { status: 'SUCCESS', message: 'api root path' }
-    end
-
     api :GET, '/v1/recipe_categories', 'Show the recipe category'
     def index
       recipe_categories = RecipeCategory.all

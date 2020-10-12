@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module V1
-  class RecipeCategoriesController < V1::ApplicationController
+  class RecipeCategoriesController < ApplicationController
     api :GET, '/v1/recipe_categories', 'Show the recipe category'
     def index
       recipe_categories = RecipeCategory.all

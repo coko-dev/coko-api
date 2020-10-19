@@ -7,14 +7,26 @@ create_table 'recipe_categories', force: :cascade, options: 'ENGINE=InnoDB DEFAU
   t.timestamps
 end
 
+create_table 'user_follows', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4' do |t|
+  t.bigint  'user_id_from', unsigned: true, null: false
+  t.bigint  'user_id_to',   unsigned: true, null: false
+  t.boolean 'is_blocked',   null: false, default: false
+  t.boolean 'is_muted',     null: false, default: false
+  t.timestamps
+end
+add_index       'user_follows', %w[user_id_from user_id_to], name: 'idx_user_follows_on_user_id_from_and_user_id_to', unique: true
+add_index       'user_follows', %w[user_id_to],              name: 'idx_user_follows_on_user_id_to'
+add_foreign_key 'user_follows', 'users',                     name: 'fk_user_follows_1', column: 'user_id_from'
+add_foreign_key 'user_follows', 'users',                     name: 'fk_user_follows_2', column: 'user_id_to'
+
 create_table 'user_profiles', force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
-  t.bigint 'user_id', null: false, unsigned: true
-  t.string 'name', null: false, default: '', limit: 25
-  t.date   'birth_date'
+  t.bigint  'user_id',          null: false, unsigned: true
+  t.string  'name',             null: false, default: '', limit: 25
+  t.date    'birth_date'
   t.integer 'housework_career', unsigned: true
-  t.string 'image', null: false, default: ''
-  t.string 'description', limit: 120
-  t.string 'website_url', limit: 100
+  t.string  'image',            null: false, default: ''
+  t.string  'description',      limit: 120
+  t.string  'website_url',      limit: 100
   t.timestamps
 end
 add_index       'user_profiles', %w[user_id],     name: 'idx_user_profiles_on_user_id'

@@ -7,6 +7,19 @@ create_table 'recipe_categories', force: :cascade, options: 'ENGINE=InnoDB DEFAU
   t.timestamps
 end
 
+create_table 'user_profiles', force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
+  t.bigint 'user_id', null: false, unsigned: true
+  t.string 'name', null: false, default: '', limit: 25
+  t.date   'birth_date'
+  t.integer 'housework_career', unsigned: true
+  t.string 'image', null: false, default: ''
+  t.string 'description', limit: 120
+  t.string 'website_url', limit: 100
+  t.timestamps
+end
+add_index       'user_profiles', %w[user_id],     name: 'idx_user_profiles_on_user_id'
+add_foreign_key 'user_profiles', 'users',         name: 'fk_user_profiles_1'
+
 create_table 'users', force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.string   'code',                   null: false, default: ''
   t.string   'api_token',              null: false, default: ''

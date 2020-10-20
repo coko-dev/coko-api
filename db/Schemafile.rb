@@ -1,5 +1,13 @@
 # frozen_string_literal: true
 
+create_table 'kitchen', force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
+  t.string  'name',            null: false, default: 'My Kitchen'
+  t.boolean 'is_subscriber',   null: false, default: false
+  t.integer 'status_id',       null: false, unsigned: true, default: 1, comment: '{ private: 1, published: 2, official: 3 }'
+  t.bigint  'orner_user_id',   unsigned: true
+  t.timestamps
+end
+
 create_table 'recipe_categories', force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.string 'name'
   t.string 'name_slug'

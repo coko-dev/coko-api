@@ -4,9 +4,11 @@ create_table 'kitchen', force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET
   t.string  'name',          null: false, default: 'My Kitchen'
   t.boolean 'is_subscriber', null: false, default: false
   t.integer 'status_id',     null: false, unsigned: true, default: 1, comment: '{ private: 1, published: 2, official: 3 }'
-  t.bigint  'orner_user_id', unsigned: true
+  t.bigint  'owner_user_id', unsigned: true
   t.timestamps
 end
+add_index       'kitchens', %w[owner_user_id], name: 'idx_kitchen_on_owner_user_id'
+add_foreign_key 'kitchens', 'users',           name: 'fk_kitchens_1', column: 'owner_user_id'
 
 create_table 'kitchen_joins', force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.integer  'code',       null: false, unsigned: true
@@ -14,13 +16,17 @@ create_table 'kitchen_joins', force: :cascade, options: 'ENGINE=InnoDB DEFAULT C
   t.integer  'status_id',  null: false, default: 1, comment: '{ open: 1, closed: 2 }'
   t.datetime 'close_at',   null: false
 end
+add_index       'kitchen_joins', %w[kitchen_id], name: 'idx_kitchen_join_on_kitchen_id'
+add_foreign_key 'kitchen_joins', 'kitchens',     name: 'fk_kitchen_1'
 
 create_table 'recipe_categories', force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
-  t.string 'name',               null: false
-  t.string 'name_slug',          null: false
-  t.bigint 'recipe_category_id', null: false, unsigned: true
+  t.string 'name',                    null: false
+  t.string 'name_slug',               null: false
+  t.bigint 'recipe_category_id_from', null: false, unsigned: true
   t.timestamps
 end
+add_index       'recipe_categories', %w[recipe_category_id_from], name: 'idx_recipe_categories_on_recipe_category_id_from'
+add_foreign_key 'recipe_categories', 'recipe_categories',         name: 'fk_recipe_categories_1', column: 'recipe_category_id_from'
 
 create_table 'user_follows', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4' do |t|
   t.bigint  'user_id_from', null: false, unsigned: true

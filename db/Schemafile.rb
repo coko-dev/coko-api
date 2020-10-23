@@ -1,23 +1,30 @@
 # frozen_string_literal: true
 
 create_table 'kitchen', force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
-  t.string  'name',            null: false, default: 'My Kitchen'
-  t.boolean 'is_subscriber',   null: false, default: false
-  t.integer 'status_id',       null: false, unsigned: true, default: 1, comment: '{ private: 1, published: 2, official: 3 }'
-  t.bigint  'orner_user_id',   unsigned: true
+  t.string  'name',          null: false, default: 'My Kitchen'
+  t.boolean 'is_subscriber', null: false, default: false
+  t.integer 'status_id',     null: false, unsigned: true, default: 1, comment: '{ private: 1, published: 2, official: 3 }'
+  t.bigint  'orner_user_id', unsigned: true
   t.timestamps
 end
 
+create_table 'kitchen_joins', force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
+  t.integer  'code',       null: false, unsigned: true
+  t.bigint   'kitchen_id', null: false, unsigned: true
+  t.integer  'status_id',  null: false, default: 1, comment: '{ open: 1, closed: 2 }'
+  t.datetime 'close_at',   null: false
+end
+
 create_table 'recipe_categories', force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
-  t.string 'name'
-  t.string 'name_slug'
-  t.bigint 'recipe_category_id'
+  t.string 'name',               null: false
+  t.string 'name_slug',          null: false
+  t.bigint 'recipe_category_id', null: false, unsigned: true
   t.timestamps
 end
 
 create_table 'user_follows', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4' do |t|
-  t.bigint  'user_id_from', unsigned: true, null: false
-  t.bigint  'user_id_to',   unsigned: true, null: false
+  t.bigint  'user_id_from', null: false, unsigned: true
+  t.bigint  'user_id_to',   null: false, unsigned: true
   t.boolean 'is_blocked',   null: false, default: false
   t.boolean 'is_muted',     null: false, default: false
   t.timestamps

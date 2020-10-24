@@ -28,6 +28,12 @@ create_table 'products', unsigned: true, force: :cascade, options: 'ENGINE=InnoD
   t.integer 'status_id',           null: false, unsigned: true, default: 1, comment: '{ published: 1, hidden: 2 }'
 end
 
+create_table 'product_categories', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
+  t.string 'name',                     null: false
+  t.string 'name_slug',                null: false
+  t.bigint 'product_category_id_from', null: false, default: 0, unsigned: true
+end
+
 create_table 'recipes', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.string  'name',         null: false
   t.bigint  'author_id',    null: false, unsigned: true
@@ -38,9 +44,9 @@ create_table 'recipes', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB
 end
 
 create_table 'recipe_categories', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
-  t.string 'name',                    null: false
-  t.string 'name_slug',               null: false
-  t.bigint 'recipe_category_id_from', null: false, unsigned: true
+  t.string  'name',                    null: false
+  t.string  'name_slug',               null: false
+  t.bigint  'recipe_category_id_from', null: false, default: 0, unsigned: true
   t.timestamps
 end
 add_index       'recipe_categories', %w[recipe_category_id_from], name: 'idx_recipe_categories_on_recipe_category_id_from'

@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-create_table 'kitchen', force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
+create_table 'kitchens', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.string  'name',          null: false, default: 'My Kitchen'
   t.boolean 'is_subscriber', null: false, default: false
   t.integer 'status_id',     null: false, unsigned: true, default: 1, comment: '{ private: 1, published: 2, official: 3 }'
-  t.bigint  'owner_user_id', unsigned: true
+  t.bigint  'owner_user_id', null: false, unsigned: true
   t.timestamps
 end
 add_index       'kitchens', %w[owner_user_id], name: 'idx_kitchen_on_owner_user_id'
 add_foreign_key 'kitchens', 'users',           name: 'fk_kitchens_1', column: 'owner_user_id'
 
-create_table 'kitchen_joins', force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
+create_table 'kitchen_joins', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.integer  'code',       null: false, unsigned: true
   t.bigint   'kitchen_id', null: false, unsigned: true
   t.integer  'status_id',  null: false, default: 1, comment: '{ open: 1, closed: 2 }'
@@ -19,7 +19,7 @@ end
 add_index       'kitchen_joins', %w[kitchen_id], name: 'idx_kitchen_join_on_kitchen_id'
 add_foreign_key 'kitchen_joins', 'kitchens',     name: 'fk_kitchen_1'
 
-create_table 'recipe_categories', force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
+create_table 'recipe_categories', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.string 'name',                    null: false
   t.string 'name_slug',               null: false
   t.bigint 'recipe_category_id_from', null: false, unsigned: true
@@ -40,7 +40,7 @@ add_index       'user_follows', %w[user_id_to],              name: 'idx_user_fol
 add_foreign_key 'user_follows', 'users',                     name: 'fk_user_follows_1', column: 'user_id_from'
 add_foreign_key 'user_follows', 'users',                     name: 'fk_user_follows_2', column: 'user_id_to'
 
-create_table 'user_profiles', force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
+create_table 'user_profiles', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.bigint  'user_id',          null: false, unsigned: true
   t.string  'name',             null: false, default: '', limit: 25
   t.date    'birth_date'
@@ -50,10 +50,10 @@ create_table 'user_profiles', force: :cascade, options: 'ENGINE=InnoDB DEFAULT C
   t.string  'website_url',      limit: 100
   t.timestamps
 end
-add_index       'user_profiles', %w[user_id],     name: 'idx_user_profiles_on_user_id'
-add_foreign_key 'user_profiles', 'users',         name: 'fk_user_profiles_1'
+add_index       'user_profiles', %w[user_id], name: 'idx_user_profiles_on_user_id'
+add_foreign_key 'user_profiles', 'users',     name: 'fk_user_profiles_1'
 
-create_table 'users', force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
+create_table 'users', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.string   'code',                   null: false, default: ''
   t.string   'api_token',              null: false, default: ''
   t.string   'firebase_id_token',      null: false, default: ''

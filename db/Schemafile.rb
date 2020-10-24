@@ -19,6 +19,15 @@ end
 add_index       'kitchen_joins', %w[kitchen_id], name: 'idx_kitchen_join_on_kitchen_id'
 add_foreign_key 'kitchen_joins', 'kitchens',     name: 'fk_kitchen_1'
 
+create_table 'recipes', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
+  t.string  'name',         null: false
+  t.bigint  'author_id',    null: false, unsigned: true
+  t.integer 'status_id',    null: false, unsigned: true, default: 1, comment: '{ published: 1, hidden: 2 }'
+  t.string  'image',        null: false, default: ''
+  t.integer 'cooking_time', null: false, default: 30
+  t.string  'description',  null: false, default: ''
+end
+
 create_table 'recipe_categories', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.string 'name',                    null: false
   t.string 'name_slug',               null: false

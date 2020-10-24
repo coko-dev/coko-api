@@ -48,17 +48,17 @@ create_table 'recipes', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB
 end
 
 create_table 'recipe_categories', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
-  t.string  'name',                    null: false
-  t.string  'name_slug',               null: false
-  t.bigint  'recipe_category_id_from', null: false, default: 0, unsigned: true
+  t.string 'name',                    null: false
+  t.string 'name_slug',               null: false
+  t.bigint 'recipe_category_id_from', null: false, default: 0, unsigned: true
   t.timestamps
 end
 add_index       'recipe_categories', %w[recipe_category_id_from], name: 'idx_recipe_categories_on_recipe_category_id_from'
 add_foreign_key 'recipe_categories', 'recipe_categories',         name: 'fk_recipe_categories_1', column: 'recipe_category_id_from'
 
 create_table 'recipe_keywords', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
-  t.string  'name', null: false
-  t.string  'author_id', null: false, unsigned: true
+  t.string  'name',       null: false
+  t.string  'author_id',  null: false, unsigned: true
   t.boolean 'is_blacked', null: false, default: false
   t.timestamps
 end
@@ -66,6 +66,14 @@ end
 create_table 'recipe_keyword_lists', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.bigint 'recipe_id',         null: false, unsigned: true
   t.bigint 'recipe_keyword_id', null: false, unsigned: true
+  t.timestamps
+end
+
+create_table 'recipe_products', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4' do |t|
+  t.bigint 'recipe_id',  null: false, unsigned: true
+  t.bigint 'product_id', null: false, unsigned: true
+  t.string 'volume',     null: false, default: ''
+  t.string 'note',       default: ''
   t.timestamps
 end
 

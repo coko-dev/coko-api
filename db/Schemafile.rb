@@ -52,6 +52,12 @@ end
 add_index       'recipe_categories', %w[recipe_category_id_from], name: 'idx_recipe_categories_on_recipe_category_id_from'
 add_foreign_key 'recipe_categories', 'recipe_categories',         name: 'fk_recipe_categories_1', column: 'recipe_category_id_from'
 
+create_table 'recipe_keywords', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
+  t.string  'name', null: false
+  t.string  'author_id', null: false, unsigned: true
+  t.boolean 'is_blacked', null: false, default: false
+end
+
 create_table 'user_follows', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4' do |t|
   t.bigint  'user_id_from', null: false, unsigned: true
   t.bigint  'user_id_to',   null: false, unsigned: true

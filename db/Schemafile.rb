@@ -85,6 +85,13 @@ create_table 'recipe_products', unsigned: true, force: :cascade, options: 'ENGIN
   t.timestamps
 end
 
+create_table 'recipe_steps', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4' do |t|
+  t.bigint  'recipe_id',   null: false, unsigned: true
+  t.integer 'sort_order',  null: false, unsigned: true
+  t.string  'description', null: false, default: ''
+  t.string  'image'
+end
+
 create_table 'user_follows', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4' do |t|
   t.bigint  'user_id_from', null: false, unsigned: true
   t.bigint  'user_id_to',   null: false, unsigned: true

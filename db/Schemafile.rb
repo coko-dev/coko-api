@@ -58,7 +58,7 @@ add_foreign_key 'recipe_categories', 'recipe_categories',         name: 'fk_reci
 
 create_table 'recipe_keywords', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.string  'name',       null: false
-  t.string  'author_id',  null: false, unsigned: true
+  t.bigint  'author_id',  null: false, unsigned: true
   t.boolean 'is_blacked', null: false, default: false
   t.timestamps
 end
@@ -101,7 +101,7 @@ end
 create_table 'recipe_steps', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4' do |t|
   t.bigint  'recipe_id',   null: false, unsigned: true
   t.integer 'sort_order',  null: false, unsigned: true
-  t.text    'body',        null: false, default: ''
+  t.text    'body',        null: false
   t.string  'image'
   t.timestamps
 end

@@ -27,6 +27,7 @@ create_table 'kitchen_products', unsigned: true, force: :cascade, options: 'ENGI
   t.string  'note'
   t.date    'best_before'
   t.integer 'day_difference'
+  t.timestamps
 end
 
 create_table 'kitchen_product_histories', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
@@ -36,6 +37,14 @@ create_table 'kitchen_product_histories', unsigned: true, force: :cascade, optio
   t.integer 'status_id',  null: false, unsigned: true, default: 1, comment: '{ added: 1, updated: 2, deleted: 3 }'
   t.date    'date',       null: false
   t.string  'note'
+  t.timestamps
+end
+
+create_table 'kitchen_shpping_lists', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
+  t.bigint 'kitchen_id', null: false, unsigned: true
+  t.bigint 'product_id', null: false, unsigned: true
+  t.bigint 'auther_id',  null: false, unsigned: true
+  t.string 'note'
   t.timestamps
 end
 

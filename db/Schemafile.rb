@@ -20,6 +20,12 @@ end
 add_index       'kitchen_joins', %w[kitchen_id], name: 'idx_kitchen_joins_on_kitchen_id'
 add_foreign_key 'kitchen_joins', 'kitchens',     name: 'fk_kitchen_joins_1'
 
+create_table 'kitchen_ocr_histories', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
+  t.bigint 'kitchen_id'
+  t.json   'log'
+  t.timestamps
+end
+
 create_table 'kitchen_products', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.bigint  'kitchen_id'
   t.bigint  'product_id'

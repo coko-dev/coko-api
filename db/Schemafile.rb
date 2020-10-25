@@ -25,6 +25,8 @@ create_table 'kitchen_ocr_histories', unsigned: true, force: :cascade, options: 
   t.json   'log'
   t.timestamps
 end
+add_index 'kitchen_ocr_histories', %w[kitchen_id], name: 'idx_kitchen_ocr_histories_on_kitchen_id'
+add_foreign_key 'kitchen_ocr_histories', 'kitchens', name: 'fk_kitchen_ocr_histories_1'
 
 create_table 'kitchen_products', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.bigint  'kitchen_id'
@@ -35,6 +37,11 @@ create_table 'kitchen_products', unsigned: true, force: :cascade, options: 'ENGI
   t.integer 'day_difference'
   t.timestamps
 end
+add_index       'kitchen_products', %w[kitchen_id product_id], name: 'idx_kitchen_products_on_kitchen_id_and_product_id'
+add_index       'kitchen_products', %w[kitchen_id],            name: 'idx_kitchen_products_on_kitchen_id'
+add_index       'kitchen_products', %w[product_id],            name: 'idx_kitchen_products_on_and_product_id'
+add_foreign_key 'kitchen_products', 'kitchens',                name: 'fk_kitchen_products_1'
+add_foreign_key 'kitchen_products', 'products',                name: 'fk_kitchen_products_2'
 
 create_table 'kitchen_product_histories', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.bigint  'kitchen_id', null: false, unsigned: true
@@ -45,14 +52,28 @@ create_table 'kitchen_product_histories', unsigned: true, force: :cascade, optio
   t.string  'note'
   t.timestamps
 end
+add_index       'kitchen_product_histories', %w[kitchen_id product_id user_id], name: 'idx_kitchen_product_histories_on_kitchen_id_and_product_id_and_user_id'
+add_index       'kitchen_product_histories', %w[kitchen_id], name: 'idx_kitchen_product_histories_on_kitchen_id'
+add_index       'kitchen_product_histories', %w[product_id], name: 'idx_kitchen_product_histories_on_product_id'
+add_index       'kitchen_product_histories', %w[user_id],    name: 'idx_kitchen_product_histories_on_user_id'
+add_foreign_key 'kitchen_product_histories', 'kitchens',     name: 'fk_kitchen_product_histories_1'
+add_foreign_key 'kitchen_product_histories', 'products',     name: 'fk_kitchen_product_histories_2'
+add_foreign_key 'kitchen_product_histories', 'users',        name: 'fk_kitchen_product_histories_3'
 
 create_table 'kitchen_shpping_lists', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.bigint 'kitchen_id', null: false, unsigned: true
   t.bigint 'product_id', null: false, unsigned: true
-  t.bigint 'auther_id',  null: false, unsigned: true
+  t.bigint 'user_id',    null: false, unsigned: true
   t.string 'note'
   t.timestamps
 end
+add_index       'kitchen_shpping_lists', %w[kitchen_id product_id user_id], name: 'idx_kitchen_shpping_lists_on_kitchen_id_and_product_id_and_user_id'
+add_index       'kitchen_shpping_lists', %w[kitchen_id], name: 'idx_kitchen_shpping_lists_on_kitchen_id'
+add_index       'kitchen_shpping_lists', %w[product_id], name: 'idx_kitchen_shpping_lists_on_product_id'
+add_index       'kitchen_shpping_lists', %w[user_id],    name: 'idx_kitchen_shpping_lists_on_user_id'
+add_foreign_key 'kitchen_shpping_lists', 'kitchens',     name: 'fk_kitchen_shpping_lists_1'
+add_foreign_key 'kitchen_shpping_lists', 'products',     name: 'fk_kitchen_shpping_lists_2'
+add_foreign_key 'kitchen_shpping_lists', 'users',        name: 'fk_kitchen_shpping_lists_3'
 
 create_table 'products', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.string  'name',                null: false

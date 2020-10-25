@@ -20,6 +20,61 @@ end
 add_index       'kitchen_joins', %w[kitchen_id], name: 'idx_kitchen_joins_on_kitchen_id'
 add_foreign_key 'kitchen_joins', 'kitchens',     name: 'fk_kitchen_joins_1'
 
+create_table 'kitchen_ocr_histories', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
+  t.bigint 'kitchen_id', null: false, unsigned: true
+  t.json   'log'
+  t.timestamps
+end
+add_index 'kitchen_ocr_histories', %w[kitchen_id], name: 'idx_kitchen_ocr_histories_on_kitchen_id'
+add_foreign_key 'kitchen_ocr_histories', 'kitchens', name: 'fk_kitchen_ocr_histories_1'
+
+create_table 'kitchen_products', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
+  t.bigint  'kitchen_id',     null: false, unsigned: true
+  t.bigint  'product_id',     null: false, unsigned: true
+  t.boolean 'is_exists',      null: false, default: false
+  t.string  'note'
+  t.date    'best_before'
+  t.integer 'day_difference', default: 7
+  t.timestamps
+end
+add_index       'kitchen_products', %w[kitchen_id product_id], name: 'idx_kitchen_products_on_kitchen_id_and_product_id'
+add_index       'kitchen_products', %w[kitchen_id],            name: 'idx_kitchen_products_on_kitchen_id'
+add_index       'kitchen_products', %w[product_id],            name: 'idx_kitchen_products_on_and_product_id'
+add_foreign_key 'kitchen_products', 'kitchens',                name: 'fk_kitchen_products_1'
+add_foreign_key 'kitchen_products', 'products',                name: 'fk_kitchen_products_2'
+
+create_table 'kitchen_product_histories', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
+  t.bigint  'kitchen_id', null: false, unsigned: true
+  t.bigint  'product_id', null: false, unsigned: true
+  t.bigint  'user_id',    null: false, unsigned: true
+  t.integer 'status_id',  null: false, unsigned: true, default: 1, comment: '{ added: 1, updated: 2, deleted: 3 }'
+  t.date    'date',       null: false
+  t.string  'note'
+  t.timestamps
+end
+add_index       'kitchen_product_histories', %w[kitchen_id product_id user_id], name: 'idx_kitchen_pdt_htr_on_kitchen_id_and_product_id_and_user_id'
+add_index       'kitchen_product_histories', %w[kitchen_id],                    name: 'idx_kitchen_product_histories_on_kitchen_id'
+add_index       'kitchen_product_histories', %w[product_id],                    name: 'idx_kitchen_product_histories_on_product_id'
+add_index       'kitchen_product_histories', %w[user_id],                       name: 'idx_kitchen_product_histories_on_user_id'
+add_foreign_key 'kitchen_product_histories', 'kitchens',                        name: 'fk_kitchen_product_histories_1'
+add_foreign_key 'kitchen_product_histories', 'products',                        name: 'fk_kitchen_product_histories_2'
+add_foreign_key 'kitchen_product_histories', 'users',                           name: 'fk_kitchen_product_histories_3'
+
+create_table 'kitchen_shopping_lists', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
+  t.bigint 'kitchen_id', null: false, unsigned: true
+  t.bigint 'product_id', null: false, unsigned: true
+  t.bigint 'user_id',    null: false, unsigned: true
+  t.string 'note'
+  t.timestamps
+end
+add_index       'kitchen_shopping_lists', %w[kitchen_id product_id user_id], name: 'idx_kitchen_spg_lists_on_kitchen_id_and_product_id_and_user_id'
+add_index       'kitchen_shopping_lists', %w[kitchen_id],                    name: 'idx_kitchen_shopping_lists_on_kitchen_id'
+add_index       'kitchen_shopping_lists', %w[product_id],                    name: 'idx_kitchen_shopping_lists_on_product_id'
+add_index       'kitchen_shopping_lists', %w[user_id],                       name: 'idx_kitchen_shopping_lists_on_user_id'
+add_foreign_key 'kitchen_shopping_lists', 'kitchens',                        name: 'fk_kitchen_shopping_lists_1'
+add_foreign_key 'kitchen_shopping_lists', 'products',                        name: 'fk_kitchen_shopping_lists_2'
+add_foreign_key 'kitchen_shopping_lists', 'users',                           name: 'fk_kitchen_shopping_lists_3'
+
 create_table 'products', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.string  'name',                null: false
   t.string  'name_hira'
@@ -29,10 +84,10 @@ create_table 'products', unsigned: true, force: :cascade, options: 'ENGINE=InnoD
   t.integer 'status_id',           null: false, unsigned: true, default: 1, comment: '{ published: 1, hidden: 2 }'
   t.timestamps
 end
-add_index       'products', %w[product_category_id],           name: 'idx_products_on_product_category_id'
-add_index       'products', %w[author_id],                     name: 'idx_products_on_author_id'
-add_foreign_key 'products', 'product_categories',              name: 'fk_products_1'
-add_foreign_key 'products', 'users',                           name: 'fk_products_2', column: 'author_id'
+add_index       'products', %w[product_category_id], name: 'idx_products_on_product_category_id'
+add_index       'products', %w[author_id],           name: 'idx_products_on_author_id'
+add_foreign_key 'products', 'product_categories',    name: 'fk_products_1'
+add_foreign_key 'products', 'users',                 name: 'fk_products_2', column: 'author_id'
 
 create_table 'product_categories', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.string 'name',                     null: false
@@ -87,7 +142,7 @@ create_table 'recipe_products', unsigned: true, force: :cascade, options: 'ENGIN
   t.bigint 'recipe_id',  null: false, unsigned: true
   t.bigint 'product_id', null: false, unsigned: true
   t.string 'volume',     null: false, default: ''
-  t.string 'note',       default: ''
+  t.string 'note'
   t.timestamps
 end
 add_index       'recipe_products', %w[recipe_id product_id], name: 'idx_recipe_products_on_recipe_id_and_product_id', unique: true
@@ -117,9 +172,9 @@ add_index       'recipe_record_images', %w[recipe_record_id], name: 'idx_recipe_
 add_foreign_key 'recipe_record_images', 'recipe_records',     name: 'fk_recipe_record_images_1'
 
 create_table 'recipe_sections', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
-  t.bigint  'recipe_id',   null: false, unsigned: true
-  t.integer 'status_id',   null: false, unsigned: true, default: 1, comment: '{ introduced: 1, advised: 2 }'
-  t.text    'body',        null: false
+  t.bigint  'recipe_id', null: false, unsigned: true
+  t.integer 'status_id', null: false, unsigned: true, default: 1, comment: '{ introduced: 1, advised: 2 }'
+  t.text    'body',      null: false
   t.string  'image'
   t.timestamps
 end
@@ -127,9 +182,9 @@ add_index       'recipe_sections', %w[recipe_id], name: 'idx_recipe_sections_on_
 add_foreign_key 'recipe_sections', 'recipes',     name: 'fk_recipe_sections_1'
 
 create_table 'recipe_steps', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4' do |t|
-  t.bigint  'recipe_id',   null: false, unsigned: true
-  t.integer 'sort_order',  null: false, unsigned: true
-  t.text    'body',        null: false
+  t.bigint  'recipe_id',  null: false, unsigned: true
+  t.integer 'sort_order', null: false, unsigned: true
+  t.text    'body',       null: false
   t.string  'image'
   t.timestamps
 end

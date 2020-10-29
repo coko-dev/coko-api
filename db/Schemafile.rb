@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
 create_table 'admin_users', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
-  t.string   'mail',               null: false
+  t.string   'email',              null: false
   t.string   'encrypted_password', null: false, default: ''
   t.string   'api_token',          null: false, default: ''
-  t.integer  'status_id',          null: false, unsigned: true, default: 1, comment: '{ read: 1, write: 2, admin: 3 }'
+  t.integer  'role_id',            null: false, unsigned: true, default: 1, comment: '{ read: 1, write: 2, admin: 3 }'
   t.datetime 'last_sign_in_at'
   t.timestamps
 end
+add_index 'admin_users', %w[email], name: 'idx_admin_users_on_email', unique: true
 
 create_table 'kitchens', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.string  'name',          null: false, default: 'My Kitchen'
@@ -96,7 +97,7 @@ end
 add_index       'products', %w[product_category_id], name: 'idx_products_on_product_category_id'
 add_index       'products', %w[author_id],           name: 'idx_products_on_author_id'
 add_foreign_key 'products', 'product_categories',    name: 'fk_products_1'
-add_foreign_key 'products', 'users',                 name: 'fk_products_2', column: 'author_id'
+add_foreign_key 'products', 'admin_users',                 name: 'fk_products_2', column: 'author_id'
 
 create_table 'product_categories', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.string 'name',                     null: false
@@ -107,7 +108,6 @@ end
 add_index       'product_categories', %w[product_category_id_from], name: 'idx_product_categories_on_product_category_id_from'
 add_foreign_key 'product_categories', 'product_categories',         name: 'fk_product_categories_1', column: 'product_category_id_from'
 
-# TODO
 create_table 'product_ocr_strings', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.bigint 'product_id', null: false, unsigned: true
   t.bigint 'kitchen_id', unsigned: true
@@ -115,6 +115,11 @@ create_table 'product_ocr_strings', unsigned: true, force: :cascade, options: 'E
   t.string 'status_id',  null: false, unsigned: true, default: 1, comment: '{ enabled: 1, disabled: 2 }'
   t.timestamps
 end
+add_index       'product_ocr_strings', %w[product_id kitchen_id], name: 'idx_product_ocr_strings_on_product_id_and_kitchen_id'
+add_index       'product_ocr_strings', %w[product_id],            name: 'idx_product_ocr_strings_on_product_id'
+add_index       'product_ocr_strings', %w[kitchen_id],            name: 'idx_product_ocr_strings_on_kitchen_id'
+add_foreign_key 'product_ocr_strings', 'products',                name: 'fk_product_ocr_strings_1'
+add_foreign_key 'product_ocr_strings', 'kitchens',                name: 'fk_product_ocr_strings_2'
 
 create_table 'recipes', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.string  'name',         null: false
@@ -150,7 +155,7 @@ create_table 'recipe_keywords', unsigned: true, force: :cascade, options: 'ENGIN
   t.timestamps
 end
 add_index       'recipe_keywords', %w[author_id], name: 'idx_recipe_keywords_on_author_id'
-add_foreign_key 'recipe_keywords', 'users',       name: 'fk_recipe_keywords_1', column: 'author_id'
+add_foreign_key 'recipe_keywords', 'admin_users',       name: 'fk_recipe_keywords_1', column: 'author_id'
 
 create_table 'recipe_keyword_lists', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.bigint 'recipe_id',         null: false, unsigned: true

@@ -1,5 +1,14 @@
 # frozen_string_literal: true
 
+create_table 'admin_users', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
+  t.string   'mail',               null: false
+  t.string   'encrypted_password', null: false, default: ''
+  t.string   'api_token',          null: false, default: ''
+  t.integer  'status_id',          null: false, unsigned: true, default: 1, comment: '{ read: 1, write: 2, admin: 3 }'
+  t.datetime 'last_sign_in_at'
+  t.timestamps
+end
+
 create_table 'kitchens', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.string  'name',          null: false, default: 'My Kitchen'
   t.boolean 'is_subscriber', null: false, default: false
@@ -98,6 +107,7 @@ end
 add_index       'product_categories', %w[product_category_id_from], name: 'idx_product_categories_on_product_category_id_from'
 add_foreign_key 'product_categories', 'product_categories',         name: 'fk_product_categories_1', column: 'product_category_id_from'
 
+# TODO
 create_table 'product_ocr_strings', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.bigint 'product_id', null: false, unsigned: true
   t.bigint 'kitchen_id', unsigned: true
@@ -171,7 +181,7 @@ create_table 'recipe_records', unsigned: true, force: :cascade, options: 'ENGINE
   t.text   'body'
   t.timestamps
 end
-add_index       'recipe_records', %w[author_id recipe_id], name: 'idx_recipe_records_on_author_id_and_recipe_id', unique: true
+add_index       'recipe_records', %w[author_id recipe_id], name: 'idx_recipe_records_on_author_id_and_recipe_id'
 add_index       'recipe_records', %w[author_id],           name: 'idx_recipe_records_on_author_id'
 add_index       'recipe_records', %w[recipe_id],           name: 'idx_recipe_records_on_recipe_id'
 add_foreign_key 'recipe_records', 'users',                 name: 'fk_recipe_records_1', column: 'author_id'

@@ -10,6 +10,39 @@ create_table 'admin_users', unsigned: true, force: :cascade, options: 'ENGINE=In
 end
 add_index 'admin_users', %w[email], name: 'idx_admin_users_on_email', unique: true
 
+create_table 'hot_recipes', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
+  t.bigint 'recipe_id',      null: false, unsigned: true
+  t.bigint 'favorite_count', null: false
+  t.bigint 'recorded_count', null: false
+  t.date   'version',        null: false
+  t.timestamps
+end
+add_index       'hot_recipes', %w[recipe_id version], name: 'idx_hot_recipes_on_recipe_id_and_version', unique: true
+add_index       'hot_recipes', %w[recipe_id],         name: 'idx_hot_recipes_on_recipe_id'
+add_foreign_key 'hot_recipes', 'recipes',             name: 'fk_hot_recipes_1'
+
+create_table 'hot_recipe_keywords', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
+  t.bigint 'recipe_keyword_id', null: false, unsigned: true
+  t.bigint 'searched_count',    null: false
+  t.bigint 'made_count',        null: false
+  t.date   'version',           null: false
+  t.timestamps
+end
+add_index       'hot_recipe_keywords', %w[recipe_keyword_id version], name: 'idx_hot_recipe_keywords_on_recipe_keyword_id_and_version', unique: true
+add_index       'hot_recipe_keywords', %w[recipe_keyword_id],         name: 'idx_hot_recipe_keywords_on_recipe_keyword_id'
+add_foreign_key 'hot_recipe_keywords', 'recipe_keywords',             name: 'fk_hot_recipe_keywords_1'
+
+create_table 'hot_users', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
+  t.bigint 'user_id',               null: false, unsigned: true
+  t.bigint 'recipe_favorite_count', null: false
+  t.bigint 'followed_count',        null: false
+  t.date   'version',               null: false
+  t.timestamps
+end
+add_index       'hot_users', %w[user_id version], name: 'idx_hot_users_on_user_id_and_version', unique: true
+add_index       'hot_users', %w[user_id],         name: 'idx_hot_users_on_user_id'
+add_foreign_key 'hot_users', 'users',             name: 'fk_hot_users_1'
+
 create_table 'kitchens', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.string  'name',          null: false, default: 'My Kitchen'
   t.boolean 'is_subscriber', null: false, default: false
@@ -147,6 +180,11 @@ create_table 'recipe_favorites', unsigned: true, force: :cascade, options: 'ENGI
   t.bigint 'user_id',   null: false, unsigned: true
   t.timestamps
 end
+add_index       'recipe_favorites', %w[recipe_id user_id], name: 'idx_recipe_favorites_on_recipe_id_and_user_id'
+add_index       'recipe_favorites', %w[recipe_id],         name: 'idx_recipe_favorites_on_recipe_id'
+add_index       'recipe_favorites', %w[user_id],           name: 'idx_recipe_favorites_on_user_id'
+add_foreign_key 'recipe_favorites', 'recipes',             name: 'fk_recipe_favorites_1'
+add_foreign_key 'recipe_favorites', 'users',               name: 'fk_recipe_favorites_2'
 
 create_table 'recipe_keywords', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.string  'name',       null: false

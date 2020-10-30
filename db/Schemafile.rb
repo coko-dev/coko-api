@@ -142,10 +142,10 @@ add_index       'product_categories', %w[product_category_id_from], name: 'idx_p
 add_foreign_key 'product_categories', 'product_categories',         name: 'fk_product_categories_1', column: 'product_category_id_from'
 
 create_table 'product_ocr_strings', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
-  t.bigint 'product_id', null: false, unsigned: true
-  t.bigint 'kitchen_id', unsigned: true
-  t.string 'ocr_string', null: false
-  t.string 'status_id',  null: false, unsigned: true, default: 1, comment: '{ enabled: 1, disabled: 2 }'
+  t.bigint  'product_id', null: false, unsigned: true
+  t.bigint  'kitchen_id', unsigned: true
+  t.string  'ocr_string', null: false
+  t.integer 'status_id',  null: false, unsigned: true, default: 1, comment: '{ enabled: 1, disabled: 2 }'
   t.timestamps
 end
 add_index       'product_ocr_strings', %w[product_id kitchen_id], name: 'idx_product_ocr_strings_on_product_id_and_kitchen_id'

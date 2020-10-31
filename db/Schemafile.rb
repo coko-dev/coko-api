@@ -65,11 +65,11 @@ add_foreign_key 'kitchen_joins', 'kitchens',     name: 'fk_kitchen_joins_1'
 
 create_table 'kitchen_ocr_histories', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.bigint 'kitchen_id', null: false, unsigned: true
-  t.json   'log'
+  t.string 'log'
   t.timestamps
 end
-add_index 'kitchen_ocr_histories', %w[kitchen_id], name: 'idx_kitchen_ocr_histories_on_kitchen_id'
-add_foreign_key 'kitchen_ocr_histories', 'kitchens', name: 'fk_kitchen_ocr_histories_1'
+add_index       'kitchen_ocr_histories', %w[kitchen_id], name: 'idx_kitchen_ocr_histories_on_kitchen_id'
+add_foreign_key 'kitchen_ocr_histories', 'kitchens',     name: 'fk_kitchen_ocr_histories_1'
 
 create_table 'kitchen_products', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.bigint  'kitchen_id',     null: false, unsigned: true
@@ -130,7 +130,7 @@ end
 add_index       'products', %w[product_category_id], name: 'idx_products_on_product_category_id'
 add_index       'products', %w[author_id],           name: 'idx_products_on_author_id'
 add_foreign_key 'products', 'product_categories',    name: 'fk_products_1'
-add_foreign_key 'products', 'admin_users',                 name: 'fk_products_2', column: 'author_id'
+add_foreign_key 'products', 'admin_users',           name: 'fk_products_2', column: 'author_id'
 
 create_table 'product_categories', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.string 'name',                     null: false
@@ -193,7 +193,7 @@ create_table 'recipe_keywords', unsigned: true, force: :cascade, options: 'ENGIN
   t.timestamps
 end
 add_index       'recipe_keywords', %w[author_id], name: 'idx_recipe_keywords_on_author_id'
-add_foreign_key 'recipe_keywords', 'admin_users',       name: 'fk_recipe_keywords_1', column: 'author_id'
+add_foreign_key 'recipe_keywords', 'admin_users', name: 'fk_recipe_keywords_1', column: 'author_id'
 
 create_table 'recipe_keyword_lists', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.bigint 'recipe_id',         null: false, unsigned: true

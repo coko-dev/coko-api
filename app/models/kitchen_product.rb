@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Kitchenproduct < ApplicationRecord
+class KitchenProduct < ApplicationRecord
   belongs_to :kitchen
-  # belongs_to :product
+  belongs_to :product
 end

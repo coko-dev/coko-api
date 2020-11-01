@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
+  belongs_to :recipe
+
   has_one :profile, class_name: 'UserProfile', dependent: :destroy
 
   has_many :hot_users, dependent: :delete_all

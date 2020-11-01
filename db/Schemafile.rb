@@ -135,7 +135,7 @@ add_foreign_key 'products', 'admin_users',           name: 'fk_products_2', colu
 create_table 'product_categories', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.string 'name',                     null: false
   t.string 'name_slug',                null: false
-  t.bigint 'product_category_id_from', null: false, default: 0, unsigned: true
+  t.bigint 'product_category_id_from', unsigned: true
   t.timestamps
 end
 add_index       'product_categories', %w[product_category_id_from], name: 'idx_product_categories_on_product_category_id_from'
@@ -169,7 +169,7 @@ add_foreign_key 'recipes', 'users',       name: 'fk_recipes_1', column: 'author_
 create_table 'recipe_categories', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.string 'name',                    null: false
   t.string 'name_slug',               null: false
-  t.bigint 'recipe_category_id_from', null: false, default: 0, unsigned: true
+  t.bigint 'recipe_category_id_from', unsigned: true
   t.timestamps
 end
 add_index       'recipe_categories', %w[recipe_category_id_from], name: 'idx_recipe_categories_on_recipe_category_id_from'

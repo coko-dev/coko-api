@@ -155,16 +155,19 @@ add_foreign_key 'product_ocr_strings', 'products',                name: 'fk_prod
 add_foreign_key 'product_ocr_strings', 'kitchens',                name: 'fk_product_ocr_strings_2'
 
 create_table 'recipes', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
-  t.string  'name',         null: false
-  t.bigint  'author_id',    null: false, unsigned: true
-  t.integer 'status_id',    null: false, unsigned: true, default: 1, comment: '{ published: 1, hidden: 2 }'
-  t.string  'image',        null: false, default: ''
-  t.integer 'cooking_time', null: false, default: 30
-  t.string  'description',  null: false, default: ''
+  t.string  'name',               null: false
+  t.bigint  'author_id',          null: false, unsigned: true
+  t.integer 'status_id',          null: false, unsigned: true, default: 1, comment: '{ published: 1, hidden: 2 }'
+  t.string  'image',              null: false, default: ''
+  t.bigint  'recipe_category_id', null: false, unsigned: true
+  t.integer 'cooking_time',       null: false, default: 30
+  t.string  'description',        null: false, default: ''
   t.timestamps
 end
-add_index       'recipes', %w[author_id], name: 'idx_recipes_on_author_id'
-add_foreign_key 'recipes', 'users',       name: 'fk_recipes_1', column: 'author_id'
+add_index       'recipes', %w[author_id],          name: 'idx_recipes_on_author_id'
+add_index       'recipes', %w[recipe_category_id], name: 'idx_recipes_on_recipe_category_id'
+add_foreign_key 'recipes', 'users',                name: 'fk_recipes_1', column: 'author_id'
+add_foreign_key 'recipes', 'recipe_categories',    name: 'fk_recipes_2'
 
 create_table 'recipe_categories', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.string 'name',                    null: false

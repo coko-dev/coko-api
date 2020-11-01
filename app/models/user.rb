@@ -14,4 +14,5 @@ class User < ApplicationRecord
   has_many :following_users, through: :followings
   has_many :follower_users, through: :followers
   has_many :recipes, foreign_key: 'author_id', class_name: 'User', inverse_of: 'auther', dependent: :nullify
+  has_many :recipe_favorite, dependent: :delete_all
 end

@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
+  belongs_to :kitchen
+
+  has_one :own_kitchen, foreign_key: 'owner_user_id', class_name: 'Kitchen', inverse_of: :owner, dependent: :nullify
   has_one :profile, class_name: 'UserProfile', dependent: :destroy
 
   has_many :hot_users, dependent: :delete_all

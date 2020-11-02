@@ -10,4 +10,6 @@ class Recipe < ApplicationRecord
   has_many :recipe_products, dependent: :delete_all
   has_many :products, through: :recipe_products
   has_many :recipe_records, dependent: :delete_all
+  has_many :recipe_sections, dependent: :delete_all
+  has_many :recipe_steps, dependent: :delete_all
 end

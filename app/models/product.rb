@@ -8,4 +8,6 @@ class Product < ApplicationRecord
   has_many :kitchen_product_histories, dependent: :delete_all
   has_many :kitchen_shopping_lists, dependent: :delete_all
   has_many :product_ocr_strings, dependent: :delete_all
+  has_many :recipe_products, dependent: :delete_all
+  has_many :recipes, through: :recipe_products
 end

@@ -22,7 +22,7 @@ module GoogleCloudStorageUtil
 
     def upload_image(bucket: nil, image: nil, file_name: nil, folder_path: 'test/')
       path = "#{folder_path}#{file_name}"
-      bucket.create_file(image.tempfile, path)
+      bucket.create_file(image, path)
     end
 
     def fetch_signed_uri(bucket: nil, file_name: nil, folder_path: 'test/')

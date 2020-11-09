@@ -16,9 +16,6 @@ gem 'rails', '~> 6.0.3', '>= 6.0.3.3'
 gem 'mysql2'
 gem 'ridgepole'
 
-# Env Var
-gem 'dotenv-rails'
-
 # Monitoring
 gem 'newrelic_rpm'
 

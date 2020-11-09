@@ -22,6 +22,9 @@ gem 'newrelic_rpm'
 # HTTP Client
 gem 'typhoeus'
 
+### Uploader
+gem 'google-cloud-storage'
+
 group :development, :test do
   ### Server
   gem 'spring'

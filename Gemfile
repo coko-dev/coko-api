@@ -25,6 +25,9 @@ gem 'typhoeus'
 ### Uploader
 gem 'google-cloud-storage'
 
+# Utils
+gem 'bcrypt'
+
 group :development, :test do
   ### Server
   gem 'spring'

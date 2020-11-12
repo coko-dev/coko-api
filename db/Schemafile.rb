@@ -2,7 +2,7 @@
 
 create_table 'admin_users', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.string   'email',              null: false
-  t.string   'encrypted_password', null: false, default: ''
+  t.string   'password_digest',    null: false, default: ''
   t.string   'api_token',          null: false, default: ''
   t.integer  'role_id',            null: false, unsigned: true, default: 1, comment: '{ read: 1, write: 2, admin: 3 }'
   t.datetime 'last_sign_in_at'

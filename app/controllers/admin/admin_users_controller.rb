@@ -2,8 +2,6 @@
 
 module Admin
   class AdminUsersController < ApplicationController
-    has_secure_password
-
     api :POST, '/admin/admin_users', 'Admin user registration.'
     def create
       admin_user = AdminUser.new(admin_user_params)
@@ -12,7 +10,7 @@ module Admin
           message: 'Completion of registration'
         }, status: :ok
       else
-        errors = user.errors
+        errors = admin_user.errors
         messages = errors.messages
         logger.error(messages)
         render content_type: 'application/json', json: {
@@ -26,9 +24,10 @@ module Admin
     end
 
     def admin_user_params
-      params.require(:admin_user).permit(
+      params.permit(
         :email,
-        :password
+        :password,
+        :password_confirmation
       )
     end
   end

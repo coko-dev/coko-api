@@ -13,11 +13,12 @@ module Admin
         errors = admin_user.errors
         messages = errors.messages
         logger.error(messages)
+        message_for_cli = messages.values.flatten.last
         render content_type: 'application/json', json: {
           errors: [{
             code: '400',
             title: 'Bad request',
-            detail: errors.first.join
+            detail: message_for_cli
           }]
         }, status: :bad_request
       end

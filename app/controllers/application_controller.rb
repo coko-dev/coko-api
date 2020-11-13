@@ -9,10 +9,10 @@ class ApplicationController < ActionController::API
 
     render content_type: 'application/json', json: {
       errors: [{
-        code: '400',
-        title: 'Bad request'
+        code: '401',
+        title: 'Unauthorized'
       }]
-    }, status: :bad_request
+    }, status: :unauthorized
   end
 
   def params_token

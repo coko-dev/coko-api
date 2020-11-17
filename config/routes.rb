@@ -8,7 +8,8 @@ Rails.application.routes.draw do
   end
 
   namespace 'admin' do
-    resources :recipe_categories
     resources :admin_users
+    resources :recipe_categories
+    resources :users
   end
 end

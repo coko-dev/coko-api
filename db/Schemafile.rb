@@ -46,7 +46,7 @@ add_foreign_key 'hot_users', 'users',             name: 'fk_hot_users_1'
 create_table 'kitchens', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.string  'name',          null: false, default: 'My Kitchen'
   t.boolean 'is_subscriber', null: false, default: false
-  t.integer 'status_id',     null: false, unsigned: true, default: 1, comment: '{ private: 1, published: 2, official: 3, blacked: 4 }'
+  t.integer 'status_id',     null: false, unsigned: true, default: 1, comment: '{ is_private: 1, published: 2, official: 3, blacked: 4 }'
   t.bigint  'owner_user_id', null: false, unsigned: true
   t.timestamps
 end
@@ -292,7 +292,7 @@ create_table 'users', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB D
   t.string   'firebase_id_token',      null: false, default: ''
   t.string   'firebase_refresh_token', null: false, default: ''
   t.bigint   'kitchen_id',             unsigned: true
-  t.integer  'status_id',              null: false, unsigned: true, default: 1, comment: '{ private: 1, published: 2, official: 3 }'
+  t.integer  'status_id',              null: false, unsigned: true, default: 1, comment: '{ is_private: 1, published: 2, official: 3 }'
   t.string   'email'
   t.string   'encrypted_password',     null: false, default: ''
   t.integer  'following_count',        null: false, unsigned: true, default: 0

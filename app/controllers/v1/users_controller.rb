@@ -19,12 +19,11 @@ module V1
         errors = user.errors
         messages = errors.messages
         logger.error(messages)
-        message_for_cli = messages.values.flatten.last
         render content_type: 'application/json', json: {
           errors: [{
             code: '400',
             title: 'Bad request',
-            detail: message_for_cli
+            detail: messages.first
           }]
         }, status: :bad_request
       end

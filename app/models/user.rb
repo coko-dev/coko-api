@@ -3,17 +3,17 @@
 class User < ApplicationRecord
   include StringUtil
 
-  before_validation :set_code, on: :create
-
-  # NOTE: OAuth完了時に登録するのでメッセージなし.profilesとは別
-  validates :code, uniqueness: true
-  validates :email, presence: true, uniqueness: true
-
   enum status_id: {
-    private: 1,
+    is_private: 1,
     published: 2,
     official: 3
   }
+
+  before_validation :set_code, on: :create
+
+  # NOTE: OAuth完了時に登録するのでメッセージなし.profilesとは別
+  validates :code, uniqueness: { case_sensitive: true }
+  validates :email, presence: true, uniqueness: { case_sensitive: true }
 
   belongs_to :kitchen, optional: true
 
@@ -36,9 +36,10 @@ class User < ApplicationRecord
     return if self[:code].present?
 
     klass = self.class
+    code = ''
     loop do
       code = klass.generate_random_code(length: 8)
-      break unless klass.exist?(code: code)
+      break unless klass.exists?(code: code)
     end
     self[:code] = code
   end

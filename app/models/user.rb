@@ -1,8 +1,13 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
+  include StringUtil
+
+  before_validation :set_code, on: :create
+
   # NOTE: OAuth完了時に登録するのでメッセージなし.profilesとは別
-  validates :email, presence: true
+  validates :code, uniqueness: true
+  validates :email, presence: true, uniqueness: true
 
   enum status_id: {
     private: 1,
@@ -26,4 +31,15 @@ class User < ApplicationRecord
   has_many :recipe_favorite, dependent: :delete_all
   has_many :recipe_keywords, foreign_key: 'author_id', class_name: 'User', inverse_of: 'author', dependent: :nullify
   has_many :recipe_records, foreign_key: 'author_id', class_name: 'User', inverse_of: 'author', dependent: :nullify
+
+  def set_code
+    return if self[:code].present?
+
+    klass = self.class
+    loop do
+      code = klass.generate_random_code(length: 8)
+      break unless klass.exist?(code: code)
+    end
+    self[:code] = code
+  end
 end

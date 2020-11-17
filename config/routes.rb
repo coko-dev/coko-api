@@ -5,11 +5,11 @@ Rails.application.routes.draw do
 
   namespace 'v1' do
     resources :recipe_categories, only: %i[index create]
+    resources :users
   end
 
   namespace 'admin' do
     resources :admin_users
     resources :recipe_categories
-    resources :users
   end
 end

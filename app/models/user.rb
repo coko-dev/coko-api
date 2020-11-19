@@ -1,7 +1,21 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
-  belongs_to :kitchen
+  include StringUtil
+
+  enum status_id: {
+    is_private: 1,
+    published: 2,
+    official: 3
+  }
+
+  before_validation :set_code, on: :create
+
+  # NOTE: OAuth完了時に登録するのでメッセージなし.profilesとは別
+  validates :code, uniqueness: { case_sensitive: true }
+  validates :email, presence: true, uniqueness: { case_sensitive: true }
+
+  belongs_to :kitchen, optional: true
 
   has_one :own_kitchen, foreign_key: 'owner_user_id', class_name: 'Kitchen', inverse_of: :owner, dependent: :nullify
   has_one :profile, class_name: 'UserProfile', dependent: :destroy
@@ -17,4 +31,16 @@ class User < ApplicationRecord
   has_many :recipe_favorite, dependent: :delete_all
   has_many :recipe_keywords, foreign_key: 'author_id', class_name: 'User', inverse_of: 'author', dependent: :nullify
   has_many :recipe_records, foreign_key: 'author_id', class_name: 'User', inverse_of: 'author', dependent: :nullify
+
+  def set_code
+    return if self[:code].present?
+
+    klass = self.class
+    code = ''
+    loop do
+      code = klass.generate_random_code(length: 8)
+      break unless klass.exists?(code: code)
+    end
+    self[:code] = code
+  end
 end

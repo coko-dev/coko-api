@@ -33,13 +33,7 @@ module V1
 
     def user_params
       params.require(:user).permit(
-        :email,
-        profile_attributes: [
-          :user_id
-        ],
-        own_kitchen_attributes: [
-          :owner_user_id
-        ]
+        :email
       )
     end
   end

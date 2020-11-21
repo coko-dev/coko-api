@@ -12,6 +12,7 @@ class User < ApplicationRecord
   before_validation :set_code, on: :create
 
   # NOTE: OAuth完了時に登録するのでメッセージなし.profilesとは別
+  # TODO: 更新時用にメッセージ用意
   validates :code, uniqueness: { case_sensitive: true }
   validates :email, presence: true, uniqueness: { case_sensitive: true }
 
@@ -32,15 +33,26 @@ class User < ApplicationRecord
   has_many :recipe_keywords, foreign_key: 'author_id', class_name: 'User', inverse_of: 'author', dependent: :nullify
   has_many :recipe_records, foreign_key: 'author_id', class_name: 'User', inverse_of: 'author', dependent: :nullify
 
+  accepts_nested_attributes_for :profile
+  accepts_nested_attributes_for :own_kitchen
+
   def set_code
     return if self[:code].present?
 
     klass = self.class
-    code = ''
+    generated_code = ''
     loop do
-      code = klass.generate_random_code(length: 8)
-      break unless klass.exists?(code: code)
+      generated_code = klass.generate_random_code(length: 8)
+      break unless klass.exists?(code: generated_code)
     end
-    self[:code] = code
+    self[:code] = generated_code
+  end
+
+  class << self
+    def set_default_kitchen(user: nil, kitchen: nil)
+      # NOTE: The trigger of action is Kitchen's after_create.
+      user.kitchen = kitchen
+      user.save!
+    end
   end
 end

@@ -10,7 +10,6 @@ class User < ApplicationRecord
   }
 
   before_validation :set_code, on: :create
-  before_create :set_default_kitchen
 
   # NOTE: OAuth完了時に登録するのでメッセージなし.profilesとは別
   # TODO: 更新時用にメッセージ用意
@@ -49,8 +48,11 @@ class User < ApplicationRecord
     self[:code] = generated_code
   end
 
-  def set_default_kitchen
-    # TODO: before_saveなはずなのにinsertと別にupdateが入ってしまう。
-    self.kitchen = own_kitchen
+  class << self
+    def set_default_kitchen(user: nil, kitchen: nil)
+      # NOTE: The trigger of action is Kitchen's after_create.
+      user.kitchen = kitchen
+      user.save!
+    end
   end
 end

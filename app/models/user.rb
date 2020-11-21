@@ -12,6 +12,7 @@ class User < ApplicationRecord
   before_validation :set_code, on: :create
 
   # NOTE: OAuth完了時に登録するのでメッセージなし.profilesとは別
+  # TODO: 更新時用にメッセージ用意
   validates :code, uniqueness: { case_sensitive: true }
   validates :email, presence: true, uniqueness: { case_sensitive: true }
 
@@ -31,6 +32,9 @@ class User < ApplicationRecord
   has_many :recipe_favorite, dependent: :delete_all
   has_many :recipe_keywords, foreign_key: 'author_id', class_name: 'User', inverse_of: 'author', dependent: :nullify
   has_many :recipe_records, foreign_key: 'author_id', class_name: 'User', inverse_of: 'author', dependent: :nullify
+
+  accepts_nested_attributes_for :profile
+  accepts_nested_attributes_for :own_kitchen
 
   def set_code
     return if self[:code].present?

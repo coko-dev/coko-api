@@ -13,7 +13,7 @@ class User < ApplicationRecord
 
   # NOTE: OAuth完了時に登録するのでメッセージなし.profilesとは別
   # TODO: 更新時用にメッセージ用意
-  validates :code, uniqueness: { case_sensitive: true }
+  validates :code, presence: { message: 'ユーザ名を入力してください' }, uniqueness: { case_sensitive: { message: 'このユーザ名は既に存在しています' } }, format: { with: /\A[0-9a-zA-Z]+\z/, message: '半角英数文字のみが使えます' }, on: %i[create update]
   validates :email, presence: true, uniqueness: { case_sensitive: true }
 
   belongs_to :kitchen, optional: true

@@ -1,16 +1,17 @@
 # frozen_string_literal: true
 
-module Admin
-  class AdminUsersController < ApplicationController
-    api :POST, '/admin/admin_users', 'Admin user registration.'
-    def create
-      admin_user = AdminUser.new(admin_user_params)
-      if admin_user.save
+module V1
+  class UserProfilesController < ApplicationController
+    api :PUT, '/v1/user_profiles', 'User profiles update.'
+    def update
+      user = User.find(user_profile_params[:user_id])
+      profile = user.profile
+      if profile.save
         render content_type: 'application/json', json: {
-          message: 'Completion of registration'
+          message: 'Update completed.'
         }, status: :ok
       else
-        errors = admin_user.errors
+        errors = profile.errors
         messages = errors.messages
         logger.error(messages)
         # NOTE: ユーザ向けバリデーションエラーを返す
@@ -25,11 +26,14 @@ module Admin
       end
     end
 
-    def admin_user_params
+    def user_profile_params
       params.permit(
-        :email,
-        :password,
-        :password_confirmation
+        :user_id,
+        :name,
+        :birth_date,
+        :housework_career,
+        :description,
+        :website_url
       )
     end
   end

@@ -13,6 +13,7 @@ module Admin
         errors = admin_user.errors
         messages = errors.messages
         logger.error(messages)
+        # NOTE: ユーザ向けバリデーションエラーを返す
         message_for_cli = messages.values.flatten.last
         render content_type: 'application/json', json: {
           errors: [{

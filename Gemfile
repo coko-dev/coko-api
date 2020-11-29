@@ -16,17 +16,22 @@ gem 'rails', '~> 6.0.3', '>= 6.0.3.3'
 gem 'mysql2'
 gem 'ridgepole'
 
+# Image
+gem 'rmagick'
+
 # Monitoring
 gem 'newrelic_rpm'
 
 # HTTP Client
 gem 'typhoeus'
 
-### Uploader
+# Uploader
+gem 'carrierwave'
 gem 'google-cloud-storage'
 
 # Utils
 gem 'bcrypt'
+gem 'config'
 
 group :development, :test do
   ### Server

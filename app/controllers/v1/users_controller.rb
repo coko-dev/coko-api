@@ -39,6 +39,7 @@ module V1
       @user.assign_attributes(user_params)
       profile = @user.profile
       profile.assign_attributes(user_profile_params)
+      profile.image = UserProfile.upload_and_fetch_image(user_id: params[:id], image: params[:base64_encoded_image]) if user_image_param.present?
       if @user.save
         render content_type: 'application/json', json: {
           message: 'Update completed.'
@@ -80,6 +81,12 @@ module V1
         :housework_career,
         :description,
         :website_url
+      )
+    end
+
+    def user_image_param
+      params.permit(
+        :base64_encoded_image
       )
     end
   end

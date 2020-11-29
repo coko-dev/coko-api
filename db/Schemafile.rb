@@ -121,7 +121,7 @@ add_foreign_key 'kitchen_shopping_lists', 'users',                           nam
 create_table 'products', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.string  'name',                null: false
   t.string  'name_hira'
-  t.string  'image',               null: false, default: ''
+  t.string  'image',               null: false, default: '', limit: 2_048
   t.bigint  'product_category_id', null: false, unsigned: true
   t.bigint  'author_id',           null: false, unsigned: true
   t.integer 'status_id',           null: false, unsigned: true, default: 1, comment: '{ published: 1, hidden: 2 }'
@@ -158,7 +158,7 @@ create_table 'recipes', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB
   t.string  'name',               null: false
   t.bigint  'author_id',          null: false, unsigned: true
   t.integer 'status_id',          null: false, unsigned: true, default: 1, comment: '{ published: 1, hidden: 2 }'
-  t.string  'image',              null: false, default: ''
+  t.string  'image',              null: false, default: '', limit: 2_048
   t.bigint  'recipe_category_id', null: false, unsigned: true
   t.integer 'cooking_time',       null: false, default: 30
   t.string  'description',        null: false, default: ''
@@ -278,7 +278,7 @@ create_table 'user_profiles', unsigned: true, force: :cascade, options: 'ENGINE=
   t.string  'name',             null: false, default: '', limit: 25
   t.date    'birth_date'
   t.integer 'housework_career', unsigned: true
-  t.string  'image',            null: false, default: ''
+  t.string  'image',            null: false, default: '', limit: 2_048
   t.string  'description',      limit: 120
   t.string  'website_url',      limit: 100
   t.timestamps

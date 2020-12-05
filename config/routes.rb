@@ -5,7 +5,7 @@ Rails.application.routes.draw do
 
   namespace 'v1' do
     resources :recipe_categories, only: %i[index create]
-    resources :users
+    resources :users, param: :code
     resources :user_profiles
   end
 

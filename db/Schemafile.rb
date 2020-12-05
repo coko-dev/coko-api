@@ -72,12 +72,10 @@ add_index       'kitchen_ocr_histories', %w[kitchen_id], name: 'idx_kitchen_ocr_
 add_foreign_key 'kitchen_ocr_histories', 'kitchens',     name: 'fk_kitchen_ocr_histories_1'
 
 create_table 'kitchen_products', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
-  t.bigint  'kitchen_id',     null: false, unsigned: true
-  t.bigint  'product_id',     null: false, unsigned: true
-  t.boolean 'is_exists',      null: false, default: false
-  t.string  'note'
-  t.date    'best_before'
-  t.integer 'day_difference', default: 7
+  t.bigint 'kitchen_id',     null: false, unsigned: true
+  t.bigint 'product_id',     null: false, unsigned: true
+  t.string 'note'
+  t.date   'best_before'
   t.timestamps
 end
 add_index       'kitchen_products', %w[kitchen_id product_id], name: 'idx_kitchen_products_on_kitchen_id_and_product_id'
@@ -87,11 +85,12 @@ add_foreign_key 'kitchen_products', 'kitchens',                name: 'fk_kitchen
 add_foreign_key 'kitchen_products', 'products',                name: 'fk_kitchen_products_2'
 
 create_table 'kitchen_product_histories', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
-  t.bigint  'kitchen_id', null: false, unsigned: true
-  t.bigint  'product_id', null: false, unsigned: true
-  t.bigint  'user_id',    null: false, unsigned: true
-  t.integer 'status_id',  null: false, unsigned: true, default: 1, comment: '{ added: 1, updated: 2, deleted: 3 }'
-  t.date    'date',       null: false
+  t.bigint  'kitchen_id',     null: false, unsigned: true
+  t.bigint  'product_id',     null: false, unsigned: true
+  t.bigint  'user_id',        null: false, unsigned: true
+  t.integer 'status_id',      null: false, unsigned: true, default: 1, comment: '{ added: 1, updated: 2, deleted: 3 }'
+  t.date    'date',           null: false
+  t.integer 'day_difference'
   t.string  'note'
   t.timestamps
 end

@@ -64,7 +64,7 @@ module V1
 
     def set_user
       # TODO: Fix to `code`
-      @user = User.find(params[:id])
+      @user = User.find_by!(code: params[:code])
     end
 
     def user_params
@@ -76,6 +76,7 @@ module V1
     def user_profile_params
       params.permit(
         :user_id,
+        :display_id,
         :name,
         :birth_date,
         :housework_career,

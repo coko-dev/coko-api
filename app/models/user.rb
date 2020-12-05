@@ -13,7 +13,6 @@ class User < ApplicationRecord
 
   # NOTE: OAuth完了時に登録するのでメッセージなし.profilesとは別
   # TODO: 更新時用にメッセージ用意
-  validates :code, presence: { message: 'ユーザ名を入力してください' }, uniqueness: { case_sensitive: { message: 'このユーザ名は既に存在しています' } }, format: { with: /\A[0-9a-zA-Z]+\z/, message: '半角英数文字のみが使えます' }, on: %i[create update]
   validates :email, presence: true, uniqueness: { case_sensitive: true }
 
   belongs_to :kitchen, optional: true
@@ -42,7 +41,7 @@ class User < ApplicationRecord
     klass = self.class
     generated_code = ''
     loop do
-      generated_code = klass.generate_random_code(length: 8)
+      generated_code = klass.generate_random_code(length: 12)
       break unless klass.exists?(code: generated_code)
     end
     self[:code] = generated_code

@@ -275,6 +275,7 @@ add_foreign_key 'user_follows', 'users',                     name: 'fk_user_foll
 
 create_table 'user_profiles', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
   t.bigint  'user_id',          null: false, unsigned: true
+  t.string  'display_id',       null: false, default: '', limit: 16
   t.string  'name',             null: false, default: '', limit: 25
   t.date    'birth_date'
   t.integer 'housework_career', unsigned: true

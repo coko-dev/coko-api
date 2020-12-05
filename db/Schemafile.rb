@@ -90,7 +90,7 @@ create_table 'kitchen_product_histories', unsigned: true, force: :cascade, optio
   t.bigint  'user_id',        null: false, unsigned: true
   t.integer 'status_id',      null: false, unsigned: true, default: 1, comment: '{ added: 1, updated: 2, deleted: 3 }'
   t.date    'date',           null: false
-  t.integer 'day_difference'
+  t.integer 'day_difference' # NOTE: Difference in expiration date
   t.string  'note'
   t.timestamps
 end

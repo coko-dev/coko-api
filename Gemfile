@@ -5,6 +5,9 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.6.6'
 
+# Authenticator
+gem 'jwt'
+
 # Core
 gem 'apipie-rails'
 gem 'bootsnap', '>= 1.4.2', require: false

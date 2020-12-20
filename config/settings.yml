@@ -1,4 +1,5 @@
 production:
+  host: 'api.coko-app.com'
   url: 'https://api.coko-app.com'
 
 develop:

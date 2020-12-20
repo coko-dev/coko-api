@@ -9,13 +9,17 @@ module AuthUtil
   JWT_DEFAULT_ALGORITHM = 'HS256'
 
   module ClassMethods
-    def jwt_encode(user_id)
-      expires_in = 1.month.from_now.to_i
+    def jwt_encode(user_id, expire: 30.days)
+      expires_in = expire.from_now.to_i
+
       preload = {
-        user_id: user_id,
-        exp: expires_in
+        iss: Settings.production.host,
+        exp: expires_in,
+        iat: Time.zone.now.to_i,
+        user_id: user_id
       }
-      JWT.encode(preload, SECRET_KEY_BASE, algorithm: JWT_DEFAULT_ALGORITHM)
+
+      JWT.encode(preload, SECRET_KEY_BASE, JWT_DEFAULT_ALGORITHM)
     end
 
     def jwt_decode(encoded_token)

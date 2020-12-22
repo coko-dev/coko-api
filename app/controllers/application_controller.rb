@@ -3,7 +3,6 @@
 class ApplicationController < ActionController::API
   include AuthUtil
 
-  # before_action :temp_auth
   before_action :authenticate_with_api_token
 
   private

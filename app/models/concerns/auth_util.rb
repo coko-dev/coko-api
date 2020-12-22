@@ -5,7 +5,7 @@ module AuthUtil
 
   extend ActiveSupport::Concern
 
-  SECRET_KEY_BASE = Rails.application.secrets.secret_key_base
+  SECRET_KEY_BASE = Rails.application.credentials[:secret_key_base]
   JWT_DEFAULT_ALGORITHM = 'HS256'
 
   module ClassMethods

@@ -5,6 +5,8 @@ class ApplicationController < ActionController::API
 
   before_action :authenticate_with_api_token
 
+  class ::UnauthorizedError < StandardError; end
+
   private
 
   # :reek:DuplicateMethodCall { exclude: [authenticate_with_api_token] }

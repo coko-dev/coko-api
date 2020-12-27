@@ -7,16 +7,20 @@ module AuthUtil
 
   SECRET_KEY_BASE = Rails.application.credentials[:secret_key_base]
   JWT_DEFAULT_ALGORITHM = 'HS256'
+  CONTENT_TYPES = %w[user admin_user].freeze
 
   module ClassMethods
-    def jwt_encode(user_id, expire: 30.days)
+    def jwt_encode(subject: nil, type: nil, expire: 30.days)
+      return if subject.blank? || type.blank? || CONTENT_TYPES.exclude?(type)
+
       expires_in = expire.from_now.to_i
 
       preload = {
         iss: Settings.production.host,
+        sub: subject,
         exp: expires_in,
         iat: Time.zone.now.to_i,
-        user_id: user_id
+        typ: type
       }
 
       JWT.encode(preload, SECRET_KEY_BASE, JWT_DEFAULT_ALGORITHM)

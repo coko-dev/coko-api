@@ -15,7 +15,7 @@ class ApplicationController < ActionController::API
     raise UnauthorizedError if encoded_token.blank?
 
     payload = self.class.jwt_decode(encoded_token)
-    @current_user = User.find_by(code: payload[:user_id])
+    @current_user = User.find_by(code: payload[:sub])
     raise UnauthorizedError if @current_user.blank?
   end
 

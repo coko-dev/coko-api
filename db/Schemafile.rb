@@ -57,7 +57,7 @@ create_table 'kitchen_joins', unsigned: true, force: :cascade, options: 'ENGINE=
   t.integer  'code',       null: false, unsigned: true
   t.bigint   'kitchen_id', null: false, unsigned: true
   t.integer  'status_id',  null: false, default: 1, comment: '{ open: 1, closed: 2 }'
-  t.datetime 'closed_at',  null: false
+  t.datetime 'expired_at', null: false
   t.timestamps
 end
 add_index       'kitchen_joins', %w[kitchen_id], name: 'idx_kitchen_joins_on_kitchen_id'

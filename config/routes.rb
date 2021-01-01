@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   apipie
 
   namespace 'v1' do
+    resources :kitchen_joins, only: %i[create]
     resources :recipe_categories, only: %i[index create]
     resources :users, param: :code
     resources :user_profiles

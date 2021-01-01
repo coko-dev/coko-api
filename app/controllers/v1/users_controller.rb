@@ -63,7 +63,6 @@ module V1
     private
 
     def set_user
-      # TODO: Fix to `code`
       @user = User.find_by!(code: params[:code])
     end
 

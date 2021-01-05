@@ -14,6 +14,6 @@ class Kitchen < ApplicationRecord
   has_many :users, dependent: :nullify
 
   def set_default_kitchen_for_user
-    User.set_default_kitchen(user: owner, kitchen: self)
+    User.set_kitchen(user: owner, kitchen: self)
   end
 end

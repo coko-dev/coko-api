@@ -67,13 +67,6 @@ module V1
     rescue StandardError => e
       messages = e.messages
       logger.error(messages)
-      render content_type: 'application/json', json: {
-        errors: [{
-          code: '400',
-          title: 'Bad request',
-          detail: messages.first
-        }]
-      }, status: :bad_request
     end
   end
 end

@@ -34,6 +34,7 @@ module V1
     end
 
     # TODO: Add image update.
+    # TODO: Fix `id` -> `code`
     api :PUT, '/v1/users/:id', 'User profiles update'
     def update
       @user.assign_attributes(user_params)

@@ -21,6 +21,7 @@ class User < ApplicationRecord
   has_one :profile, class_name: 'UserProfile', dependent: :destroy
 
   has_many :hot_users, dependent: :delete_all
+  has_many :kitchen_joins, dependent: :delete_all
   has_many :kitchen_product_histories, dependent: :delete_all
   has_many :kitchen_shopping_lists, dependent: :delete_all
   has_many :followings, foreign_key: 'user_id_from', class_name: 'UserFollow', inverse_of: 'following_user', dependent: :delete_all
@@ -48,8 +49,7 @@ class User < ApplicationRecord
   end
 
   class << self
-    def set_default_kitchen(user: nil, kitchen: nil)
-      # NOTE: The trigger of action is Kitchen's after_create.
+    def set_kitchen(user: nil, kitchen: nil)
       user.kitchen = kitchen
       user.save!
     end

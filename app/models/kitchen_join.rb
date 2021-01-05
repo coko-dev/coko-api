@@ -15,6 +15,7 @@ class KitchenJoin < ApplicationRecord
   validates :code, presence: true, length: { is: 6 }
 
   belongs_to :kitchen
+  belongs_to :user
 
   def set_code
     return if self[:code].present?

@@ -31,6 +31,7 @@ module V1
       end
     end
 
+    # TODO: Add error handling.
     api :PATCH, '/v1/kitchen_joins/:code/verification', 'Verification kitchen join'
     def verification
       matched_kitchen_join = KitchenJoin.open.find_by!(code: params[:code], user_id: @current_user.id)
@@ -59,14 +60,13 @@ module V1
     def confirm
       matched_kitchen_join = KitchenJoin.open.find_by!(user_id: @current_user.id)
       User.set_kitchen(user: @current_user, kitchen: matched_kitchen_join.kitchen)
+      matched_kitchen_join.closed!
 
       render content_type: 'application/json', json: {
-        message: 'Succeeded in participating in the kitchen',
-        kitchen_name: kitchen.name
+        message: 'Succeeded in participating in the kitchen'
       }, status: :ok
     rescue StandardError => e
-      messages = e.messages
-      logger.error(messages)
+      logger.error(e.messages)
     end
   end
 end

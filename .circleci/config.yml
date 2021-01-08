@@ -6,10 +6,10 @@ jobs:
         environment:
           - BUNDLER_VERSION: 1.17.2
           - RAILS_ENV: 'test'
-      - image: circleci/mysql:5.7
+      - image: circleci/postgres:9.6.2-alpine
         environment:
-          - MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
-          - MYSQL_ROOT_HOST: '127.0.0.1'
+          - POSTGRES_ALLOW_EMPTY_PASSWORD: 'true'
+          - POSTGRES_ROOT_HOST: '127.0.0.1'
 
     working_directory: ~/coko-api  
 
@@ -40,7 +40,7 @@ jobs:
           name: Databasesetup
           command: |
             bundle exec rake db:create
-            bundle exec ridgepole -E test -f db/Schemafile.rb -c config/database.yml -a
+            bundle exec ridgepole --apply -E test -f db/Schemafile.rb -c config/database.yml
 
       # run tests!
       - run:
@@ -70,5 +70,5 @@ jobs:
           name: Deploy Master to Heroku
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              git push https://heroku:1d7816ff-99ea-437c-9170-ceda4c732289@git.heroku.com/coko-api.git master
+              git push https://heroku:$HEROKU_API_KEY@git.heroku.com/coko-api.git master
             fi

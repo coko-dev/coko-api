@@ -40,7 +40,7 @@ jobs:
           name: Databasesetup
           command: |
             bundle exec rake db:create
-            bundle exec ridgepole -E test -f db/Schemafile.rb -c config/database.yml -a --disable-mysql-unsigned
+            bundle exec ridgepole --apply -E test -f db/Schemafile.rb -c config/database.yml --disable-mysql-unsigned
 
       # run tests!
       - run:

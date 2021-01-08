@@ -15,8 +15,11 @@ services:
     environment:
       RAILS_ENV: development
     volumes:
+      - bundle_install:/usr/local/bundle
       - .:/coko-api
     ports:
       - '3000:3000'
     links:
       - db
+volumes:
+  bundle_install:

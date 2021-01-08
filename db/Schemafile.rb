@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-create_table 'admin_users', unsigned: true, force: :cascade, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
+create_table 'admin_users', unsigned: true, force: :cascade, options: 'ENGINE=BLACKHOLE DEFAULT CHARSET=utf8' do |t|
   t.string   'email',              null: false
   t.string   'password_digest',    null: false, default: ''
   t.string   'api_token',          null: false, default: ''

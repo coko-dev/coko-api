@@ -1,12 +1,12 @@
 version: '3'
 services:
   db:
-    image: mysql:5.7
+    image: postgres
     environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: root
+      POSTGRES_PASSWORD: password
+      POSTGRES_DATABASE: root
     ports:
-      - '3306:3306'
+      - '5432:5432'
   api:
     build: .
     command: /bin/sh -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"

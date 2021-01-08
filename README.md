@@ -40,7 +40,7 @@ Successfully built xxxxxxxxxxx
 - api
   - Rails Web API server.
 - db
-  - Database server (MySQL2)
+  - Database server (PostgreSQL)
 
 ```terminal
 ### Start all container

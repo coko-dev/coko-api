@@ -1,5 +1,5 @@
 default: &default
-  adapter: mysql2
+  adapter: postgresql
   encoding: utf8mb4
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: root
@@ -16,7 +16,7 @@ test:
 
 production:
   <<: *default
-  adapter: mysql2
+  adapter: postgresql
   database: <%= ENV['DB_NAME'] %>
   username: <%= ENV['DB_USERNAME'] %>
   password: <%= ENV['DB_PASSWORD'] %>

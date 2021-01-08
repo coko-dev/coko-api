@@ -212,7 +212,7 @@ add_index       'recipe_keyword_lists', %w[recipe_keyword_id], name: 'idx_recipe
 add_foreign_key 'recipe_keyword_lists', 'recipes',             name: 'fk_recipe_keyword_lists_1'
 add_foreign_key 'recipe_keyword_lists', 'recipe_keywords',     name: 'fk_recipe_keyword_lists_2'
 
-create_table 'recipe_products', unsigned: true, force: :cascade, options: 'ENGINE=BLACKHOLE DEFAULT CHARSET=utf8mb4' do |t|
+create_table 'recipe_products', unsigned: true, force: :cascade do |t|
   t.bigint 'recipe_id',  null: false, unsigned: true
   t.bigint 'product_id', null: false, unsigned: true
   t.string 'volume',     null: false, default: ''
@@ -255,7 +255,7 @@ end
 add_index       'recipe_sections', %w[recipe_id], name: 'idx_recipe_sections_on_recipe_id'
 add_foreign_key 'recipe_sections', 'recipes',     name: 'fk_recipe_sections_1'
 
-create_table 'recipe_steps', unsigned: true, force: :cascade, options: 'ENGINE=BLACKHOLE DEFAULT CHARSET=utf8mb4' do |t|
+create_table 'recipe_steps', unsigned: true, force: :cascade do |t|
   t.bigint  'recipe_id',  null: false, unsigned: true
   t.integer 'sort_order', null: false, unsigned: true
   t.text    'body',       null: false
@@ -265,7 +265,7 @@ end
 add_index       'recipe_steps', %w[recipe_id], name: 'idx_recipe_steps_on_recipe_id'
 add_foreign_key 'recipe_steps', 'recipes',     name: 'fk_recipe_steps_1'
 
-create_table 'user_follows', unsigned: true, force: :cascade, options: 'ENGINE=BLACKHOLE DEFAULT CHARSET=utf8mb4' do |t|
+create_table 'user_follows', unsigned: true, force: :cascade do |t|
   t.bigint  'user_id_from', null: false, unsigned: true
   t.bigint  'user_id_to',   null: false, unsigned: true
   t.boolean 'is_blocked',   null: false, default: false

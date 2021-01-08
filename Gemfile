@@ -16,7 +16,6 @@ gem 'rack-cors', require: 'rack/cors'
 gem 'rails', '~> 6.0.3', '>= 6.0.3.3'
 
 # DB
-gem 'mysql2'
 gem 'ridgepole'
 
 # Image
@@ -37,6 +36,9 @@ gem 'bcrypt'
 gem 'config'
 
 group :development, :test do
+  ### DB
+  gem 'mysql2'
+
   ### Server
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
@@ -79,4 +81,8 @@ group :test do
   gem 'database_cleaner'
   gem 'factory_bot_rails'
   gem 'rspec_junit_formatter'
+end
+
+group :production do
+  gem 'pg'
 end

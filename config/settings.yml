@@ -1,6 +1,6 @@
 production:
-  host: 'api.coko-app.com'
-  url: 'https://api.coko-app.com'
+  host: 'api.tabecoko.com'
+  url: 'https://api.tabecoko.com'
 
 develop:
   url: 'http://localhost:3000'

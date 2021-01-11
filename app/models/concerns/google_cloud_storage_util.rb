@@ -7,8 +7,9 @@ module GoogleCloudStorageUtil
 
   module ClassMethods
     def fetch_bucket
-      storage = Google::Cloud::Storage.new(credentials: Rails.application.credentials.gcp)
-      storage.bucket 'coko_bucket'
+      credentials = Rails.application.credentials.gcp
+      storage = Google::Cloud::Storage.new(credentials: credentials.service_account)
+      storage.bucket(credentials.gcs.bucket)
     end
 
     def delete_image(bucket: nil, file_name: nil, folder_path: 'test/')

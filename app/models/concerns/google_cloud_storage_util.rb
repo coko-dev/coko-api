@@ -7,10 +7,7 @@ module GoogleCloudStorageUtil
 
   module ClassMethods
     def fetch_bucket
-      storage = Google::Cloud::Storage.new(
-        project_id: 'coko-prd',
-        credentials: Rails.application.credentials.google
-      )
+      storage = Google::Cloud::Storage.new(credentials: Rails.application.credentials.gcp)
       storage.bucket 'coko_bucket'
     end
 

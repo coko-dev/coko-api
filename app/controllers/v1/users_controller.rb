@@ -4,6 +4,8 @@ module V1
   class UsersController < ApplicationController
     before_action :set_user, only: %i[update]
 
+    skip_before_action :authenticate_with_api_token, only: %i[create]
+
     # api :GET, '/v1/users', 'Show the user'
     # def show
     #   recipe_categories = RecipeCategory.all

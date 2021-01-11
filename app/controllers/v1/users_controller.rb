@@ -6,12 +6,6 @@ module V1
 
     skip_before_action :authenticate_with_api_token, only: %i[create]
 
-    # api :GET, '/v1/users', 'Show the user'
-    # def show
-    #   recipe_categories = RecipeCategory.all
-    #   render json: { recipe_categories: recipe_categories }
-    # end
-
     api :POST, '/v1/users', 'User registration'
     def create
       user = User.new(user_params)

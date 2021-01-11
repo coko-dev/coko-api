@@ -27,10 +27,10 @@ class UserProfile < ApplicationRecord
   end
 
   class << self
-    def upload_and_fetch_image(user_id: nil, image: nil)
+    def upload_and_fetch_image(user_code: nil, image: nil)
       bin = Base64.decode64(image)
       bucket = fetch_bucket
-      file_name = "#{user_id}-#{Time.zone.now}.png"
+      file_name = "#{user_code}-#{Time.zone.now}.png"
       path = "#{Rails.root}/tmp/#{file_name}"
       gcs_image = nil
       File.open(path, 'wb+') do |file|

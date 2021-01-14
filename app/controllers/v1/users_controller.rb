@@ -14,8 +14,12 @@ module V1
       user.build_profile
       user.build_own_kitchen
       if user.save
+        code = user.code
+        token = self.class.jwt_encode(subject: code, type: 'user')
+        # TODO: Move to Json serializer
         render content_type: 'application/json', json: {
-          message: 'Completion of registration'
+          user_code: code,
+          token: token
         }, status: :ok
       else
         render_bad_request(user)

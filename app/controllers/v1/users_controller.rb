@@ -2,6 +2,8 @@
 
 module V1
   class UsersController < ApplicationController
+    include RenderErrorUtil
+
     before_action :set_user, only: %i[update]
 
     skip_before_action :authenticate_with_api_token, only: %i[create]
@@ -16,22 +18,12 @@ module V1
           message: 'Completion of registration'
         }, status: :ok
       else
-        errors = user.errors
-        messages = errors.messages
-        logger.error(messages)
-        render content_type: 'application/json', json: {
-          errors: [{
-            code: '400',
-            title: 'Bad request',
-            detail: messages.first
-          }]
-        }, status: :bad_request
+        render_bad_request(user)
       end
     end
 
     # TODO: Add image update.
-    # TODO: Fix `id` -> `code`
-    api :PUT, '/v1/users/:id', 'User profiles update'
+    api :PUT, '/v1/users/:code', 'User profiles update'
     def update
       @user.assign_attributes(user_params)
       profile = @user.profile
@@ -42,18 +34,11 @@ module V1
           message: 'Update completed.'
         }, status: :ok
       else
-        errors = @user.errors
-        messages = errors.messages
-        logger.error(messages)
+        errors = @user.errors.messages
+        logger.error(errors)
         # NOTE: ユーザ向けバリデーションエラーを返す
-        message_for_cli = messages.values.flatten.last
-        render content_type: 'application/json', json: {
-          errors: [{
-            code: '400',
-            title: 'Bad request',
-            detail: message_for_cli
-          }]
-        }, status: :bad_request
+        detail = errors.values.flatten.last
+        render_origin_bad_request('Bad request', detail)
       end
     end
 

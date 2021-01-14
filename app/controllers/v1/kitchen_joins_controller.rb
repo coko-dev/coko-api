@@ -2,8 +2,6 @@
 
 module V1
   class KitchenJoinsController < ApplicationController
-    include RenderErrorUtil
-
     api :POST, '/v1/kitchen_joins', 'Create kitchen joins'
     def create
       user_id = params[:user_id]

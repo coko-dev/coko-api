@@ -2,8 +2,6 @@
 
 module V1
   class UsersController < ApplicationController
-    include RenderErrorUtil
-
     before_action :set_user, only: %i[update]
 
     skip_before_action :authenticate_with_api_token, only: %i[create]
@@ -60,7 +58,6 @@ module V1
 
     def user_profile_params
       params.permit(
-        :user_id,
         :display_id,
         :name,
         :birth_date,

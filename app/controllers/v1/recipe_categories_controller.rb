@@ -2,8 +2,6 @@
 
 module V1
   class RecipeCategoriesController < ApplicationController
-    include RenderErrorUtil
-
     api :GET, '/v1/recipe_categories', 'Show the recipe category'
     def index
       recipe_categories = RecipeCategory.all

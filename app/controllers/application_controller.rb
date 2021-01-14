@@ -2,6 +2,7 @@
 
 class ApplicationController < ActionController::API
   include AuthUtil
+  include RenderErrorUtil
 
   before_action :authenticate_with_api_token
 

@@ -16,7 +16,7 @@ module RenderErrorUtil
     }, status: :bad_request
   end
 
-  def render_origin_bad_request(title, detail)
+  def render_manual_bad_request(title, detail)
     render content_type: 'application/json', json: {
       errors: {
         code: '400',

@@ -18,16 +18,7 @@ module V1
           message: 'Completion of registration'
         }, status: :ok
       else
-        errors = kitchen_join.errors
-        messages = errors.messages
-        logger.error(messages)
-        render content_type: 'application/json', json: {
-          errors: [{
-            code: '400',
-            title: 'Bad request',
-            detail: messages.first
-          }]
-        }, status: :bad_request
+        render_bad_request(kitchen_join)
       end
     end
 
@@ -43,16 +34,7 @@ module V1
           kitchen_name: kitchen.name
         }, status: :ok
       else
-        errors = matched_kitchen_join.errors
-        messages = errors.messages
-        logger.error(messages)
-        render content_type: 'application/json', json: {
-          errors: [{
-            code: '400',
-            title: 'Bad request',
-            detail: messages.first
-          }]
-        }, status: :bad_request
+        render_bad_request(matched_kitchen_join)
       end
     end
 

@@ -14,7 +14,7 @@ module V1
       if recipe_category.save
         render json: { status: 'SUCCESS', data: recipe_category }
       else
-        render json: { status: 'ERROR', data: recipe_category.error }
+        render_bad_request(recipe_category)
       end
     end
 

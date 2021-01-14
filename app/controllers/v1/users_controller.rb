@@ -12,26 +12,20 @@ module V1
       user.build_profile
       user.build_own_kitchen
       if user.save
+        code = user.code
+        token = self.class.jwt_encode(subject: code, type: 'user')
+        # TODO: Move to Json serializer
         render content_type: 'application/json', json: {
-          message: 'Completion of registration'
+          user_code: code,
+          token: token
         }, status: :ok
       else
-        errors = user.errors
-        messages = errors.messages
-        logger.error(messages)
-        render content_type: 'application/json', json: {
-          errors: [{
-            code: '400',
-            title: 'Bad request',
-            detail: messages.first
-          }]
-        }, status: :bad_request
+        render_bad_request(user)
       end
     end
 
     # TODO: Add image update.
-    # TODO: Fix `id` -> `code`
-    api :PUT, '/v1/users/:id', 'User profiles update'
+    api :PUT, '/v1/users/:code', 'User profiles update'
     def update
       @user.assign_attributes(user_params)
       profile = @user.profile
@@ -42,18 +36,11 @@ module V1
           message: 'Update completed.'
         }, status: :ok
       else
-        errors = @user.errors
-        messages = errors.messages
-        logger.error(messages)
+        errors = @user.errors.messages
+        logger.error(errors)
         # NOTE: ユーザ向けバリデーションエラーを返す
-        message_for_cli = messages.values.flatten.last
-        render content_type: 'application/json', json: {
-          errors: [{
-            code: '400',
-            title: 'Bad request',
-            detail: message_for_cli
-          }]
-        }, status: :bad_request
+        detail = errors.values.flatten.last
+        render_manual_bad_request('Bad request', detail)
       end
     end
 
@@ -71,7 +58,6 @@ module V1
 
     def user_profile_params
       params.permit(
-        :user_id,
         :display_id,
         :name,
         :birth_date,

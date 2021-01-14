@@ -2,6 +2,8 @@
 
 module V1
   class RecipeCategoriesController < ApplicationController
+    include RenderErrorUtil
+
     api :GET, '/v1/recipe_categories', 'Show the recipe category'
     def index
       recipe_categories = RecipeCategory.all
@@ -14,7 +16,7 @@ module V1
       if recipe_category.save
         render json: { status: 'SUCCESS', data: recipe_category }
       else
-        render json: { status: 'ERROR', data: recipe_category.error }
+        render_bad_request(recipe_category)
       end
     end
 

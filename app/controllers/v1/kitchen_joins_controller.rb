@@ -2,6 +2,8 @@
 
 module V1
   class KitchenJoinsController < ApplicationController
+    include RenderErrorUtil
+
     api :POST, '/v1/kitchen_joins', 'Create kitchen joins'
     def create
       user_id = params[:user_id]
@@ -18,16 +20,7 @@ module V1
           message: 'Completion of registration'
         }, status: :ok
       else
-        errors = kitchen_join.errors
-        messages = errors.messages
-        logger.error(messages)
-        render content_type: 'application/json', json: {
-          errors: [{
-            code: '400',
-            title: 'Bad request',
-            detail: messages.first
-          }]
-        }, status: :bad_request
+        render_bad_request(kitchen_join)
       end
     end
 

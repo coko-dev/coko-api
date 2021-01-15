@@ -18,12 +18,10 @@ class UserProfile < ApplicationRecord
     return if self[:display_id].present?
 
     klass = self.class
-    generated_code = ''
-    loop do
+    self[:display_id] = loop do
       generated_code = klass.generate_random_code(length: 8)
       break unless klass.exists?(display_id: generated_code)
     end
-    self[:display_id] = generated_code
   end
 
   class << self

@@ -3,6 +3,8 @@
 class User < ApplicationRecord
   include StringUtil
 
+  CODE_REGEX = /[0-9a-zA-Z_.]+/.freeze
+
   enum status_id: {
     is_private: 1,
     published: 2,

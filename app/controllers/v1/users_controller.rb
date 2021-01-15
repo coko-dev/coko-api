@@ -2,9 +2,17 @@
 
 module V1
   class UsersController < ApplicationController
-    before_action :set_user, only: %i[update]
+    before_action :set_user, only: %i[update show]
 
     skip_before_action :authenticate_with_api_token, only: %i[create]
+
+    api :GET, '/v1/users', 'Show user'
+    param :code, User::CODE_REGEX, required: true, desc: 'User code'
+    def show
+      render content_type: 'application/json', json: UserSerializer.new(
+        @user
+      ), status: :ok
+    end
 
     api :POST, '/v1/users', 'User registration'
     def create

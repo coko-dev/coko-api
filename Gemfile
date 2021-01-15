@@ -28,6 +28,9 @@ gem 'newrelic_rpm'
 # HTTP Client
 gem 'typhoeus'
 
+# Serializer
+gem 'jsonapi-serializer'
+
 # Uploader
 gem 'carrierwave'
 gem 'google-cloud-storage'

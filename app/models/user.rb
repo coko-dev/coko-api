@@ -3,6 +3,8 @@
 class User < ApplicationRecord
   include StringUtil
 
+  CODE_REGEX = /[0-9a-zA-Z_.]+/.freeze
+
   enum status_id: {
     is_private: 1,
     published: 2,
@@ -40,12 +42,10 @@ class User < ApplicationRecord
     return if self[:code].present?
 
     klass = self.class
-    generated_code = ''
-    loop do
+    self[:code] = loop do
       generated_code = klass.generate_random_code(length: 12)
       break unless klass.exists?(code: generated_code)
     end
-    self[:code] = generated_code
   end
 
   class << self

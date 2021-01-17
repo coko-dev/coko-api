@@ -24,10 +24,10 @@ class ApplicationController < ActionController::API
       end
     rescue JWT::DecodeError => e
       logger.warn(e)
-      return render_unauthorized
+      render_unauthorized
     rescue StandardError => e
       logger.warn(e)
-      return render_manual_bad_request('Bad Request', e)
+      render_bad_request(detail: e.message)
     end
   end
 

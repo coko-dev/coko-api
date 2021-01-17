@@ -24,11 +24,11 @@ module V1
         token = self.class.jwt_encode(subject: code, type: 'user')
         # TODO: Move to Json serializer
         render content_type: 'application/json', json: {
-          user_code: code,
+          code: code,
           token: token
         }, status: :ok
       else
-        render_bad_request(user)
+        render_bad_request(object: user)
       end
     end
 

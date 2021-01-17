@@ -18,7 +18,7 @@ module V1
           message: 'Completion of registration'
         }, status: :ok
       else
-        render_bad_request(kitchen_join)
+        render_bad_request(object: kitchen_join)
       end
     end
 
@@ -34,7 +34,7 @@ module V1
           kitchen_name: kitchen.name
         }, status: :ok
       else
-        render_bad_request(matched_kitchen_join)
+        render_bad_request(object: matched_kitchen_join)
       end
     end
 

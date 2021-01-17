@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ApplicationController < ActionController::API
+  include ActionController::HttpAuthentication::Token::ControllerMethods
   include AuthUtil
   include RenderErrorUtil
 
@@ -12,12 +13,22 @@ class ApplicationController < ActionController::API
 
   # :reek:DuplicateMethodCall { exclude: [authenticate_with_api_token] }
   def authenticate_with_api_token
-    encoded_token = request.headers['Authorization']
-    raise UnauthorizedError if encoded_token.blank?
-
-    payload = self.class.jwt_decode(encoded_token)
-    @current_user = User.find_by(code: payload[:sub])
-    raise UnauthorizedError if @current_user.blank?
+    authenticate_or_request_with_http_token do |token, _options|
+      payload = self.class.jwt_decode(token)
+      subject = payload[:sub]
+      case payload[:typ]
+      when 'user'
+        @current_user = User.find_by!(code: subject)
+      when 'admin_user'
+        @admin_user = AdminUser.find(subject)
+      end
+    rescue JWT::DecodeError => e
+      logger.warn(e)
+      return render_unauthorized
+    rescue StandardError => e
+      logger.warn(e)
+      return render_manual_bad_request('Bad Request', e)
+    end
   end
 
   # NOTE: Not used
@@ -25,12 +36,7 @@ class ApplicationController < ActionController::API
     credentials = Rails.application.credentials.temp_auth[:token]
     return if params_token == credentials
 
-    render content_type: 'application/json', json: {
-      errors: [{
-        code: '401',
-        title: 'Unauthorized'
-      }]
-    }, status: :unauthorized
+    raise UnauthorizedError
   end
 
   # NOTE: Not used

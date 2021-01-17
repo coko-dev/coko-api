@@ -28,7 +28,7 @@ module V1
           token: token
         }, status: :ok
       else
-        render_bad_request(user)
+        render_bad_request(object: user)
       end
     end
 

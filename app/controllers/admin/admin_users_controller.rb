@@ -4,7 +4,7 @@ module Admin
   class AdminUsersController < ApplicationController
     skip_before_action :authenticate_with_api_token, only: %i[create]
 
-    api :POST, '/admin/admin_users', 'Admin user registration.'
+    api :POST, '/admin/admin_users', 'Admin user registration'
     def create
       admin_user = AdminUser.new(admin_user_params)
       if admin_user.save

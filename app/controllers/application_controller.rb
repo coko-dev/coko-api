@@ -1,23 +1,53 @@
 # frozen_string_literal: true
 
 class ApplicationController < ActionController::API
+  include ActionController::HttpAuthentication::Token::ControllerMethods
   include AuthUtil
   include RenderErrorUtil
 
   before_action :authenticate_with_api_token
 
   class ::UnauthorizedError < StandardError; end
+  class ::ForbiddenError < StandardError; end
 
   private
 
   # :reek:DuplicateMethodCall { exclude: [authenticate_with_api_token] }
   def authenticate_with_api_token
-    encoded_token = request.headers['Authorization']
-    raise UnauthorizedError if encoded_token.blank?
+    authenticate_or_request_with_http_token do |token, _options|
+      payload = self.class.jwt_decode(token)
+      subject = payload[:sub]
+      type = payload[:typ]
+      raise ForbiddenError unless macthed_routing_for_user_type?(type)
 
-    payload = self.class.jwt_decode(encoded_token)
-    @current_user = User.find_by(code: payload[:sub])
-    raise UnauthorizedError if @current_user.blank?
+      case type
+      when 'user'
+        @current_user = User.find_by!(code: subject)
+      when 'admin_user'
+        @admin_user = AdminUser.find(subject)
+      end
+    rescue JWT::DecodeError => e
+      logger.warn(e)
+      render_unauthorized
+    rescue ForbiddenError => e
+      logger.warn(e)
+      render_forbidden
+    rescue StandardError => e
+      logger.warn(e)
+      render_bad_request(detail: e.message)
+    end
+  end
+
+  def macthed_routing_for_user_type?(type)
+    requested = request.path.match(%r{/(.+?)/})[1]
+    settings = Settings.routing.namespace
+
+    case type
+    when 'user'
+      settings.public
+    when 'admin_user'
+      settings.admin
+    end.include?(requested)
   end
 
   # NOTE: Not used
@@ -25,12 +55,7 @@ class ApplicationController < ActionController::API
     credentials = Rails.application.credentials.temp_auth[:token]
     return if params_token == credentials
 
-    render content_type: 'application/json', json: {
-      errors: [{
-        code: '401',
-        title: 'Unauthorized'
-      }]
-    }, status: :unauthorized
+    raise UnauthorizedError
   end
 
   # NOTE: Not used

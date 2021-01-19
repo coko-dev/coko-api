@@ -19,6 +19,7 @@ Rails.application.routes.draw do
 
   namespace 'admin' do
     resources :admin_users
+    resources :products
     resources :recipe_categories
   end
 end

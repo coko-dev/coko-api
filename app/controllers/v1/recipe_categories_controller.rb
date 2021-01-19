@@ -14,15 +14,17 @@ module V1
       if recipe_category.save
         render json: { status: 'SUCCESS', data: recipe_category }
       else
-        render_bad_request(recipe_category)
+        render_bad_request(object: recipe_category)
       end
     end
 
     def recipe_category_params
       params.require(:recipe_category).permit(
-        :name,
-        :name_slug,
-        :recipe_category_id
+        %i[
+          name
+          name_slug
+          recipe_category_id
+        ]
       )
     end
   end

@@ -66,12 +66,14 @@ module V1
 
     def user_profile_params
       params.permit(
-        :display_id,
-        :name,
-        :birth_date,
-        :housework_career,
-        :description,
-        :website_url
+        %i[
+          display_id
+          name
+          birth_date
+          housework_career
+          description
+          website_url
+        ]
       )
     end
 

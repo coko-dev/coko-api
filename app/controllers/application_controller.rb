@@ -8,6 +8,7 @@ class ApplicationController < ActionController::API
   before_action :authenticate_with_api_token
 
   class ::UnauthorizedError < StandardError; end
+  class ::ForbiddenError < StandardError; end
 
   private
 
@@ -16,7 +17,10 @@ class ApplicationController < ActionController::API
     authenticate_or_request_with_http_token do |token, _options|
       payload = self.class.jwt_decode(token)
       subject = payload[:sub]
-      case payload[:typ]
+      type = payload[:typ]
+      raise ForbiddenError unless macthed_routing_for_user_type?(type)
+
+      case type
       when 'user'
         @current_user = User.find_by!(code: subject)
       when 'admin_user'
@@ -25,10 +29,25 @@ class ApplicationController < ActionController::API
     rescue JWT::DecodeError => e
       logger.warn(e)
       render_unauthorized
+    rescue ForbiddenError => e
+      logger.warn(e)
+      render_forbidden
     rescue StandardError => e
       logger.warn(e)
       render_bad_request(detail: e.message)
     end
+  end
+
+  def macthed_routing_for_user_type?(type)
+    requested = request.path.match(%r{/(.+?)/})[1]
+    settings = Settings.routing.namespace
+
+    case type
+    when 'user'
+      settings.public
+    when 'admin_user'
+      settings.admin
+    end.include?(requested)
   end
 
   # NOTE: Not used

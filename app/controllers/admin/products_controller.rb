@@ -4,10 +4,17 @@ module Admin
   class ProductsController < ApplicationController
     api :POST, '/admin/products', 'Product registration.'
     def create
-      product = Product.new
+      product = Product.new(product_params)
       product.author = @admin_user
       product.product_category = ProductCategory.find(params[:product_category_id])
-      product.save
+      # TODO: Upload image.
+      if product.save
+        render content_type: 'application/json', json: ProductSerializer.new(
+          product
+        ), status: :ok
+      else
+        render_bad_request(object: product)
+      end
     end
 
     def product_params

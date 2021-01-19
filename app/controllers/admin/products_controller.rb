@@ -2,7 +2,7 @@
 
 module Admin
   class ProductsController < ApplicationController
-    api :POST, '/admin/products', 'Product registration.'
+    api :POST, '/admin/products', 'Product registration'
     param :name, String, require: true, desc: 'Product name'
     param :name_hira, String, desc: 'Product name of Hiragana'
     param :product_category_id, String, desc: 'Category id'
@@ -20,13 +20,14 @@ module Admin
       end
     end
 
-    api :PUT, '/admin/products/:id', 'Product update.'
+    api :PUT, '/admin/products/:id', 'Product update'
     param :name, String, require: true, desc: 'Product name'
     param :name_hira, String, desc: 'Product name of Hiragana'
     param :product_category_id, String, desc: 'Category id'
     def update
       product = Product.find(params[:id])
       product.assign_attributes(product_params)
+      # TODO: Upload image.
       if product.save
         render content_type: 'application/json', json: ProductSerializer.new(
           product

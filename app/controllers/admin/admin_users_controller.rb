@@ -25,9 +25,11 @@ module Admin
 
     def admin_user_params
       params.permit(
-        :email,
-        :password,
-        :password_confirmation
+        %i[
+          email
+          password
+          password_confirmation
+        ]
       )
     end
   end

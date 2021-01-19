@@ -4,3 +4,10 @@ production:
 
 develop:
   url: 'http://localhost:3000'
+
+routing:
+  namespace:
+    admin:
+      - 'admin'
+    public:
+      - 'v1'

@@ -20,9 +20,11 @@ module V1
 
     def recipe_category_params
       params.require(:recipe_category).permit(
-        :name,
-        :name_slug,
-        :recipe_category_id
+        %i[
+          name
+          name_slug
+          recipe_category_id
+        ]
       )
     end
   end

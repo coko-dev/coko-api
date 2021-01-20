@@ -3,7 +3,7 @@
 module Admin
   class ProductsController < ApplicationController
     before_action :set_product, only: %i[update]
-    before_action :set_product_include_hidden, only: %i[hide]
+    before_action :set_product_include_hidden, only: %i[hide publish]
 
     api :POST, '/admin/products', 'Product registration'
     param :name, String, require: true, desc: 'Product name'
@@ -44,6 +44,16 @@ module Admin
     def hide
       is_changed = @product.published?
       @product.hidden!
+      # TODO: Include to serializer
+      render content_type: 'application/json', json: {
+        is_changed: is_changed
+      }, status: :ok
+    end
+
+    api :PATCH, '/admin/products/:id/publish', 'Make a product published'
+    def publish
+      is_changed = @product.hidden?
+      @product.published!
       # TODO: Include to serializer
       render content_type: 'application/json', json: {
         is_changed: is_changed

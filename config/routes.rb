@@ -19,7 +19,11 @@ Rails.application.routes.draw do
 
   namespace 'admin' do
     resources :admin_users
-    resources :products
+    resources :products do
+      member do
+        patch '/hide', to: 'products#hide'
+      end
+    end
     resources :recipe_categories
   end
 end

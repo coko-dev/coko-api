@@ -2,6 +2,9 @@
 
 module Admin
   class ProductsController < ApplicationController
+    before_action :set_product, only: %i[update]
+    before_action :set_product_include_hidden, only: %i[hide]
+
     api :POST, '/admin/products', 'Product registration'
     param :name, String, require: true, desc: 'Product name'
     param :name_hira, String, desc: 'Product name of Hiragana'
@@ -25,16 +28,34 @@ module Admin
     param :name_hira, String, desc: 'Product name of Hiragana'
     param :product_category_id, String, desc: 'Category id'
     def update
-      product = Product.find(params[:id])
-      product.assign_attributes(product_params)
+      @product = Product.find(params[:id])
+      @product.assign_attributes(product_params)
       # TODO: Upload image.
-      if product.save
+      if @product.save
         render content_type: 'application/json', json: ProductSerializer.new(
-          product
+          @product
         ), status: :ok
       else
-        render_bad_request(object: product)
+        render_bad_request(object: @product)
       end
+    end
+
+    api :PATCH, '/admin/products/:id/hide', 'Make a product hidden'
+    def hide
+      is_changed = @product.published?
+      @product.hidden!
+      # TODO: Include to serializer
+      render content_type: 'application/json', json: {
+        is_changed: is_changed
+      }, status: :ok
+    end
+
+    def set_product
+      @product = Product.published.find(params[:id])
+    end
+
+    def set_product_include_hidden
+      @product = Product.find(params[:id])
     end
 
     def product_params

@@ -5,6 +5,9 @@ class KitchenJoin < ApplicationRecord
 
   CODE_MAXIMUM = 99_999
 
+  # NOTE: Disable the default 'open' method.
+  class << self; undef :open; end
+
   enum status_id: {
     open: 1,
     closed: 2

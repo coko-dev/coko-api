@@ -35,10 +35,12 @@ module V1
     # TODO: Add image update.
     api :PUT, '/v1/users/:code', 'User profiles update'
     def update
+      raise ForbiddenError if @current_user != @user
+
       @user.assign_attributes(user_params)
       profile = @user.profile
       profile.assign_attributes(user_profile_params)
-      profile.image = UserProfile.upload_and_fetch_image(user_code: params[:code], image: params[:base64_encoded_image]) if user_image_param.present?
+      profile.upload_and_fetch_user_image(encoded_image: params[:base64_encoded_image]) if user_image_param.present?
       if @user.save
         render content_type: 'application/json', json: {
           message: 'Update completed.'

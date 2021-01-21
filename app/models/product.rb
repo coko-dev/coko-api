@@ -19,4 +19,8 @@ class Product < ApplicationRecord
   validates :name, presence: true, length: { maximum: 32 }, on: %i[create update]
   validates :name_hira, length: { maximum: 32 }
   validates :product_category_id, presence: true, on: %i[create update]
+
+  def upload_and_fetch_product_image(subject: nil, encoded_image: nil)
+    self[:image] = self.class.upload_and_fetch_image(subject: subject, encoded_image: encoded_image, type: :product) || ''
+  end
 end

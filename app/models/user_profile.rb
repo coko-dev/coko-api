@@ -20,7 +20,7 @@ class UserProfile < ApplicationRecord
     klass = self.class
     self[:display_id] = loop do
       generated_code = klass.generate_random_code(length: 8)
-      break unless klass.exists?(display_id: generated_code)
+      break generated_code unless klass.exists?(display_id: generated_code)
     end
   end
 

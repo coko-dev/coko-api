@@ -44,7 +44,7 @@ class User < ApplicationRecord
     klass = self.class
     self[:code] = loop do
       generated_code = klass.generate_random_code(length: 12)
-      break unless klass.exists?(code: generated_code)
+      break generated_code unless klass.exists?(code: generated_code)
     end
   end
 

@@ -3,6 +3,8 @@
 class KitchenJoin < ApplicationRecord
   include StringUtil
 
+  CODE_MAXIMUM = 99_999
+
   enum status_id: {
     open: 1,
     closed: 2
@@ -21,10 +23,9 @@ class KitchenJoin < ApplicationRecord
     return if self[:code].present?
 
     klass = self.class
-    minimum = 99_999
     self[:code] = loop do
       generated_code = klass.generate_random_number(length: 6)
-      break unless generated_code < minimum || klass.open.exists?(code: generated_code)
+      break generated_code unless generated_code < CODE_MAXIMUM || klass.open.exists?(code: generated_code)
     end
   end
 

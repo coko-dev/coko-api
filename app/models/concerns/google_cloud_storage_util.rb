@@ -29,7 +29,7 @@ module GoogleCloudStorageUtil
     end
 
     def upload_and_fetch_image(subject: nil, encoded_image: nil, type: nil)
-      return if %w[subject encoded_image type].any?(nil) || FOLDERS_BY_TYPE.keys.exclude?(type)
+      return if [subject, encoded_image, type].any?(nil) || FOLDERS_BY_TYPE.keys.exclude?(type)
 
       bin = Base64.decode64(encoded_image)
       bucket = fetch_bucket

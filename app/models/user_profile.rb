@@ -24,19 +24,7 @@ class UserProfile < ApplicationRecord
     end
   end
 
-  class << self
-    def upload_and_fetch_image(user_code: nil, image: nil)
-      bin = Base64.decode64(image)
-      bucket = fetch_bucket
-      file_name = "#{user_code}-#{Time.zone.now}.png"
-      path = "#{Rails.root}/tmp/#{file_name}"
-      gcs_image = nil
-      File.open(path, 'wb+') do |file|
-        file.write(bin)
-        gcs_image = upload_image(bucket: bucket, image: file, file_name: file_name)
-      end
-      File.delete(path)
-      gcs_image.signed_url
-    end
+  def upload_and_fetch_user_image(encoded_image: nil)
+    self[:image] = self.class.upload_and_fetch_image(subject: self[:code], encoded_image: encoded_image, type: :user)
   end
 end

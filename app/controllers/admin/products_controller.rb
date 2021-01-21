@@ -13,7 +13,7 @@ module Admin
       product = Product.new(product_params)
       product.author = @admin_user
       product.product_category = ProductCategory.find(params[:product_category_id])
-      # TODO: Upload image.
+      product.upload_and_fetch_product_image(subject: @admin_user.id, encoded_image: params[:base64_encoded_image]) if product_image_param.present?
       if product.save
         render content_type: 'application/json', json: ProductSerializer.new(
           product
@@ -28,9 +28,8 @@ module Admin
     param :name_hira, String, desc: 'Product name of Hiragana'
     param :product_category_id, String, desc: 'Category id'
     def update
-      @product = Product.find(params[:id])
       @product.assign_attributes(product_params)
-      # TODO: Upload image.
+      @product.upload_and_fetch_product_image(subject: @admin_user.id, encoded_image: params[:base64_encoded_image]) if product_image_param.present?
       if @product.save
         render content_type: 'application/json', json: ProductSerializer.new(
           @product

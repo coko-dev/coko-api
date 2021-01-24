@@ -30,10 +30,9 @@ class User < ApplicationRecord
   has_many :followers, foreign_key: 'user_id_to', class_name: 'UserFollow', inverse_of: 'follower_user', dependent: :delete_all
   has_many :following_users, through: :followings
   has_many :follower_users, through: :followers
-  has_many :recipes, foreign_key: 'author_id', class_name: 'User', inverse_of: 'author', dependent: :nullify
-  has_many :recipe_favorite, dependent: :delete_all
-  has_many :recipe_keywords, foreign_key: 'author_id', class_name: 'User', inverse_of: 'author', dependent: :nullify
-  has_many :recipe_records, foreign_key: 'author_id', class_name: 'User', inverse_of: 'author', dependent: :nullify
+  has_many :recipes, foreign_key: 'author_id', class_name: 'Recipe', inverse_of: 'author', dependent: :nullify
+  has_many :recipe_favorites, dependent: :delete_all
+  has_many :recipe_records, foreign_key: 'author_id', class_name: 'RecipeRecord', inverse_of: 'author', dependent: :nullify
 
   accepts_nested_attributes_for :profile
   accepts_nested_attributes_for :own_kitchen
@@ -46,6 +45,10 @@ class User < ApplicationRecord
       generated_code = klass.generate_random_code(length: 12)
       break generated_code unless klass.exists?(code: generated_code)
     end
+  end
+
+  def my_kitchen?(kitchen)
+    self.kitchen == kitchen
   end
 
   class << self

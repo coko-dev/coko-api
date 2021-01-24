@@ -58,6 +58,7 @@ module V1
       ]
     end
 
+    # NOTE: Don't include 'best_before' in params to make an error if it cannot be converted to date type.
     def kitchen_product_params
       params.permit(
         %i[

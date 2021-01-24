@@ -4,11 +4,13 @@ module RenderErrorUtil
   extend ActiveSupport::Concern
 
   def render_bad_request(exception = nil)
+    message = exception&.message || 'Bad request error'
+    logger.error(message)
     render content_type: 'application/json', json: {
       errors: {
         status: '400',
         title: 'Bad Request',
-        detail: exception&.message
+        detail: message
       }.compact
     }, status: :bad_request
   end

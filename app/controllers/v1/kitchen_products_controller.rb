@@ -12,14 +12,13 @@ module V1
       # NOTE: When building with params, no error occurs and it becomes nil.
       kitchen_product.best_before = params[:best_before].to_date
       kitchen_product.kitchen = @kitchen
-      if kitchen_product.save
-        render content_type: 'application/json', json: KitchenProductSerializer.new(
-          kitchen_product,
-          include: associations_for_serialization
-        ), status: :ok
-      else
-        render_bad_request(object: kitchen_product)
-      end
+      kitchen_product.save!
+      render content_type: 'application/json', json: KitchenProductSerializer.new(
+        kitchen_product,
+        include: associations_for_serialization
+      ), status: :ok
+    rescue StandardError => e
+      render_bad_request(e)
     end
 
     private

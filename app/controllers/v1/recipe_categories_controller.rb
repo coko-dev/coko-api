@@ -11,11 +11,12 @@ module V1
     api :POST, '/v1/recipe_categories', 'Create recipe categories'
     def create
       recipe_category = RecipeCategory.new(recipe_category_params)
-      if recipe_category.save
-        render json: { status: 'SUCCESS', data: recipe_category }
-      else
-        render_bad_request(object: recipe_category)
-      end
+      recipe_category.save!
+      render json: {
+        status: 'SUCCESS', data: recipe_category
+      }
+    rescue StandardError => e
+      render_bad_request(e)
     end
 
     def recipe_category_params

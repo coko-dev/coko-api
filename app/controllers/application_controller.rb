@@ -33,7 +33,6 @@ class ApplicationController < ActionController::API
       logger.warn(e)
       render_forbidden
     rescue StandardError => e
-      logger.warn(e)
       render_bad_request(e)
     end
   end

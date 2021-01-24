@@ -16,6 +16,6 @@ class AdminUser < ApplicationRecord
   # TODO: role_id
   # TODO: last_sign_in_at
 
-  has_many :products, foreign_key: 'author_id', class_name: 'AdminUser', inverse_of: 'author', dependent: :nullify
+  has_many :products, foreign_key: 'author_id', class_name: 'Product', inverse_of: 'author', dependent: :nullify
   has_many :recipe_keywords, foreign_key: 'author_id', class_name: 'RecipeKeyword', inverse_of: 'author', dependent: :nullify
 end

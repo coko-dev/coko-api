@@ -3,7 +3,16 @@
 module V1
   class KitchenProductsController < ApplicationController
     before_action :set_kitchen
-    # before_action :verify_current_user_for_kitchen
+    before_action :verify_current_user_for_kitchen, only: %i[index]
+
+    api :GET, '/v1/kitchen_products', 'Get all products in own kitchen'
+    def index
+      kitchen_products = @kitchen.kitchen_products
+      render content_type: 'application/json', json: KitchenProductSerializer.new(
+        kitchen_products,
+        include: associations_for_serialization
+      ), status: :ok
+    end
 
     api :POST, '/v1/kitchen_products', 'Create a kitchen product'
     def create
@@ -39,8 +48,10 @@ module V1
       @kitchen = @current_user.kitchen
     end
 
-    # TODO
-    # def verify_current_user_for_kitchen
-    # end
+    def verify_current_user_for_kitchen
+      return if @current_user.my_kitchen?(@kitchen)
+
+      raise ForbiddenError
+    end
   end
 end

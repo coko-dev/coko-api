@@ -40,7 +40,9 @@ module V1
 
     def kitchen_product_params
       params.permit(
-        :note
+        %i[
+          note
+        ]
       )
     end
 

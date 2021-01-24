@@ -61,7 +61,9 @@ module V1
 
     def user_params
       params.permit(
-        :email
+        %i[
+          email
+        ]
       )
     end
 
@@ -80,7 +82,9 @@ module V1
 
     def user_image_param
       params.permit(
-        :base64_encoded_image
+        %i[
+          base64_encoded_image
+        ]
       )
     end
   end

@@ -13,13 +13,12 @@ module V1
         expired_at: Time.zone.now + 3.minutes
       )
 
-      if kitchen_join.save
-        render content_type: 'application/json', json: {
-          message: 'Completion of registration'
-        }, status: :ok
-      else
-        render_bad_request(object: kitchen_join)
-      end
+      kitchen_join.save!
+      render content_type: 'application/json', json: {
+        message: 'Completion of registration'
+      }, status: :ok
+    rescue StandardError => e
+      render_bad_request(e)
     end
 
     # TODO: Add error handling.
@@ -28,14 +27,13 @@ module V1
       matched_kitchen_join = KitchenJoin.open.find_by!(code: params[:code], user_id: @current_user.id)
       kitchen = matched_kitchen_join.kitchen
       matched_kitchen_join.is_confirming = true
-      if matched_kitchen_join.save
-        render content_type: 'application/json', json: {
-          message: 'Completion of registration',
-          kitchen_name: kitchen.name
-        }, status: :ok
-      else
-        render_bad_request(object: matched_kitchen_join)
-      end
+      matched_kitchen_join.save!
+      render content_type: 'application/json', json: {
+        message: 'Completion of registration',
+        kitchen_name: kitchen.name
+      }, status: :ok
+    rescue StandardError => e
+      render_bad_request(e)
     end
 
     api :PATCH, '/v1/kitchen_joins/confirm', 'Confirm kitchen join'

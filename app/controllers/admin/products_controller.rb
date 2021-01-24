@@ -14,13 +14,12 @@ module Admin
       product.author = @admin_user
       product.product_category = ProductCategory.find(params[:product_category_id])
       product.upload_and_fetch_product_image(subject: @admin_user.id, encoded_image: params[:base64_encoded_image]) if product_image_param.present?
-      if product.save
-        render content_type: 'application/json', json: ProductSerializer.new(
-          product
-        ), status: :ok
-      else
-        render_bad_request(object: product)
-      end
+      product.save!
+      render content_type: 'application/json', json: ProductSerializer.new(
+        product
+      ), status: :ok
+    rescue StandardError => e
+      render_bad_request(e)
     end
 
     api :PUT, '/admin/products/:id', 'Product update'
@@ -30,13 +29,12 @@ module Admin
     def update
       @product.assign_attributes(product_params)
       @product.upload_and_fetch_product_image(subject: @admin_user.id, encoded_image: params[:base64_encoded_image]) if product_image_param.present?
-      if @product.save
-        render content_type: 'application/json', json: ProductSerializer.new(
-          @product
-        ), status: :ok
-      else
-        render_bad_request(object: @product)
-      end
+      @product.save!
+      render content_type: 'application/json', json: ProductSerializer.new(
+        @product
+      ), status: :ok
+    rescue StandardError => e
+      render_bad_request(e)
     end
 
     api :PATCH, '/admin/products/:id/hide', 'Make a product hidden'

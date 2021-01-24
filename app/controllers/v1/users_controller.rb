@@ -19,17 +19,16 @@ module V1
       user = User.new(user_params)
       user.build_profile
       user.build_own_kitchen
-      if user.save
-        code = user.code
-        token = self.class.jwt_encode(subject: code, type: 'user')
-        # TODO: Move to Json serializer
-        render content_type: 'application/json', json: {
-          code: code,
-          token: token
-        }, status: :ok
-      else
-        render_bad_request(object: user)
-      end
+      user.save!
+      code = user.code
+      token = self.class.jwt_encode(subject: code, type: 'user')
+      # TODO: Move to Json serializer
+      render content_type: 'application/json', json: {
+        code: code,
+        token: token
+      }, status: :ok
+    rescue StandardError => e
+      render_bad_request(e)
     end
 
     # TODO: Add image update.
@@ -50,7 +49,7 @@ module V1
         logger.error(errors)
         # NOTE: ユーザ向けバリデーションエラーを返す
         detail = errors.values.flatten.last
-        render_manual_bad_request('Bad request', detail)
+        render_manual_bad_request(detail)
       end
     end
 

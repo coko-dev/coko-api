@@ -19,6 +19,8 @@ module V1
       render_bad_request(e)
     end
 
+    private
+
     def recipe_category_params
       params.require(:recipe_category).permit(
         %i[

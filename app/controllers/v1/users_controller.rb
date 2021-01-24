@@ -49,7 +49,7 @@ module V1
         logger.error(errors)
         # NOTE: ユーザ向けバリデーションエラーを返す
         detail = errors.values.flatten.last
-        render_manual_bad_request('Bad request', detail)
+        render_manual_bad_request(detail)
       end
     end
 

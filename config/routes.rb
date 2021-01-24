@@ -12,6 +12,7 @@ Rails.application.routes.draw do
         patch '/confirm', to: 'kitchen_joins#confirm'
       end
     end
+    resources :kitchen_products
     resources :recipe_categories, only: %i[index create]
     resources :users, param: :code
     resources :user_profiles

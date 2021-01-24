@@ -3,20 +3,13 @@
 module RenderErrorUtil
   extend ActiveSupport::Concern
 
-  def render_bad_request(object: nil, detail: nil)
-    error_contents = {
-      status: '400',
-      title: 'Bad Request',
-      detail: detail
-    }.compact
-    if object.present?
-      errors = object.errors
-      error_contents[:detail] ||= errors.first.join
-      messages = errors.messages
-      logger.error(messages)
-    end
+  def render_bad_request(exception = nil)
     render content_type: 'application/json', json: {
-      errors: error_contents
+      errors: {
+        status: '400',
+        title: 'Bad Request',
+        detail: exception&.message
+      }.compact
     }, status: :bad_request
   end
 

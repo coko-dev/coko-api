@@ -3,6 +3,9 @@
 module RenderErrorUtil
   extend ActiveSupport::Concern
 
+  class UnauthorizedError < StandardError; end
+  class ForbiddenError < StandardError; end
+
   def render_bad_request(exception = nil)
     message = exception&.message || 'Bad request error'
     logger.error(message)

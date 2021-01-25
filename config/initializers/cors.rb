@@ -13,7 +13,7 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
     when 'development'
       origins '*'
     when 'production'
-      origins 'https://api.coko-app.com'
+      origins Settings.production.host
     end
     resource '*', headers: :any, methods: %i[get post options]
   end

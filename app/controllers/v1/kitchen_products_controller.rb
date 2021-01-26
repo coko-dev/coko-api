@@ -3,8 +3,8 @@
 module V1
   class KitchenProductsController < ApplicationController
     before_action :set_kitchen, only: %i[index create]
-    before_action :set_kitchen_product, only: %i[update]
-    before_action :verify_current_user_for_kitchen, only: %i[update]
+    before_action :set_kitchen_product, only: %i[update destroy]
+    before_action :verify_current_user_for_kitchen, only: %i[update destroy]
 
     api :GET, '/v1/kitchen_products', 'Get all products in own kitchen'
     def index
@@ -42,10 +42,23 @@ module V1
       # NOTE: When building with params, no error occurs and it becomes nil.
       @kitchen_product.best_before = params[:best_before].to_date
       @kitchen_product.save!
+      # TODO: Add is_updated to meta
       render content_type: 'application/json', json: KitchenProductSerializer.new(
         @kitchen_product,
         include: associations_for_serialization
       ), status: :ok
+    rescue StandardError => e
+      render_bad_request(e)
+    end
+
+    api :DELETE, '/v1/kitchen_products/:id', 'Delete a kitchen product'
+    def destroy
+      @kitchen_product.delete
+      render content_type: 'application/json', json: {
+        data: {
+          is_deleted: @kitchen_product.destroyed?
+        }
+      }, status: :ok
     rescue StandardError => e
       render_bad_request(e)
     end

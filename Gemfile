@@ -22,6 +22,9 @@ gem 'ridgepole'
 # Image
 gem 'rmagick'
 
+# Language
+gem 'rails-i18n'
+
 # Monitoring
 gem 'newrelic_rpm'
 

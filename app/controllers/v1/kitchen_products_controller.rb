@@ -3,8 +3,8 @@
 module V1
   class KitchenProductsController < ApplicationController
     before_action :set_kitchen, only: %i[index create]
-    before_action :set_kitchen_product, only: %i[update]
-    before_action :verify_current_user_for_kitchen, only: %i[update]
+    before_action :set_kitchen_product, only: %i[update destroy]
+    before_action :verify_current_user_for_kitchen, only: %i[update destroy]
 
     api :GET, '/v1/kitchen_products', 'Get all products in own kitchen'
     def index
@@ -25,7 +25,11 @@ module V1
       # NOTE: When building with params, no error occurs and it becomes nil.
       kitchen_product.best_before = params[:best_before].to_date
       kitchen_product.kitchen = @kitchen
-      kitchen_product.save!
+      @kitchen.touch_with_history_build(user: @current_user, product: product, status_id: 'added')
+      ApplicationRecord.transaction do
+        kitchen_product.save!
+        @kitchen.save!
+      end
       render content_type: 'application/json', json: KitchenProductSerializer.new(
         kitchen_product,
         include: associations_for_serialization
@@ -41,11 +45,35 @@ module V1
       @kitchen_product.assign_attributes(kitchen_product_params)
       # NOTE: When building with params, no error occurs and it becomes nil.
       @kitchen_product.best_before = params[:best_before].to_date
-      @kitchen_product.save!
+      is_changed = @kitchen_product.changed?
+      if is_changed
+        kitchen = @kitchen_product.kitchen.touch_with_history_build(user: @current_user, product: @kitchen_product.product, status_id: 'updated')
+        ApplicationRecord.transaction do
+          @kitchen_product.save!
+          kitchen.save!
+        end
+      end
       render content_type: 'application/json', json: KitchenProductSerializer.new(
         @kitchen_product,
-        include: associations_for_serialization
+        include: associations_for_serialization,
+        meta: {
+          is_changed: is_changed
+        }
       ), status: :ok
+    rescue StandardError => e
+      render_bad_request(e)
+    end
+
+    api :DELETE, '/v1/kitchen_products/:id', 'Delete a kitchen product'
+    def destroy
+      kitchen = @kitchen_product.kitchen.touch_with_history_build(user: @current_user, product: @kitchen_product.product, status_id: 'deleted')
+      ApplicationRecord.transaction do
+        @kitchen_product.destroy!
+        kitchen.save!
+      end
+      render content_type: 'application/json', json: {
+        data: { meta: { is_deleted: @kitchen_product.destroyed? } }
+      }, status: :ok
     rescue StandardError => e
       render_bad_request(e)
     end

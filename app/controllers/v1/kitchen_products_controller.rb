@@ -25,9 +25,7 @@ module V1
       # NOTE: When building with params, no error occurs and it becomes nil.
       kitchen_product.best_before = params[:best_before].to_date
       kitchen_product.kitchen = @kitchen
-
-      @kitchen.kitchen_product_histories.build(user: @current_user, product: product, date: Time.zone.today)
-      @kitchen.touch_last_action_at
+      @kitchen.touch_with_history_build(user: @current_user, product: product, status_id: 'added')
       ApplicationRecord.transaction do
         kitchen_product.save!
         @kitchen.save!
@@ -59,7 +57,7 @@ module V1
 
     api :DELETE, '/v1/kitchen_products/:id', 'Delete a kitchen product'
     def destroy
-      @kitchen_product.destroy
+      @kitchen_product.destroy!
       render content_type: 'application/json', json: {
         data: {
           is_deleted: @kitchen_product.destroyed?

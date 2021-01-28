@@ -44,10 +44,11 @@ add_index       'hot_users', %w[user_id],         name: 'idx_hot_users_on_user_i
 add_foreign_key 'hot_users', 'users',             name: 'fk_hot_users_1'
 
 create_table 'kitchens', unsigned: true, force: :cascade do |t|
-  t.string  'name',          null: false, default: 'My Kitchen'
-  t.boolean 'is_subscriber', null: false, default: false
-  t.integer 'status_id',     null: false, unsigned: true, default: 1, comment: '{ is_private: 1, published: 2, official: 3, blacked: 4 }'
-  t.bigint  'owner_user_id', null: false, unsigned: true
+  t.string   'name',          null: false, default: 'My Kitchen'
+  t.boolean  'is_subscriber', null: false, default: false
+  t.integer  'status_id',     null: false, unsigned: true, default: 1, comment: '{ is_private: 1, published: 2, official: 3, blacked: 4 }'
+  t.bigint   'owner_user_id', null: false, unsigned: true
+  t.datetime 'last_action_at'
   t.timestamps
 end
 add_index       'kitchens', %w[owner_user_id], name: 'idx_kitchens_on_owner_user_id'

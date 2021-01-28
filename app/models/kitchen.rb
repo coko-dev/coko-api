@@ -25,7 +25,8 @@ class Kitchen < ApplicationRecord
   end
 
   def touch_with_history_build(user:, product:, status_id:)
-    kitchen_product_histories.build(user: user, product: product, date: Time.zone.today, status_id: status_id)
     touch_last_action_at
+    kitchen_product_histories.build(user: user, product: product, date: Time.zone.today, status_id: status_id)
+    self
   end
 end

@@ -1,0 +1,14 @@
+ja:
+  activerecord:
+    models:
+      user: ユーザー
+      user_profile: プロフィール
+    attributes:
+      user:
+        email: メールアドレス
+      user_profile:
+        display_id: ユーザー名
+        name: ニックネーム
+        housework_career: 家事歴
+        description: 紹介文
+        website_url: 外部リンク

@@ -39,5 +39,10 @@ module CokoApi
     config.exceptions_app = ->(env) do
       ErrorsController.action(:show).call(env)
     end
+
+    # i18n
+    config.i18n.load_path += Dir[Rails.root.join('config/locales/**/*.yml').to_s]
+    config.i18n.available_locales = %i[ja en]
+    config.i18n.default_locale = :ja
   end
 end

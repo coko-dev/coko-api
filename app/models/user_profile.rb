@@ -12,7 +12,8 @@ class UserProfile < ApplicationRecord
   validates :description, length: { maximum: 120 }, on: %i[update]
   validates :website_url, length: { maximum: 100 }, on: %i[update]
 
-  belongs_to :user
+  # NOTE: Enable 'autosave' option to save at the same time as 'User'.
+  belongs_to :user, autosave: true
 
   def set_default_display_id
     return if self[:display_id].present?

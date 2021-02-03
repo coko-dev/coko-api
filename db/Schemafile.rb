@@ -165,8 +165,7 @@ create_table 'recipes', unsigned: true, force: :cascade do |t|
   t.integer 'status_id',          null: false, unsigned: true, default: 1, comment: '{ published: 1, hidden: 2 }'
   t.string  'image',              null: false, default: '', limit: 2_048
   t.bigint  'recipe_category_id', null: false, unsigned: true
-  t.integer 'cooking_time',       null: false, default: 30
-  t.string  'description',        null: false, default: ''
+  t.integer 'cooking_time',       null: false, unsigned: true, default: 30
   t.timestamps
 end
 add_index       'recipes', %w[author_id],          name: 'idx_recipes_on_author_id'
@@ -220,7 +219,7 @@ create_table 'recipe_products', unsigned: true, force: :cascade do |t|
   t.string 'note'
   t.timestamps
 end
-add_index       'recipe_products', %w[recipe_id product_id], name: 'idx_recipe_products_on_recipe_id_and_product_id', unique: true
+add_index       'recipe_products', %w[recipe_id product_id], name: 'idx_recipe_products_on_recipe_id_and_product_id'
 add_index       'recipe_products', %w[recipe_id],            name: 'idx_recipe_products_on_recipe_id'
 add_index       'recipe_products', %w[product_id],           name: 'idx_recipe_products_on_product_id'
 add_foreign_key 'recipe_products', 'recipes',                name: 'fk_recipe_products_1'
@@ -248,9 +247,8 @@ add_foreign_key 'recipe_record_images', 'recipe_records',     name: 'fk_recipe_r
 
 create_table 'recipe_sections', unsigned: true, force: :cascade do |t|
   t.bigint  'recipe_id', null: false, unsigned: true
-  t.integer 'status_id', null: false, unsigned: true, default: 1, comment: '{ introduced: 1, advised: 2 }'
+  t.integer 'status_id', null: false, unsigned: true, default: 1, comment: '{ introduced: 1, adviced: 2 }'
   t.text    'body',      null: false
-  t.string  'image'
   t.timestamps
 end
 add_index       'recipe_sections', %w[recipe_id], name: 'idx_recipe_sections_on_recipe_id'

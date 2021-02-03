@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class Recipe < ApplicationRecord
+  validates :name, presence: true
+  # TODO: validates :image
+  validates :cooking_time, presence: true, length: { maximum: 3 }
+
   belongs_to :author, class_name: 'User', inverse_of: 'recipes'
   belongs_to :recipe_category
 
@@ -13,4 +17,27 @@ class Recipe < ApplicationRecord
   has_many :recipe_records, dependent: :delete_all
   has_many :recipe_sections, dependent: :delete_all
   has_many :recipe_steps, dependent: :delete_all
+
+  def build_each_sections(introduction:, advice:)
+    RecipeSection.status_ids.keys.zip([introduction, advice]) do |st, sct|
+      recipe_sections.build(status_id: st, body: sct)
+    end
+  end
+
+  def build_each_steps(step_params)
+    step_params.each.with_index(1) do |param, idx|
+      recipe_steps.build(sort_order: idx, body: param[:body], image: param[:image])
+    end
+  rescue StandardError
+    false
+  end
+
+  def build_each_recipe_products(recipe_product_params)
+    recipe_product_params.each do |param|
+      prd = Product.find(param[:product_id])
+      recipe_products.build(product: prd, volume: param[:volume], note: param[:note])
+    end
+  rescue StandardError
+    false
+  end
 end

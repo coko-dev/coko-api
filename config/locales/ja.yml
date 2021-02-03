@@ -3,6 +3,11 @@ ja:
     models:
       user: ユーザー
       user_profile: プロフィール
+      recipe: レシピ
+      recipe_category: レシピのカテゴリ
+      recipe_product: レシピに使用する食材
+      recipe_section: セクション
+      recipe_step: レシピ作成手順
     attributes:
       user:
         email: メールアドレス
@@ -12,3 +17,18 @@ ja:
         housework_career: 家事歴
         description: 紹介文
         website_url: 外部リンク
+      recipe:
+        name: レシピ名
+        image: レシピ画像
+        cooking_time: 調理時間
+      recipe_category:
+        name: カテゴリ名
+      recipe_product:
+        volume: 使用量
+        note: 備考
+      recipe_section:
+        body: はじめに・コツ
+      recipe_step:
+        sort_order: 並び替え順序
+        body: 手順
+        image: 手順の画像

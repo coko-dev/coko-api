@@ -12,6 +12,8 @@ class ApplicationController < ActionController::API
   # :reek:DuplicateMethodCall { exclude: [authenticate_with_api_token] }
   def authenticate_with_api_token
     authenticate_or_request_with_http_token do |token, _options|
+      raise StandardError unless matching_access_key?
+
       payload = self.class.jwt_decode(token)
       subject = payload[:sub]
       type = payload[:typ]
@@ -44,6 +46,10 @@ class ApplicationController < ActionController::API
     when 'admin_user'
       settings.admin
     end.include?(requested)
+  end
+
+  def matching_access_key?
+    request.headers[:HTTP_X_COKO_API_KEY] == Rails.application.credentials.api_access_key
   end
 
   # NOTE: Not used

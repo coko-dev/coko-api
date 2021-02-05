@@ -1,5 +1,6 @@
 # About:
-Web API of the application "Coko". This API is for SSKDs and is not intended to be open to the public.
+Web API of the application "タベココ（tabecoko）". This API is for SSKDs.
+Currently temporarily open to the public.
 
 # Build & Test status:
 - Go check build or test status with CircleCI

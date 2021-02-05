@@ -9,7 +9,6 @@ class ApplicationController < ActionController::API
 
   private
 
-  # :reek:DuplicateMethodCall { exclude: [authenticate_with_api_token] }
   def authenticate_with_api_token
     authenticate_or_request_with_http_token do |token, _options|
       raise StandardError unless matching_access_key?
@@ -50,20 +49,5 @@ class ApplicationController < ActionController::API
 
   def matching_access_key?
     request.headers[:HTTP_X_COKO_API_KEY] == Rails.application.credentials.api_access_key
-  end
-
-  # NOTE: Not used
-  def temp_auth
-    credentials = Rails.application.credentials.temp_auth[:token]
-    return if params_token == credentials
-
-    raise UnauthorizedError
-  end
-
-  # NOTE: Not used
-  def params_token
-    params.permit(
-      :temp_auth_token
-    ).values.first
   end
 end

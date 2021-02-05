@@ -3,12 +3,12 @@
 module V1
   class KitchenJoinsController < ApplicationController
     api :POST, '/v1/kitchen_joins', 'Create kitchen joins'
+    param :user_id, :number, required: true, desc: 'id of a user to invite'
     def create
-      user_id = params[:user_id]
-      raise StandardError if user_id.blank?
+      user = User.find(params[:user_id])
 
       kitchen_join = KitchenJoin.new(
-        user_id: user_id,
+        user: user,
         kitchen_id: @current_user.kitchen_id,
         expired_at: Time.zone.now + 3.minutes
       )

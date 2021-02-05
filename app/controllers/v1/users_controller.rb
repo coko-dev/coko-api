@@ -31,7 +31,7 @@ module V1
       render_bad_request(e)
     end
 
-    # TODO: Remove image upload
+    # TODO: Remove image uploading
     api :PUT, '/v1/users/:code', 'User profiles update'
     def update
       raise ForbiddenError if @current_user != @user

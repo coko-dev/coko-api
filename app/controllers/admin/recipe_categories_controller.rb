@@ -24,6 +24,9 @@ module Admin
     end
 
     api :POST, '/admin/recipe_categories', 'Create a recipe category'
+    param :name, String, required: true, desc: 'Category name for display'
+    param :name_slug, String, required: true, desc: 'Category name slug'
+    param :parent_category_id, :number, desc: 'Parent category\'s key'
     def create
       recipe_category = RecipeCategory.new(recipe_category_params)
       # NOTE: Use '.find_by' as parent_category_id can be null.

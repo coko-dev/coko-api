@@ -5,6 +5,9 @@ module Admin
     skip_before_action :authenticate_with_api_token, only: %i[create]
 
     api :POST, '/admin/admin_users', 'Admin user registration'
+    param :email, String, required: true, desc: 'Admin user email'
+    param :password, String, required: true, desc: 'Account password'
+    param :password_confirmation, String, required: true, desc: 'Password confirmation'
     def create
       admin_user = AdminUser.new(admin_user_params)
       admin_user.save!

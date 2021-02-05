@@ -2,33 +2,31 @@
 
 module V1
   class RecipeCategoriesController < ApplicationController
-    api :GET, '/v1/recipe_categories', 'Show the recipe category'
+    before_action :set_recipe_category, only: %i[show]
+
+    api :GET, '/v1/recipe_categories', 'Show all recipe category'
     def index
-      recipe_categories = RecipeCategory.all
-      render json: { recipe_categories: recipe_categories }
+      render content_type: 'application/json', json: RecipeCategorySerializer.new(
+        RecipeCategory.all
+      )
+    rescue StandardError => e
+      render_bad_request(e)
     end
 
-    api :POST, '/v1/recipe_categories', 'Create recipe categories'
-    def create
-      recipe_category = RecipeCategory.new(recipe_category_params)
-      recipe_category.save!
-      render json: {
-        status: 'SUCCESS', data: recipe_category
-      }
+    api :GET, '/v1/recipe_categories/:id', 'Show a recipe category'
+    def show
+      render content_type: 'application/json', json: RecipeCategorySerializer.new(
+        @recipe_category
+        # TODO: include related recipes
+      )
     rescue StandardError => e
       render_bad_request(e)
     end
 
     private
 
-    def recipe_category_params
-      params.require(:recipe_category).permit(
-        %i[
-          name
-          name_slug
-          recipe_category_id
-        ]
-      )
+    def set_recipe_category
+      @recipe_category = RecipeCategory.find(params[:id])
     end
   end
 end

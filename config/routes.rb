@@ -14,7 +14,7 @@ Rails.application.routes.draw do
     end
     resources :kitchen_products
     resources :recipes
-    resources :recipe_categories, only: %i[index create]
+    resources :recipe_categories, only: %i[index show]
     resources :users, param: :code
     resources :user_profiles
   end

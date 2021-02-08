@@ -31,14 +31,13 @@ module V1
       render_bad_request(e)
     end
 
-    # TODO: Remove image uploading
+    # TODO: Remove email updating
     api :PUT, '/v1/users/:code', 'User profiles update'
     def update
       raise ForbiddenError if @current_user != @user
 
       @user.assign_attributes(user_params)
       profile = @user.profile
-      profile.upload_and_fetch_user_image(encoded_image: params[:base64_encoded_image]) if user_image_param.present?
       profile.assign_attributes(user_profile_params)
       @user.save!
       render content_type: 'application/json', json: {
@@ -69,6 +68,7 @@ module V1
           name
           birth_date
           housework_career
+          image
           description
           website_url
         ]

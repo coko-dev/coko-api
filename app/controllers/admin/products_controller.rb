@@ -13,7 +13,6 @@ module Admin
       product = Product.new(product_params)
       product.author = @admin_user
       product.product_category = ProductCategory.find(params[:product_category_id])
-      product.upload_and_fetch_product_image(subject: @admin_user.id, encoded_image: params[:base64_encoded_image]) if product_image_param.present?
       product.save!
       render content_type: 'application/json', json: ProductSerializer.new(
         product
@@ -27,9 +26,7 @@ module Admin
     param :name_hira, String, desc: 'Product name of Hiragana'
     param :product_category_id, String, desc: 'Category id'
     def update
-      @product.assign_attributes(product_params)
-      @product.upload_and_fetch_product_image(subject: @admin_user.id, encoded_image: params[:base64_encoded_image]) if product_image_param.present?
-      @product.save!
+      @product.update!(product_params)
       render content_type: 'application/json', json: ProductSerializer.new(
         @product
       ), status: :ok
@@ -70,13 +67,8 @@ module Admin
         %i[
           name
           name_hira
+          image
         ]
-      )
-    end
-
-    def product_image_param
-      params.permit(
-        :base64_encoded_image
       )
     end
   end

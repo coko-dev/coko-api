@@ -21,7 +21,6 @@ module V1
       render_bad_request(e)
     end
 
-    # TODO: Add error handling.
     api :PATCH, '/v1/kitchen_joins/:code/verification', 'Verification kitchen join'
     def verification
       matched_kitchen_join = KitchenJoin.open.find_by!(code: params[:code], user_id: @current_user.id)

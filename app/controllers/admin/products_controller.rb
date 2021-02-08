@@ -27,9 +27,7 @@ module Admin
     param :name_hira, String, desc: 'Product name of Hiragana'
     param :product_category_id, String, desc: 'Category id'
     def update
-      @product.assign_attributes(product_params)
-      @product.upload_and_fetch_product_image(subject: @admin_user.id, encoded_image: params[:base64_encoded_image]) if product_image_param.present?
-      @product.save!
+      @product.update!(product_params)
       render content_type: 'application/json', json: ProductSerializer.new(
         @product
       ), status: :ok
@@ -70,6 +68,7 @@ module Admin
         %i[
           name
           name_hira
+          image
         ]
       )
     end

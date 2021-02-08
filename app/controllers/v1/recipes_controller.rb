@@ -23,7 +23,9 @@ module V1
       recipe.author = @current_user
       recipe.recipe_category = RecipeCategory.find(params[:recipe_category_id])
       recipe.build_each_sections(introduction: params[:introduction], advice: params[:advice])
-      raise StandardError unless recipe.build_each_recipe_products(recipe_product_params).present? && recipe.build_each_steps(recipe_step_params).present?
+      products_exists = recipe.build_each_recipe_products(recipe_product_params).present?
+      steps_exists = recipe.build_each_steps(recipe_step_params).present?
+      raise StandardError unless products_exists && steps_exists
 
       recipe.save!
     rescue StandardError => e

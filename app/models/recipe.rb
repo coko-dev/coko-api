@@ -18,9 +18,16 @@ class Recipe < ApplicationRecord
   has_many :recipe_sections, dependent: :delete_all
   has_many :recipe_steps, dependent: :delete_all
 
-  def build_each_sections(introduction:, advice:)
-    RecipeSection.status_ids.keys.zip([introduction, advice]) do |st, sct|
-      recipe_sections.build(status_id: st, body: sct)
+  def build_or_update_each_sections(introduction:, advice:)
+    RecipeSection.status_ids.keys.zip([introduction, advice]) do |st, body|
+      next if body.blank?
+
+      rc = recipe_sections.find_by(status_id: st)
+      if rc.present?
+        rc.update!(body: body)
+      else
+        recipe_sections.build(status_id: st, body: body)
+      end
     end
   end
 

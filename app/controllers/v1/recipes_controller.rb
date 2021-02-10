@@ -33,17 +33,17 @@ module V1
     end
 
     api :PUT, '/v1/recipes/:id', 'Update a recipe'
-    param :name, String, desc: 'Recipe name'
-    param :image, String, desc: 'Recipe image url'
-    param :recipe_category_id, :number, desc: "Parent category's id"
-    param :cooking_time, String, desc: 'Minutes to cook'
-    param :introduction, String, desc: 'Recipe introduction'
-    param :advice, String, desc: 'Recipe advice'
-    param :recipe_steps, Array, desc: 'Make recipe steps' do
+    param :name, String, allow_blank: true, desc: 'Recipe name'
+    param :image, String, allow_blank: true, desc: 'Recipe image url'
+    param :recipe_category_id, :number, allow_blank: true, desc: "Parent category's id"
+    param :cooking_time, String, allow_blank: true, desc: 'Minutes to cook'
+    param :introduction, String, allow_blank: true, desc: 'Recipe introduction'
+    param :advice, String, allow_blank: true, desc: 'Recipe advice'
+    param :recipe_steps, Array, allow_blank: true, desc: 'Make recipe steps' do
       param :body, String, required: true, desc: 'Step description'
       param :image, String, allow_blank: true, desc: 'Step image url'
     end
-    param :recipe_products, Array, desc: 'Products required for recipe' do
+    param :recipe_products, Array, allow_blank: true, desc: 'Products required for recipe' do
       param :product_id, :number, required: true, desc: "Parent product's id"
       param :volume, String, allow_blank: true, desc: 'Amount to use'
       param :note, String, allow_blank: true, desc: 'Note for cook'

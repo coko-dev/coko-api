@@ -2,6 +2,8 @@
 
 module V1
   class RecipesController < ApplicationController
+    before_action :set_recipe, only: %i[update]
+
     api :POST, '/v1/recipes', 'Posting a recipe'
     param :name, String, required: true, desc: 'Recipe name'
     param :image, String, required: true, desc: 'Recipe image url'
@@ -49,26 +51,29 @@ module V1
       param :note, String, allow_blank: true, desc: 'Note for cook'
     end
     def update
-      recipe = Recipe.find(params[:id])
-      recipe.assign_attributes(recipe_params)
-      recipe.recipe_category = RecipeCategory.find(params[:recipe_category_id])
+      @recipe.assign_attributes(recipe_params)
+      @recipe.recipe_category = RecipeCategory.find(params[:recipe_category_id])
       ApplicationRecord.transaction do
-        recipe.build_or_update_each_sections(introduction: params[:introduction], advice: params[:advice])
+        @recipe.build_or_update_each_sections(introduction: params[:introduction], advice: params[:advice])
         if recipe_product_params.present?
-          recipe.recipe_products.destroy_all
-          recipe.build_each_recipe_products(recipe_product_params)
+          @recipe.recipe_products.destroy_all
+          @recipe.build_each_recipe_products(recipe_product_params)
         end
         if recipe_step_params.present?
-          recipe.recipe_steps.destroy_all
-          recipe.build_each_steps(recipe_step_params)
+          @recipe.recipe_steps.destroy_all
+          @recipe.build_each_steps(recipe_step_params)
         end
-        recipe.save!
+        @recipe.save!
       end
     rescue StandardError => e
       render_bad_request(e)
     end
 
     private
+
+    def set_recipe
+      @recipe = Recipe.find(params[:id])
+    end
 
     def recipe_params
       params.permit(

@@ -5,24 +5,24 @@ module V1
     api :POST, '/v1/recipes', 'Posting a recipe'
     param :name, String, required: true, desc: 'Recipe name'
     param :image, String, required: true, desc: 'Recipe image url'
-    param :recipe_category_id, :number, required: true, desc: 'Parent category\'s id'
+    param :recipe_category_id, :number, required: true, desc: "Parent category's id"
     param :cooking_time, String, required: true, desc: 'Minutes to cook'
     param :introduction, String, required: true, desc: 'Recipe introduction'
     param :advice, String, required: true, desc: 'Recipe advice'
-    param :recipe_steps, Array, desc: 'Make recipe steps' do
+    param :recipe_steps, Array, required: true, desc: 'Make recipe steps' do
       param :body, String, required: true, desc: 'Step description'
       param :image, String, allow_blank: true, desc: 'Step image url'
     end
-    param :recipe_products, Array, desc: 'Products required for recipe' do
-      param :product_id, :number, required: true, desc: 'Parent product\'s id'
+    param :recipe_products, Array, required: true, desc: 'Products required for recipe' do
+      param :product_id, :number, required: true, desc: "Parent product's id"
       param :volume, String, allow_blank: true, desc: 'Amount to use'
       param :note, String, allow_blank: true, desc: 'Note for cook'
     end
     def create
-      recipe = Recipe.new(recipe_create_params)
+      recipe = Recipe.new(recipe_params)
       recipe.author = @current_user
       recipe.recipe_category = RecipeCategory.find(params[:recipe_category_id])
-      recipe.build_each_sections(introduction: params[:introduction], advice: params[:advice])
+      recipe.build_or_update_each_sections(introduction: params[:introduction], advice: params[:advice])
       products_exists = recipe.build_each_recipe_products(recipe_product_params).present?
       steps_exists = recipe.build_each_steps(recipe_step_params).present?
       raise StandardError unless products_exists && steps_exists
@@ -32,9 +32,45 @@ module V1
       render_bad_request(e)
     end
 
+    api :PUT, '/v1/recipes/:id', 'Update a recipe'
+    param :name, String, desc: 'Recipe name'
+    param :image, String, desc: 'Recipe image url'
+    param :recipe_category_id, :number, desc: "Parent category's id"
+    param :cooking_time, String, desc: 'Minutes to cook'
+    param :introduction, String, desc: 'Recipe introduction'
+    param :advice, String, desc: 'Recipe advice'
+    param :recipe_steps, Array, desc: 'Make recipe steps' do
+      param :body, String, required: true, desc: 'Step description'
+      param :image, String, allow_blank: true, desc: 'Step image url'
+    end
+    param :recipe_products, Array, desc: 'Products required for recipe' do
+      param :product_id, :number, required: true, desc: "Parent product's id"
+      param :volume, String, allow_blank: true, desc: 'Amount to use'
+      param :note, String, allow_blank: true, desc: 'Note for cook'
+    end
+    def update
+      recipe = Recipe.find(params[:id])
+      recipe.assign_attributes(recipe_params)
+      recipe.recipe_category = RecipeCategory.find(params[:recipe_category_id])
+      ApplicationRecord.transaction do
+        recipe.build_or_update_each_sections(introduction: params[:introduction], advice: params[:advice])
+        if recipe_product_params.present?
+          recipe.recipe_products.destroy_all
+          recipe.build_each_recipe_products(recipe_product_params)
+        end
+        if recipe_step_params.present?
+          recipe.recipe_steps.destroy_all
+          recipe.build_each_steps(recipe_step_params)
+        end
+        recipe.save!
+      end
+    rescue StandardError => e
+      render_bad_request(e)
+    end
+
     private
 
-    def recipe_create_params
+    def recipe_params
       params.permit(
         %i[
           name

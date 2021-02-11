@@ -2,7 +2,15 @@
 
 module V1
   class RecipesController < ApplicationController
-    before_action :set_recipe, only: %i[update]
+    before_action :set_recipe, only: %i[show update]
+
+    api :GET, '/v1/recipes/:id', 'Show a recipe'
+    def show
+      render content_type: 'application/json', json: RecipeSerializer.new(
+        @recipe,
+        include: association_for_a_recipe
+      ), status: :ok
+    end
 
     api :POST, '/v1/recipes', 'Posting a recipe'
     param :name, String, required: true, desc: 'Recipe name'
@@ -30,6 +38,10 @@ module V1
       raise StandardError unless products_exists && steps_exists
 
       recipe.save!
+      render content_type: 'application/json', json: RecipeSerializer.new(
+        recipe,
+        include: association_for_a_recipe
+      ), status: :ok
     rescue StandardError => e
       render_bad_request(e)
     end
@@ -65,6 +77,10 @@ module V1
         end
         @recipe.save!
       end
+      render content_type: 'application/json', json: RecipeSerializer.new(
+        @recipe,
+        include: association_for_a_recipe
+      ), status: :ok
     rescue StandardError => e
       render_bad_request(e)
     end
@@ -73,6 +89,15 @@ module V1
 
     def set_recipe
       @recipe = Recipe.find(params[:id])
+    end
+
+    def association_for_a_recipe
+      %i[
+        recipe_steps
+        recipe_products.product
+        recipe_category
+        author
+      ]
     end
 
     def recipe_params

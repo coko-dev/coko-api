@@ -13,4 +13,6 @@ class RecipeSerializer < ApplicationSerializer
 
   belongs_to :recipe_category
   belongs_to :author, serializer: UserSerializer
+
+  has_many :recipe_steps
 end

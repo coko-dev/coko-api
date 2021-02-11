@@ -2,7 +2,15 @@
 
 module V1
   class RecipesController < ApplicationController
-    before_action :set_recipe, only: %i[update]
+    before_action :set_recipe, only: %i[show update]
+
+    api :GET, '/v1/recipes/:id', 'Show a recipe'
+    def show
+      render content_type: 'application/json', json: RecipeSerializer.new(
+        @recipe,
+        include: show_associations
+      ), status: :ok
+    end
 
     api :POST, '/v1/recipes', 'Posting a recipe'
     param :name, String, required: true, desc: 'Recipe name'
@@ -73,6 +81,13 @@ module V1
 
     def set_recipe
       @recipe = Recipe.find(params[:id])
+    end
+
+    def show_associations
+      %i[
+        recipe_category
+        author
+      ]
     end
 
     def recipe_params

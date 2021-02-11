@@ -17,7 +17,7 @@ module V1
     def show
       render content_type: 'application/json', json: RecipeCategorySerializer.new(
         @recipe_category
-        # TODO: include related recipes
+        # TODO: include related recipes (about 10 recipes)
       )
     rescue StandardError => e
       render_bad_request(e)

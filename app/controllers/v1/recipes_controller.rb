@@ -8,7 +8,7 @@ module V1
     def show
       render content_type: 'application/json', json: RecipeSerializer.new(
         @recipe,
-        include: show_associations
+        include: association_for_a_recipe
       ), status: :ok
     end
 
@@ -38,6 +38,10 @@ module V1
       raise StandardError unless products_exists && steps_exists
 
       recipe.save!
+      render content_type: 'application/json', json: RecipeSerializer.new(
+        recipe,
+        include: association_for_a_recipe
+      ), status: :ok
     rescue StandardError => e
       render_bad_request(e)
     end
@@ -73,6 +77,10 @@ module V1
         end
         @recipe.save!
       end
+      render content_type: 'application/json', json: RecipeSerializer.new(
+        @recipe,
+        include: association_for_a_recipe
+      ), status: :ok
     rescue StandardError => e
       render_bad_request(e)
     end
@@ -83,7 +91,7 @@ module V1
       @recipe = Recipe.find(params[:id])
     end
 
-    def show_associations
+    def association_for_a_recipe
       %i[
         recipe_steps
         recipe_products.product

@@ -15,4 +15,5 @@ class RecipeSerializer < ApplicationSerializer
   belongs_to :author, serializer: UserSerializer
 
   has_many :recipe_steps
+  has_many :recipe_products
 end

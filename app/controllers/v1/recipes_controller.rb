@@ -86,6 +86,7 @@ module V1
     def show_associations
       %i[
         recipe_steps
+        recipe_products.product
         recipe_category
         author
       ]

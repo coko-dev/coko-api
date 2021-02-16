@@ -2,8 +2,8 @@
 
 module V1
   class KitchenProductsController < ApplicationController
-    before_action :set_kitchen, only: %i[index create]
-    before_action :set_kitchen_product, only: %i[update destroy]
+    before_action :set_kitchen,                     only: %i[index create]
+    before_action :set_kitchen_product,             only: %i[update destroy]
     before_action :verify_current_user_for_kitchen, only: %i[update destroy]
 
     api :GET, '/v1/kitchen_products', 'Get all products in own kitchen'

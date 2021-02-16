@@ -2,7 +2,7 @@
 
 module Admin
   class ProductsController < ApplicationController
-    before_action :set_product, only: %i[update]
+    before_action :set_product,                only: %i[update]
     before_action :set_product_include_hidden, only: %i[hide publish]
 
     api :POST, '/admin/products', 'Product registration'

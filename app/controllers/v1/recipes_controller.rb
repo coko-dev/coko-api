@@ -2,7 +2,7 @@
 
 module V1
   class RecipesController < ApplicationController
-    before_action :set_recipe, only: %i[show update]
+    before_action :set_recipe, only: %i[show update destroy]
 
     api :GET, '/v1/recipes/:id', 'Show a recipe'
     def show
@@ -81,6 +81,16 @@ module V1
         @recipe,
         include: association_for_a_recipe
       ), status: :ok
+    rescue StandardError => e
+      render_bad_request(e)
+    end
+
+    api :DELETE, '/v1/recipes/:id', 'Delete a recipe'
+    def destroy
+      @recipe.destroy!
+      render content_type: 'application/json', json: {
+        data: { meta: { is_deleted: @recipe.destroyed? } }
+      }, status: :ok
     rescue StandardError => e
       render_bad_request(e)
     end

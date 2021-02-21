@@ -95,6 +95,15 @@ module V1
       render_bad_request(e)
     end
 
+    api :GET, '/v1/recipes/latest', 'Show latest recipes'
+    def show_latest
+      recipes = Recipe.all.order(created_at: :desc).limit(8)
+      render content_type: 'application/json', json: RecipeSerializer.new(
+        recipes,
+        include: association_for_recipes
+      ), status: :ok
+    end
+
     private
 
     def set_recipe
@@ -105,6 +114,13 @@ module V1
       %i[
         recipe_steps
         recipe_products.product
+        recipe_category
+        author
+      ]
+    end
+
+    def association_for_recipes
+      %i[
         recipe_category
         author
       ]

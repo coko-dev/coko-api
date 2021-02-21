@@ -13,7 +13,11 @@ Rails.application.routes.draw do
       end
     end
     resources :kitchen_products
-    resources :recipes
+    resources :recipes do
+      collection do
+        get '/latest', to: 'recipes#show_latest'
+      end
+    end
     resources :recipe_categories, only: %i[index show]
     resources :users, param: :code
     resources :user_profiles

@@ -5,14 +5,13 @@ class ApplicationController < ActionController::API
   include AuthUtil
   include RenderErrorUtil
 
+  before_action :authenticate_with_base_api_key
   before_action :authenticate_with_api_token
 
   private
 
   def authenticate_with_api_token
     authenticate_or_request_with_http_token do |token, _options|
-      raise StandardError unless matching_access_key?
-
       payload = self.class.jwt_decode(token)
       subject = payload[:sub]
       type = payload[:typ]
@@ -47,7 +46,11 @@ class ApplicationController < ActionController::API
     end.include?(requested)
   end
 
-  def matching_access_key?
-    request.headers[:HTTP_X_COKO_API_KEY] == Rails.application.credentials.api_access_key
+  def authenticate_with_base_api_key
+    is_valid = request.headers[:HTTP_X_COKO_API_KEY] == Rails.application.credentials.api_access_key
+
+    raise StandardError unless is_valid
+  rescue StandardError
+    render_manual_bad_request('access key is invalid')
   end
 end

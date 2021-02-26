@@ -2,7 +2,7 @@
 
 module V1
   class RecipesController < ApplicationController
-    before_action :set_recipe, only: %i[show update destroy create_favorite]
+    before_action :set_recipe, only: %i[show update destroy create_favorite destroy_favorite]
 
     api :GET, '/v1/recipes/:id', 'Show a recipe'
     def show

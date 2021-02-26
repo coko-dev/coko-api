@@ -166,6 +166,7 @@ create_table 'recipes', unsigned: true, force: :cascade do |t|
   t.string  'image',              null: false, default: '', limit: 2_048
   t.bigint  'recipe_category_id', null: false, unsigned: true
   t.integer 'cooking_time',       null: false, unsigned: true, default: 30
+  t.bigint  'favorite_count',     null: false, unsigned: true, default: 0
   t.timestamps
 end
 add_index       'recipes', %w[author_id],          name: 'idx_recipes_on_author_id'

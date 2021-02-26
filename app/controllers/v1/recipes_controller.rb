@@ -2,7 +2,7 @@
 
 module V1
   class RecipesController < ApplicationController
-    before_action :set_recipe, only: %i[show update destroy]
+    before_action :set_recipe, only: %i[show update destroy create_favorite destroy_favorite]
 
     api :GET, '/v1/recipes/:id', 'Show a recipe'
     def show
@@ -102,6 +102,28 @@ module V1
         recipes,
         include: association_for_recipes
       ), status: :ok
+    end
+
+    api :POST, '/v1/recipes/:id/favorite', 'Make a recipe favorite'
+    def create_favorite
+      is_new_favorite = RecipeFavorite.where(recipe: @recipe, user: @current_user).empty?
+      if is_new_favorite
+        favorite = RecipeFavorite.new(recipe: @recipe, user: @current_user)
+        favorite.save!
+      end
+      render content_type: 'application/json', json: {
+        data: { meta: { is_new_favorite: is_new_favorite } }
+      }, status: :ok
+    end
+
+    api :DELETE, '/v1/recipes/:id/favorite', 'Delete a recipe favorite'
+    def destroy_favorite
+      favorite = RecipeFavorite.find_by(recipe: @recipe, user: @current_user)
+      is_exists = favorite.present?
+      favorite.destroy! if is_exists
+      render content_type: 'application/json', json: {
+        data: { meta: { is_deleted: is_exists } }
+      }, status: :ok
     end
 
     private

@@ -4,7 +4,7 @@ module V1
   class RecipeRecordsController < ApplicationController
     before_action :set_recipe, only: %i[create]
 
-    api :POST, '/v1/recipes/:recipe_id/records', 'Create recipe record'
+    api :POST, '/v1/recipes/:recipe_id/recipe_records', 'Create recipe record'
     param :body, String, required: true, desc: 'Record description'
     param :recipe_record_images, Array, required: true, desc: 'Record images' do
       param :image, String, required: true, desc: 'Recipe image url'

@@ -5,9 +5,10 @@ ja:
       user_profile: プロフィール
       recipe: レシピ
       recipe_category: レシピのカテゴリ
-      recipe_product: レシピに使用する食材
+      recipe_product: レシピに使う食材
       recipe_section: セクション
       recipe_step: レシピ作成手順
+      recipe_record: レシピきろく
     attributes:
       user:
         email: メールアドレス
@@ -32,3 +33,5 @@ ja:
         sort_order: 並び替え順序
         body: 手順
         image: 手順の画像
+      recipe_record:
+        body: 文章

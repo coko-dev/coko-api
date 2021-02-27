@@ -14,6 +14,7 @@ Rails.application.routes.draw do
     end
     resources :kitchen_products
     resources :recipes do
+      resources :recipe_records
       member do
         post '/favorite', to: 'recipes#create_favorite'
         delete '/favorite', to: 'recipes#destroy_favorite'

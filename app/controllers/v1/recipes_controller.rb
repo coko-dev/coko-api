@@ -104,7 +104,8 @@ module V1
       ), status: :ok
     end
 
-    api :POST, '/v1/recipes/:id/favorite', 'Make a recipe favorite'
+    # TODO: Move to favorites controller
+    api :POST, '/v1/recipes/:recipe_id/favorite', 'Make a recipe favorite'
     def create_favorite
       is_new_favorite = RecipeFavorite.where(recipe: @recipe, user: @current_user).empty?
       if is_new_favorite
@@ -116,7 +117,8 @@ module V1
       }, status: :ok
     end
 
-    api :DELETE, '/v1/recipes/:id/favorite', 'Delete a recipe favorite'
+    # TODO: Move to favorites controller
+    api :DELETE, '/v1/recipes/:recipe_id/favorite', 'Delete a recipe favorite'
     def destroy_favorite
       favorite = RecipeFavorite.find_by(recipe: @recipe, user: @current_user)
       is_exists = favorite.present?

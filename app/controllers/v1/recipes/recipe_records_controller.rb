@@ -16,6 +16,10 @@ module V1
         raise StandardError unless images_exists
 
         recipe_record.save!
+        render content_type: 'application/json', json: RecipeRecordSerializer.new(
+          recipe_record,
+          include: association_for_a_record
+        ), status: :ok
       rescue StandardError => e
         render_bad_request(e)
       end
@@ -24,6 +28,13 @@ module V1
 
       def set_recipe
         @recipe = Recipe.find(params[:recipe_id])
+      end
+
+      def association_for_a_record
+        %i[
+          recipe
+          author
+        ]
       end
 
       def recipe_record_params

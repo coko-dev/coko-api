@@ -23,6 +23,7 @@ Rails.application.routes.draw do
         get '/latest', to: 'recipes#show_latest'
       end
     end
+    resources :recipe_records
     resources :recipe_categories, only: %i[index show]
     resources :users, param: :code
     resources :user_profiles

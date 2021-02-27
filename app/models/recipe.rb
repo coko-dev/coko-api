@@ -32,19 +32,19 @@ class Recipe < ApplicationRecord
   end
 
   def build_each_steps(step_params)
+    return if step_params.blank?
+
     step_params.each.with_index(1) do |param, idx|
       recipe_steps.build(sort_order: idx, body: param[:body], image: param[:image])
     end
-  rescue StandardError
-    false
   end
 
   def build_each_recipe_products(recipe_product_params)
+    return if recipe_product_params.blank?
+
     recipe_product_params.each do |param|
       prd = Product.find(param[:product_id])
       recipe_products.build(product: prd, volume: param[:volume], note: param[:note])
     end
-  rescue StandardError
-    false
   end
 end

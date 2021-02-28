@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       end
     end
     resources :kitchen_products
+    resources :kitchen_shopping_lists
     resources :recipes do
       resources :recipe_records, only: %i[create], controller: 'recipes/recipe_records'
       member do

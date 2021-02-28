@@ -1,6 +1,7 @@
 ja:
   activerecord:
     models:
+      kitchen_shopping_list: 買うものリスト
       user: ユーザー
       user_profile: プロフィール
       recipe: レシピ
@@ -35,3 +36,5 @@ ja:
         image: 手順の画像
       recipe_record:
         body: 文章
+      kitchen_shopping_list:
+        note: メモ

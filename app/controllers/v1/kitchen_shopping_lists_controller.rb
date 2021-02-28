@@ -29,6 +29,19 @@ module V1
       render_bad_request(e)
     end
 
+    api :DELETE, '/v1/kitchen_shopping_lists'
+    param :kitchen_shopping_list_ids, Array, required: true, desc: 'Shopping list ids. Ex: [1, 2, 3]'
+    def destroy
+      ids = params[:kitchen_shopping_list_ids]
+      ksls = @current_user.kitchen.kitchen_shopping_lists.where(id: ids)
+      destroyed = ksls.destroy_all
+      render content_type: 'application/json', json: {
+        data: { meta: { destroyed_count: destroyed.size } }
+      }, status: :ok
+    rescue StandardError => e
+      render_bad_request(e)
+    end
+
     private
 
     def association_for_lists

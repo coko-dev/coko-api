@@ -21,6 +21,12 @@ module V1
       kitchen = @current_user.kitchen
       ksls.each { |ksl| ksl.kitchen = kitchen }
       @current_user.save!
+      render content_type: 'application/json', json: KitchenShoppingListSerializer.new(
+        ksls,
+        include: association_for_lists
+      ), status: :ok
+    rescue StandardError => e
+      render_bad_request(e)
     end
 
     private

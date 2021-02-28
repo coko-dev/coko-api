@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class KitchenShoppingList < ApplicationRecord
-  validates :note, length: { maximum: 64 }, allow_nil: true
+  validates :note, length: { maximum: 32 }, allow_nil: true
 
   belongs_to :kitchen
   belongs_to :user

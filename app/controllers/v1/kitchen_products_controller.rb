@@ -16,7 +16,7 @@ module V1
     end
 
     api :POST, '/v1/kitchen_products', 'Create a kitchen product'
-    param :product_id, :number, required: true, desc: 'Parent product\'s id'
+    param :product_id, :number, required: true, desc: "Parent product's id"
     param :note, String, desc: "User's memo"
     param :best_before, String, desc: "Ex: '2021-10-5' or '2021-10-05'"
     def create

@@ -17,8 +17,8 @@ module V1
 
     api :POST, '/v1/kitchen_products', 'Create a kitchen product'
     param :product_id, :number, required: true, desc: 'Parent product\'s id'
-    param :note, String, desc: 'User\'s memo'
-    param :best_before, String, desc: 'Ex: \'2021-10-5\' or \'2021-10-05\''
+    param :note, String, desc: "User's memo"
+    param :best_before, String, desc: "Ex: '2021-10-5' or '2021-10-05'"
     def create
       product = Product.find(params[:product_id])
       kitchen_product = product.kitchen_products.build(kitchen_product_params)
@@ -39,8 +39,8 @@ module V1
     end
 
     api :PUT, '/v1/kitchen_products/:id', 'Update a kitchen product'
-    param :note, String, desc: 'User\'s memo'
-    param :best_before, String, desc: 'Ex: \'2021-10-5\' or \'2021-10-05\''
+    param :note, String, desc: "User's memo"
+    param :best_before, String, desc: "Ex: '2021-10-5' or '2021-10-05'"
     def update
       @kitchen_product.assign_attributes(kitchen_product_params)
       # NOTE: When building with params, no error occurs and it becomes nil.

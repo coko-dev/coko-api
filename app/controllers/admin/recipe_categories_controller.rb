@@ -26,11 +26,11 @@ module Admin
     api :POST, '/admin/recipe_categories', 'Create a recipe category'
     param :name, String, required: true, desc: 'Category name for display'
     param :name_slug, String, required: true, desc: 'Category name slug'
-    param :parent_category_id, :number, desc: 'Parent category\'s key'
+    param :parent_category_id, :number, desc: "Parent category's key"
     def create
       recipe_category = RecipeCategory.new(recipe_category_params)
-      # NOTE: Use '.find_by' as parent_category_id can be null.
-      recipe_category.parent_category = RecipeCategory.find_by(id: params[:parent_category_id])
+      parent_category_id = params[:parent_category_id]
+      recipe_category.parent_category = RecipeCategory.find(parent_category_id) if parent_category_id.present?
       recipe_category.save!
       render content_type: 'application/json', json: RecipeCategorySerializer.new(
         recipe_category

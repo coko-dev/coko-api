@@ -2,6 +2,7 @@ ja:
   activerecord:
     models:
       kitchen_shopping_list: 買うものリスト
+      product_category: 食材カテゴリ
       user: ユーザー
       user_profile: プロフィール
       recipe: レシピ
@@ -11,6 +12,9 @@ ja:
       recipe_step: レシピ作成手順
       recipe_record: レシピきろく
     attributes:
+      product_category:
+        name: 食品カテゴリ名
+        name_slug: 食品カテゴリのネームスラッグ
       user:
         email: メールアドレス
       user_profile:

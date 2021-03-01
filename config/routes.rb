@@ -43,6 +43,7 @@ Rails.application.routes.draw do
         patch '/publish', to: 'products#publish'
       end
     end
+    resources :product_categories
     resources :recipe_categories
   end
 end

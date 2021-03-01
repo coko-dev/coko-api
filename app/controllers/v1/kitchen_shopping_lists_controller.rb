@@ -29,7 +29,7 @@ module V1
       render_bad_request(e)
     end
 
-    api :DELETE, '/v1/kitchen_shopping_lists'
+    api :DELETE, '/v1/kitchen_shopping_lists', 'Delete selected lists'
     param :kitchen_shopping_list_ids, Array, required: true, desc: 'Shopping list ids. Ex: [1, 2, 3]'
     def destroy
       ids = params[:kitchen_shopping_list_ids]

@@ -3,13 +3,13 @@
 module V1
   class KitchenJoinsController < ApplicationController
     api :POST, '/v1/kitchen_joins', 'Create kitchen joins'
-    param :user_id, :number, required: true, desc: 'id of a user to invite'
+    param :user_code, :number, required: true, desc: 'code of a user to invite'
     def create
-      user = User.find(params[:user_id])
+      user = User.find(params[:user_code])
 
       kitchen_join = KitchenJoin.new(
         user: user,
-        kitchen_id: @current_user.kitchen_id,
+        kitchen: @current_user.kitchen,
         expired_at: Time.zone.now + 3.minutes
       )
 
@@ -23,7 +23,7 @@ module V1
 
     api :PATCH, '/v1/kitchen_joins/:code/verification', 'Verification kitchen join'
     def verification
-      matched_kitchen_join = KitchenJoin.open.find_by!(code: params[:code], user_id: @current_user.id)
+      matched_kitchen_join = KitchenJoin.open.find_by!(code: params[:code], user: @current_user)
       kitchen = matched_kitchen_join.kitchen
       matched_kitchen_join.is_confirming = true
       matched_kitchen_join.save!
@@ -37,7 +37,7 @@ module V1
 
     api :PATCH, '/v1/kitchen_joins/confirm', 'Confirm kitchen join'
     def confirm
-      matched_kitchen_join = KitchenJoin.open.find_by!(user_id: @current_user.id)
+      matched_kitchen_join = KitchenJoin.open.find_by!(user: @current_user)
       User.set_kitchen(user: @current_user, kitchen: matched_kitchen_join.kitchen)
       matched_kitchen_join.closed!
 

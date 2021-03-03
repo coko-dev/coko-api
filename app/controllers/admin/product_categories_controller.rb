@@ -12,7 +12,7 @@ module Admin
     end
 
     api :POST, '/admin/product_categories', 'Create product category'
-    param :name, String, require: true, desc: 'Category name for display'
+    param :name, String, required: true, desc: 'Category name for display'
     param :name_slug, String, required: true, desc: 'Category name slug'
     param :parent_category_id, :number, desc: "Parent category's key"
     def create

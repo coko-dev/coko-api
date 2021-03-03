@@ -7,7 +7,7 @@ module V1
     skip_before_action :authenticate_with_api_token, only: %i[create]
 
     api :GET, '/v1/users/:code', 'Show user'
-    param :code, User::CODE_REGEX, required: true, desc: 'User code'
+    param :code, User::CODE_REGEX, required: true, desc: 'User a code'
     def show
       render content_type: 'application/json', json: UserSerializer.new(
         @user
@@ -32,7 +32,7 @@ module V1
     end
 
     # TODO: Remove email updating
-    api :PUT, '/v1/users/:code', 'User profiles update'
+    api :PUT, '/v1/users/:code', "Update user's profile"
     def update
       raise ForbiddenError if @current_user != @user
 

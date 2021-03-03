@@ -1,4 +1,5 @@
 production:
+  base_domain: 'tabecoko.com'
   host: 'api.tabecoko.com'
   url: 'https://api.tabecoko.com'
 

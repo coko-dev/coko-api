@@ -16,7 +16,7 @@ module V1
 
     api :POST, '/v1/users', 'User registration'
     def create
-      user = User.new(user_params)
+      user = User.new
       user.build_profile
       user.build_own_kitchen
       user.save!

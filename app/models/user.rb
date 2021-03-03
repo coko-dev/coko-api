@@ -12,10 +12,9 @@ class User < ApplicationRecord
   }
 
   before_validation :set_code, on: :create
+  before_validation :set_default_email, on: :create
 
-  # NOTE: OAuth完了時に登録するのでメッセージなし.profilesとは別
-  # TODO: 更新時用にメッセージ用意
-  validates :email, presence: true, uniqueness: { case_sensitive: true }
+  validates :email, presence: true, uniqueness: true
 
   belongs_to :kitchen, optional: true
 
@@ -45,6 +44,10 @@ class User < ApplicationRecord
       generated_code = klass.generate_random_code(length: 12)
       break generated_code unless klass.exists?(code: generated_code)
     end
+  end
+
+  def set_default_email
+    self[:email] = "#{code}@#{Settings.production.base_domain}"
   end
 
   def my_kitchen?(kitchen)

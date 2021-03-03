@@ -23,10 +23,10 @@ module V1
       code = user.code
       token = self.class.jwt_encode(subject: code, type: 'user')
       # TODO: Move to Json serializer
-      render content_type: 'application/json', json: {
-        code: code,
-        token: token
-      }, status: :ok
+      render content_type: 'application/json', json: UserSerializer.new(
+        user,
+        meta: { token: token }
+      ), status: :ok
     rescue StandardError => e
       render_bad_request(e)
     end
@@ -40,9 +40,9 @@ module V1
       profile = @user.profile
       profile.assign_attributes(user_profile_params)
       @user.save!
-      render content_type: 'application/json', json: {
-        message: 'Update completed.'
-      }, status: :ok
+      render content_type: 'application/json', json: UserSerializer.new(
+        @user
+      ), status: :ok
     rescue StandardError => e
       render_bad_request(e)
     end

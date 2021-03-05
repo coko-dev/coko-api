@@ -19,7 +19,7 @@ Rails.application.routes.draw do
     resources :products, only: %i[index]
     resources :product_categories, only: %i[index]
     resources :recipes do
-      resources :recipe_records, only: %i[create], controller: 'recipes/recipe_records'
+      resources :recipe_records, only: %i[index create], controller: 'recipes/recipe_records'
       member do
         post '/favorite', to: 'recipes#create_favorite'
         delete '/favorite', to: 'recipes#destroy_favorite'
@@ -30,10 +30,15 @@ Rails.application.routes.draw do
     end
     resources :recipe_records
     resources :recipe_categories, only: %i[index show]
-    resources :users, param: :code
+    resources :users, param: :code do
+      resources :recipe_records, only: %i[index], controller: 'users/recipe_records'
+    end
     resources :user_profiles
   end
 
+  # - - - - - - -
+  #    Admin
+  # - - - - - - -
   namespace 'admin' do
     post '/token', to: 'admin_users#token'
     put '/verificate', to: 'admin_users#verificate'

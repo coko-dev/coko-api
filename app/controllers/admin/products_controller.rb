@@ -5,7 +5,15 @@ module Admin
     before_action :set_product,                only: %i[update]
     before_action :set_product_include_hidden, only: %i[hide publish]
 
-    api :POST, '/admin/products', 'Product registration'
+    api :GET, '/admin/products', 'Show all products'
+    def index
+      products = Product.published
+      render content_type: 'application/json', json: ProductSerializer.new(
+        products
+      ), status: :ok
+    end
+
+    api :POST, '/admin/products', 'Create product'
     param :name, String, require: true, desc: 'Product name'
     param :name_hira, String, desc: 'Product name of Hiragana'
     param :product_category_id, String, desc: 'Category id'

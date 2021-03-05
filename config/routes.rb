@@ -17,6 +17,7 @@ Rails.application.routes.draw do
     delete 'kitchen_shopping_lists', to: 'kitchen_shopping_lists#destroy'
 
     resources :products, only: %i[index]
+    resources :product_categories, only: %i[index]
     resources :recipes do
       resources :recipe_records, only: %i[create], controller: 'recipes/recipe_records'
       member do

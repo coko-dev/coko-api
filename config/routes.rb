@@ -34,6 +34,8 @@ Rails.application.routes.draw do
   end
 
   namespace 'admin' do
+    post '/token', to: 'admin_users#token'
+    put '/verificate', to: 'admin_users#verificate'
     resources :admin_users
     resources :products do
       member do

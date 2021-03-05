@@ -3,7 +3,7 @@
 class KitchenJoin < ApplicationRecord
   include StringUtil
 
-  CODE_MAXIMUM = 99_999
+  CODE_MINIMUM = 100_000
 
   # NOTE: Disable the default 'open' method.
   class << self; undef :open; end
@@ -28,7 +28,7 @@ class KitchenJoin < ApplicationRecord
     klass = self.class
     self[:code] = loop do
       generated_code = klass.generate_random_number(length: 6)
-      break generated_code unless generated_code < CODE_MAXIMUM || klass.open.exists?(code: generated_code)
+      break generated_code unless generated_code < CODE_MINIMUM || klass.open.exists?(code: generated_code)
     end
   end
 

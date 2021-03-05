@@ -4,11 +4,22 @@ module V1
   class RecipeRecordsController < ApplicationController
     before_action :set_recipe_record, only: %i[show update destroy]
 
-    api :GET, '/v1/recipe_records/:id', 'Show recipe record'
+    api :GET, '/v1/recipe_records', 'Show recipe record related to user own'
+    def index
+      recipe_records = @current_user.recipe_records.order(created_at: :desc)
+      render content_type: 'application/json', json: RecipeRecordSerializer.new(
+        recipe_records,
+        include: associations_to_include
+      ), status: :ok
+    rescue StandardError => e
+      render_bad_request(e)
+    end
+
+    api :GET, '/v1/recipe_records/:id', 'Show a recipe record'
     def show
       render content_type: 'application/json', json: RecipeRecordSerializer.new(
         @recipe_record,
-        include: association_for_a_record
+        include: associations_to_include
       ), status: :ok
     rescue StandardError => e
       render_bad_request(e)
@@ -30,7 +41,7 @@ module V1
       end
       render content_type: 'application/json', json: RecipeRecordSerializer.new(
         @recipe_record,
-        include: association_for_a_record
+        include: associations_to_include
       ), status: :ok
     rescue StandardError => e
       render_bad_request(e)
@@ -52,7 +63,7 @@ module V1
       @recipe_record = RecipeRecord.find(params[:id])
     end
 
-    def association_for_a_record
+    def associations_to_include
       %i[
         recipe
         author

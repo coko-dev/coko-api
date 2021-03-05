@@ -30,7 +30,9 @@ Rails.application.routes.draw do
     end
     resources :recipe_records
     resources :recipe_categories, only: %i[index show]
-    resources :users, param: :code
+    resources :users, param: :code do
+      resources :recipe_records, only: %i[index], controller: 'users/recipe_records'
+    end
     resources :user_profiles
   end
 

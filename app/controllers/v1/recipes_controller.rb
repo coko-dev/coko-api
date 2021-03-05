@@ -4,6 +4,15 @@ module V1
   class RecipesController < ApplicationController
     before_action :set_recipe, only: %i[show update destroy create_favorite destroy_favorite]
 
+    api :GET, '/v1/recipes', 'Show some recipes'
+    def index
+      recipes = Recipe.order(created_at: :desc).limit(12)
+      render content_type: 'application/json', json: RecipeSerializer.new(
+        recipes,
+        include: association_for_recipes
+      ), status: :ok
+    end
+
     api :GET, '/v1/recipes/:id', 'Show a recipe'
     def show
       render content_type: 'application/json', json: RecipeSerializer.new(
@@ -93,15 +102,6 @@ module V1
       }, status: :ok
     rescue StandardError => e
       render_bad_request(e)
-    end
-
-    api :GET, '/v1/recipes/latest', 'Show latest recipes'
-    def show_latest
-      recipes = Recipe.all.order(created_at: :desc).limit(8)
-      render content_type: 'application/json', json: RecipeSerializer.new(
-        recipes,
-        include: association_for_recipes
-      ), status: :ok
     end
 
     # TODO: Move to favorites controller

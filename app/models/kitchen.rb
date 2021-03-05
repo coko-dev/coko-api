@@ -4,6 +4,12 @@ class Kitchen < ApplicationRecord
   before_create :touch_last_action_at
   after_create :set_default_kitchen_for_user
 
+  enum status_id: {
+    is_private: 1,
+    published: 2,
+    official: 3
+  }
+
   belongs_to :owner, foreign_key: 'owner_user_id', class_name: 'User', inverse_of: :own_kitchen
 
   has_many :kitchen_joins, dependent: :delete_all

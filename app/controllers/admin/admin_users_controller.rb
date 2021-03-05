@@ -19,7 +19,7 @@ module Admin
       render_bad_request(e)
     end
 
-    api :PUT, '/admin/verificate'
+    api :PUT, '/admin/verificate', 'Verificate admin user'
     param :email, String, required: true, desc: 'Admin user email'
     param :onetime_pass, String, required: true, desc: 'One time pass code'
     param :password, String, required: true, desc: 'Account password'

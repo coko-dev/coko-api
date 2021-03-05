@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class AdminUser < ApplicationRecord
+  include StringUtil
+
+  CODE_MINIMUM = 100_000
+
   has_secure_password
 
   validates :email, presence: { message: 'メールアドレスを入力してください' }, uniqueness: { message: 'このメールアドレスは既に登録されています' }, on: :create
@@ -18,4 +22,13 @@ class AdminUser < ApplicationRecord
 
   has_many :products, foreign_key: 'author_id', class_name: 'Product', inverse_of: 'author', dependent: :nullify
   has_many :recipe_keywords, foreign_key: 'author_id', class_name: 'RecipeKeyword', inverse_of: 'author', dependent: :nullify
+
+  class << self
+    def generate_pass_code
+      loop do
+        generated_code = generate_random_number(length: 6)
+        break generated_code if generated_code >= CODE_MINIMUM
+      end
+    end
+  end
 end

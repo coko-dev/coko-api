@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class RecipeKeyword < ApplicationRecord
+  validates :name, presence: true, uniqueness: true
+
   belongs_to :author, class_name: 'AdminUser', inverse_of: 'recipe_keywords'
 
   has_many :hot_recipe_keywords, dependent: :delete_all

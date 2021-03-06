@@ -36,9 +36,9 @@ Rails.application.routes.draw do
     resources :user_profiles
   end
 
-  # - - - - - - -
-  #    Admin
-  # - - - - - - -
+  # - - - - - - - - - - #
+  #        Admin        #
+  # - - - - - - - - - - #
   namespace 'admin' do
     post '/token', to: 'admin_users#token'
     put '/verificate', to: 'admin_users#verificate'
@@ -46,12 +46,11 @@ Rails.application.routes.draw do
     resources :products do
       member do
         patch '/hide', to: 'products#hide'
-      end
-      member do
         patch '/publish', to: 'products#publish'
       end
     end
     resources :product_categories
     resources :recipe_categories
+    resources :recipe_keywords
   end
 end

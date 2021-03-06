@@ -7,6 +7,7 @@ ja:
       user_profile: プロフィール
       recipe: レシピ
       recipe_category: レシピのカテゴリ
+      recipe_keyword: レシピのキーワード
       recipe_product: レシピに使う食材
       recipe_section: セクション
       recipe_step: レシピ作成手順
@@ -14,7 +15,7 @@ ja:
     attributes:
       product_category:
         name: 食品カテゴリ名
-        name_slug: 食品カテゴリのネームスラッグ
+        name_slug: ネームスラッグ
       user:
         email: メールアドレス
       user_profile:
@@ -29,6 +30,9 @@ ja:
         cooking_time: 調理時間
       recipe_category:
         name: カテゴリ名
+        name_slug: ネームスラッグ
+      recipe_keyword:
+        name: キーワード名
       recipe_product:
         volume: 使用量
         note: 備考

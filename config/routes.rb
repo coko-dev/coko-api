@@ -46,8 +46,6 @@ Rails.application.routes.draw do
     resources :products do
       member do
         patch '/hide', to: 'products#hide'
-      end
-      member do
         patch '/publish', to: 'products#publish'
       end
     end

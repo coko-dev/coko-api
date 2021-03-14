@@ -28,6 +28,7 @@ module V1
     param :cooking_time, String, required: true, desc: 'Minutes to cook'
     param :introduction, String, required: true, desc: 'Recipe introduction'
     param :advice, String, required: true, desc: 'Recipe advice'
+    param :recipe_keyword_ids, Array, allow_blank: true, desc: 'Recipe keyword ids. Ex: [1, 2, 3]'
     param :recipe_steps, Array, required: true, desc: 'Make recipe steps' do
       param :body, String, required: true, desc: 'Step description'
       param :image, String, allow_blank: true, desc: 'Step image url'
@@ -42,6 +43,7 @@ module V1
       recipe.author = @current_user
       recipe.recipe_category = RecipeCategory.find(params[:recipe_category_id])
       recipe.build_or_update_each_sections(introduction: params[:introduction], advice: params[:advice])
+      recipe.build_each_keywords(params[:recipe_keyword_ids])
       products_exists = recipe.build_each_recipe_products(recipe_product_params).present?
       steps_exists = recipe.build_each_steps(recipe_step_params).present?
       raise StandardError unless products_exists && steps_exists
@@ -62,6 +64,7 @@ module V1
     param :cooking_time, String, allow_blank: true, desc: 'Minutes to cook'
     param :introduction, String, allow_blank: true, desc: 'Recipe introduction'
     param :advice, String, allow_blank: true, desc: 'Recipe advice'
+    param :recipe_keyword_ids, Array, allow_blank: true, desc: 'Recipe keyword ids. Ex: [1, 2, 3]'
     param :recipe_steps, Array, allow_blank: true, desc: 'Make recipe steps' do
       param :body, String, required: true, desc: 'Step description'
       param :image, String, allow_blank: true, desc: 'Step image url'
@@ -73,8 +76,14 @@ module V1
     end
     def update
       @recipe.assign_attributes(recipe_params)
-      @recipe.recipe_category = RecipeCategory.find(params[:recipe_category_id])
+      recipe_category_id = params[:recipe_category_id]
+      @recipe.recipe_category = RecipeCategory.find(recipe_category_id) if recipe_category_id.present?
       ApplicationRecord.transaction do
+        recipe_keyword_ids = params[:recipe_keyword_ids]
+        if recipe_keyword_ids.present?
+          @recipe.recipe_keyword_lists.destroy_all
+          @recipe.build_each_keywords(recipe_keyword_ids)
+        end
         @recipe.build_or_update_each_sections(introduction: params[:introduction], advice: params[:advice])
         if recipe_product_params.present?
           @recipe.recipe_products.destroy_all

@@ -31,6 +31,17 @@ class Recipe < ApplicationRecord
     end
   end
 
+  def build_each_keywords(keyword_ids)
+    return if keyword_ids.blank?
+
+    keyword_ids.uniq!
+
+    keyword_ids.each do |keyword_id|
+      kw = RecipeKeyword.where(is_blacked: false).find(keyword_id)
+      recipe_keyword_lists.build(recipe_keyword: kw)
+    end
+  end
+
   def build_each_steps(step_params)
     return if step_params.blank?
 

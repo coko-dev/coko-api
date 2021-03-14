@@ -51,6 +51,10 @@ Rails.application.routes.draw do
     end
     resources :product_categories
     resources :recipe_categories
-    resources :recipe_keywords
+    resources :recipe_keywords do
+      collection do
+        get '/blacked', to: 'recipe_keywords#show_blacked'
+      end
+    end
   end
 end

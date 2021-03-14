@@ -196,6 +196,7 @@ add_foreign_key 'recipe_favorites', 'users',               name: 'fk_recipe_favo
 
 create_table 'recipe_keywords', unsigned: true, force: :cascade do |t|
   t.string  'name',       null: false
+  t.string  'name_hira',  null: false
   t.bigint  'author_id',  null: false, unsigned: true
   t.boolean 'is_blacked', null: false, default: false
   t.timestamps

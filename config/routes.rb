@@ -28,7 +28,9 @@ Rails.application.routes.draw do
         get '/latest', to: 'recipes#show_latest'
       end
     end
-    resources :recipe_keywords
+    resources :recipe_keywords do
+      resources :recipes, only: %i[index], controller: 'recipe_keywords/recipes'
+    end
     resources :recipe_records
     resources :recipe_categories, only: %i[index show]
     resources :users, param: :code do

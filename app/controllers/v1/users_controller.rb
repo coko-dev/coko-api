@@ -14,6 +14,13 @@ module V1
       ), status: :ok
     end
 
+    api :GET, '/v1/users/current', 'Show current user'
+    def show_current_user
+      render content_type: 'application/json', json: UserSerializer.new(
+        @current_user
+      ), status: :ok
+    end
+
     api :POST, '/v1/users', 'User registration'
     def create
       user = User.new
@@ -31,12 +38,17 @@ module V1
       render_bad_request(e)
     end
 
-    # TODO: Remove email updating
     api :PUT, '/v1/users/:code', "Update user's profile"
+    param :display_id, String, allow_blank: true, desc: 'User display id'
+    param :name, String, allow_blank: true, desc: 'User name'
+    param :birth_date, String, allow_blank: true, desc: 'Birth date'
+    param :housework_career, String, allow_blank: true, desc: 'housework_career'
+    param :image, String, allow_blank: true, desc: 'User image url'
+    param :description, String, allow_blank: true, desc: 'Description'
+    param :website_url, String, allow_blank: true, desc: 'Website url(link)'
     def update
       raise ForbiddenError if @current_user != @user
 
-      @user.assign_attributes(user_params)
       profile = @user.profile
       profile.assign_attributes(user_profile_params)
       @user.save!

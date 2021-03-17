@@ -35,6 +35,9 @@ Rails.application.routes.draw do
     resources :recipe_categories, only: %i[index show]
     resources :users, param: :code do
       resources :recipe_records, only: %i[index], controller: 'users/recipe_records'
+      collection do
+        get '/current', to: 'users#show_current_user'
+      end
     end
     resources :user_profiles
   end

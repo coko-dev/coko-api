@@ -14,6 +14,13 @@ module V1
       ), status: :ok
     end
 
+    api :GET, '/v1/users/current', 'Show current user'
+    def show_current_user
+      render content_type: 'application/json', json: UserSerializer.new(
+        @current_user
+      ), status: :ok
+    end
+
     api :POST, '/v1/users', 'User registration'
     def create
       user = User.new
@@ -36,7 +43,6 @@ module V1
     def update
       raise ForbiddenError if @current_user != @user
 
-      @user.assign_attributes(user_params)
       profile = @user.profile
       profile.assign_attributes(user_profile_params)
       @user.save!

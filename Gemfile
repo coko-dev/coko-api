@@ -31,6 +31,9 @@ gem 'newrelic_rpm'
 # HTTP Client
 gem 'typhoeus'
 
+# Authorization
+gem 'pundit'
+
 # Serializer
 gem 'jsonapi-serializer'
 

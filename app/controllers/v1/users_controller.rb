@@ -49,6 +49,7 @@ module V1
     def update
       raise ForbiddenError if @current_user != @user
 
+      authorize(@user)
       profile = @user.profile
       profile.assign_attributes(user_profile_params)
       @user.save!

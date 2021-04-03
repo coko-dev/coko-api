@@ -8,6 +8,9 @@ ruby '2.6.6'
 # Authenticator
 gem 'jwt'
 
+# Authorization
+gem 'pundit'
+
 # Core
 gem 'apipie-rails'
 gem 'bootsnap', '>= 1.4.2', require: false
@@ -30,9 +33,6 @@ gem 'newrelic_rpm'
 
 # HTTP Client
 gem 'typhoeus'
-
-# Authorization
-gem 'pundit'
 
 # Serializer
 gem 'jsonapi-serializer'

@@ -8,6 +8,9 @@ ruby '2.6.6'
 # Authenticator
 gem 'jwt'
 
+# Authorization
+gem 'pundit'
+
 # Core
 gem 'apipie-rails'
 gem 'bootsnap', '>= 1.4.2', require: false

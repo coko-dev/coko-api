@@ -3,12 +3,17 @@
 class ApplicationController < ActionController::API
   include ActionController::HttpAuthentication::Token::ControllerMethods
   include AuthUtil
+  include Pundit
   include RenderErrorUtil
 
   before_action :authenticate_with_base_api_key
   before_action :authenticate_with_api_token
 
   private
+
+  def pundit_user
+    @current_user || @admin_user
+  end
 
   def authenticate_with_api_token
     authenticate_or_request_with_http_token do |token, _options|

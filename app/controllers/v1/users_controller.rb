@@ -47,8 +47,6 @@ module V1
     param :description, String, allow_blank: true, desc: 'Description'
     param :website_url, String, allow_blank: true, desc: 'Website url(link)'
     def update
-      raise ForbiddenError if @current_user != @user
-
       authorize(@user)
       profile = @user.profile
       profile.assign_attributes(user_profile_params)

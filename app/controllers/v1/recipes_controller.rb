@@ -75,6 +75,7 @@ module V1
       param :note, String, allow_blank: true, desc: 'Note for cook'
     end
     def update
+      authorize(@recipe)
       @recipe.assign_attributes(recipe_params)
       recipe_category_id = params[:recipe_category_id]
       @recipe.recipe_category = RecipeCategory.find(recipe_category_id) if recipe_category_id.present?

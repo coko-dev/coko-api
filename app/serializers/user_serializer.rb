@@ -7,6 +7,10 @@ class UserSerializer < ApplicationSerializer
 
   attributes :following_count, :follower_count
 
+  attribute :recipe_count do |object|
+    object.recipes.count
+  end
+
   attribute :display_id do |object|
     object.profile.display_id
   end

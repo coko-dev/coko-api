@@ -4,7 +4,6 @@ module V1
   class KitchenProductsController < ApplicationController
     before_action :set_kitchen,                     only: %i[index create]
     before_action :set_kitchen_product,             only: %i[update destroy]
-    before_action :verify_current_user_for_kitchen, only: %i[update destroy]
 
     api :GET, '/v1/kitchen_products', 'Show all products in own kitchen'
     def index
@@ -42,6 +41,7 @@ module V1
     param :note, String, desc: "User's memo"
     param :best_before, String, desc: "Ex: '2021-10-5' or '2021-10-05'"
     def update
+      authorize(@kitchen_product)
       @kitchen_product.assign_attributes(kitchen_product_params)
       # NOTE: When building with params, no error occurs and it becomes nil.
       @kitchen_product.best_before = params[:best_before].to_date
@@ -66,6 +66,7 @@ module V1
 
     api :DELETE, '/v1/kitchen_products/:id', 'Delete a kitchen product'
     def destroy
+      authorize(@kitchen_product)
       kitchen = @kitchen_product.kitchen.touch_with_history_build(user: @current_user, product: @kitchen_product.product, status_id: 'deleted')
       ApplicationRecord.transaction do
         @kitchen_product.destroy!
@@ -101,13 +102,6 @@ module V1
 
     def set_kitchen_product
       @kitchen_product = KitchenProduct.find(params[:id])
-    end
-
-    def verify_current_user_for_kitchen
-      kitchen = @kitchen_product.kitchen
-      return if @current_user.my_kitchen?(kitchen)
-
-      raise ForbiddenError
     end
   end
 end

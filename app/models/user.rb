@@ -58,6 +58,23 @@ class User < ApplicationRecord
     self.kitchen == kitchen
   end
 
+  def follow(user)
+    user_id_to = user.id
+    return false if following_users.exists?(user_id_to) || self == user
+
+    # NOTE: #build の引数に user_id_to を含められない
+    uf = followings.build
+    uf.user_id_to = user_id_to
+    uf.save
+  end
+
+  def unfollow(user)
+    uf = followings.find_by(user_id_to: user.id)
+    return false if uf.blank?
+
+    uf.destroy.present?
+  end
+
   class << self
     def set_kitchen(user: nil, kitchen: nil)
       user.kitchen = kitchen

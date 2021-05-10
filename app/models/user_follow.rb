@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class UserFollow < ApplicationRecord
+  enum status_id: {
+    followed: 1,
+    blocked: 2,
+    muted: 3
+  }
+
   # NOTE: after_save は削除時にコールバックされない
   after_commit :recount_for_follow
 

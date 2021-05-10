@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class RecipeFavorite < ApplicationRecord
+  # TODO: インクリメント -> 再カウント
   after_create :increment_favorite_count
   after_destroy :decrement_favorite_count
 

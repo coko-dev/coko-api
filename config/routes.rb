@@ -38,6 +38,12 @@ Rails.application.routes.draw do
       collection do
         get '/current', to: 'users#show_current_user'
       end
+      member do
+        get '/followers', to: 'user_follows#show_followers'
+        get '/followings', to: 'user_follows#show_followings'
+        post '/follow', to: 'user_follows#create'
+        delete '/unfollow', to: 'user_follows#destroy'
+      end
     end
     resources :user_profiles
   end

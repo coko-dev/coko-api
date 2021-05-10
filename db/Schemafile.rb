@@ -269,8 +269,7 @@ add_foreign_key 'recipe_steps', 'recipes',     name: 'fk_recipe_steps_1'
 create_table 'user_follows', unsigned: true, force: :cascade do |t|
   t.bigint  'user_id_from', null: false, unsigned: true
   t.bigint  'user_id_to',   null: false, unsigned: true
-  t.boolean 'is_blocked',   null: false, default: false
-  t.boolean 'is_muted',     null: false, default: false
+  t.integer 'status_id',    null: false, unsigned: true, default: 1, comment: '{ followed: 1, blocked: 2, muted: 3 }'
   t.timestamps
 end
 add_index       'user_follows', %w[user_id_from user_id_to], name: 'idx_user_follows_on_user_id_from_and_user_id_to', unique: true

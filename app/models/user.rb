@@ -27,8 +27,8 @@ class User < ApplicationRecord
   has_many :kitchen_shopping_lists, dependent: :delete_all
   has_many :followings, foreign_key: 'user_id_from', class_name: 'UserFollow', inverse_of: 'following_user', dependent: :delete_all
   has_many :followers, foreign_key: 'user_id_to', class_name: 'UserFollow', inverse_of: 'follower_user', dependent: :delete_all
-  has_many :following_users, through: :followings
-  has_many :follower_users, through: :followers
+  has_many :following_users, through: :followings, source: :follower_user
+  has_many :follower_users, through: :followers, source: :following_user
   has_many :recipes, foreign_key: 'author_id', class_name: 'Recipe', inverse_of: 'author', dependent: :nullify
   has_many :recipe_favorites, dependent: :delete_all
   has_many :recipe_records, foreign_key: 'author_id', class_name: 'RecipeRecord', inverse_of: 'author', dependent: :nullify
@@ -60,12 +60,10 @@ class User < ApplicationRecord
 
   def follow(user)
     user_id_to = user.id
-    return false if following_users.exists?(user_id_to) || self == user
+    return false if self == user
 
-    # NOTE: #build の引数に user_id_to を含められない
-    uf = followings.build
-    uf.user_id_to = user_id_to
-    uf.save
+    uf = followings.find_or_initialize_by(user_id_to: user_id_to)
+    uf.new_record? && uf.save
   end
 
   def unfollow(user)

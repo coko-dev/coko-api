@@ -27,8 +27,14 @@ class User < ApplicationRecord
   has_many :kitchen_shopping_lists, dependent: :delete_all
   has_many :followings, foreign_key: 'user_id_from', class_name: 'UserFollow', inverse_of: 'following_user', dependent: :delete_all
   has_many :followers, foreign_key: 'user_id_to', class_name: 'UserFollow', inverse_of: 'follower_user', dependent: :delete_all
-  has_many :following_users, through: :followings
-  has_many :follower_users, through: :followers
+  has_many :following_users, -> { merge(UserFollow.followed) }, through: :followings, source: :follower_user
+  has_many :follower_users, -> { merge(UserFollow.followed) }, through: :followers, source: :following_user
+  has_many :blocking_users, -> { merge(UserFollow.blocked) }, through: :followings, source: :follower_user
+  has_many :blocker_users, -> { merge(UserFollow.blocked) }, through: :followers, source: :following_user
+  has_many :muting_users, -> { merge(UserFollow.muted) }, through: :followings, source: :follower_user
+  has_many :muted_users, -> { merge(UserFollow.muted) }, through: :followers, source: :following_user
+  has_many :all_following_users, through: :followings, source: :follower_user
+  has_many :all_follower_users, through: :followers, source: :following_user
   has_many :recipes, foreign_key: 'author_id', class_name: 'Recipe', inverse_of: 'author', dependent: :nullify
   has_many :recipe_favorites, dependent: :delete_all
   has_many :recipe_records, foreign_key: 'author_id', class_name: 'RecipeRecord', inverse_of: 'author', dependent: :nullify
@@ -56,6 +62,21 @@ class User < ApplicationRecord
 
   def my_kitchen?(kitchen)
     self.kitchen == kitchen
+  end
+
+  def follow(user)
+    user_id_to = user.id
+    return false if self == user
+
+    uf = followings.find_or_initialize_by(user_id_to: user_id_to)
+    uf.new_record? && uf.save
+  end
+
+  def unfollow(user)
+    uf = followings.find_by(user_id_to: user.id, status_id: :followed)
+    return false if uf.blank?
+
+    uf.destroy.present?
   end
 
   class << self

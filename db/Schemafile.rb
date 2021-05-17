@@ -81,6 +81,7 @@ create_table 'kitchen_products', unsigned: true, force: :cascade do |t|
   t.bigint 'kitchen_id',     null: false, unsigned: true
   t.bigint 'product_id',     null: false, unsigned: true
   t.string 'note'
+  t.date   'added_on'
   t.date   'best_before'
   t.timestamps
 end

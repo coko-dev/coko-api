@@ -17,12 +17,14 @@ module V1
     api :POST, '/v1/kitchen_products', 'Create a kitchen product'
     param :product_id, :number, required: true, desc: "Parent product's id"
     param :note, String, desc: "User's memo"
+    param :added_on, String, desc: "Ex: '2021-10-5' or '2021-10-05'. Default: request date"
     param :best_before, String, desc: "Ex: '2021-10-5' or '2021-10-05'"
     def create
       product = Product.find(params[:product_id])
       kitchen_product = product.kitchen_products.build(kitchen_product_params)
       # NOTE: When building with params, no error occurs and it becomes nil.
-      kitchen_product.best_before = params[:best_before].to_date
+      kitchen_product.added_on = params[:added_on]&.to_date
+      kitchen_product.best_before = params[:best_before]&.to_date
       kitchen_product.kitchen = @kitchen
       @kitchen.touch_with_history_build(user: @current_user, product: product, status_id: 'added')
       ApplicationRecord.transaction do
@@ -39,11 +41,13 @@ module V1
 
     api :PUT, '/v1/kitchen_products/:id', 'Update a kitchen product'
     param :note, String, desc: "User's memo"
+    param :added_on, String, desc: "Ex: '2021-10-5' or '2021-10-05'. Default: request date"
     param :best_before, String, desc: "Ex: '2021-10-5' or '2021-10-05'"
     def update
       authorize(@kitchen_product)
       @kitchen_product.assign_attributes(kitchen_product_params)
       # NOTE: When building with params, no error occurs and it becomes nil.
+      @kitchen_product.added_on = params[:added_on].to_date
       @kitchen_product.best_before = params[:best_before].to_date
       is_changed = @kitchen_product.changed?
       if is_changed

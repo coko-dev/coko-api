@@ -3,7 +3,7 @@
 module Admin
   class HotRecipeVersionsController < ApplicationController
     before_action :set_version, only: %i[enable]
-    
+
     api :GET, '/admin/hot_recipe_versions', 'Show enabled version'
     def index
       render content_type: 'application/json', json: HotRecipeVersionSerializer.new(
@@ -12,7 +12,7 @@ module Admin
     rescue StandardError => e
       render_bad_request(e)
     end
-    
+
     api :POST, '/admin/hot_recipe_versions', 'Register hot recipe version. Default hidden'
     param :version, String, required: true, desc: 'Version name'
     def create

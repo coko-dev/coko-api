@@ -3,8 +3,10 @@
 module RenderErrorUtil
   extend ActiveSupport::Concern
 
+  # rubocop:disable Layout/EmptyLineBetweenDefs
   class UnauthorizedError < StandardError; end
   class ForbiddenError < StandardError; end
+  # rubocop:enable Layout/EmptyLineBetweenDefs
 
   def render_bad_request(exception = nil)
     message = exception&.message || 'Bad request error'

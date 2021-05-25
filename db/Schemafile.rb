@@ -10,16 +10,22 @@ create_table 'admin_users', unsigned: true, force: :cascade do |t|
 end
 add_index 'admin_users', %w[email], name: 'idx_admin_users_on_email', unique: true
 
-create_table 'hot_recipes', unsigned: true, force: :cascade do |t|
-  t.bigint 'recipe_id',      null: false, unsigned: true
-  t.bigint 'favorite_count', null: false
-  t.bigint 'recorded_count', null: false
-  t.date   'version',        null: false
+create_table 'hot_recipe_versions', unsigned: true, force: :cascade do |t|
+  t.string  'version',   null: false
+  t.integer 'status_id', null: false, unsigned: true, default: 2, comment: '{ enabled: 1, disabled: 2 }'
   t.timestamps
 end
-add_index       'hot_recipes', %w[recipe_id version], name: 'idx_hot_recipes_on_recipe_id_and_version', unique: true
-add_index       'hot_recipes', %w[recipe_id],         name: 'idx_hot_recipes_on_recipe_id'
-add_foreign_key 'hot_recipes', 'recipes',             name: 'fk_hot_recipes_1'
+
+create_table 'hot_recipes', unsigned: true, force: :cascade do |t|
+  t.bigint 'recipe_id',             null: false, unsigned: true
+  t.bigint 'hot_recipe_version_id', null: false, unsigned: true
+  t.timestamps
+end
+add_index       'hot_recipes', %w[recipe_id hot_recipe_version_id], name: 'idx_hot_recipes_on_recipe_id_and_hot_recipe_version_id'
+add_index       'hot_recipes', %w[recipe_id],                       name: 'idx_hot_recipes_on_recipe_id'
+add_index       'hot_recipes', %w[hot_recipe_version_id],           name: 'idx_hot_recipes_on_hot_recipe_version_id'
+add_foreign_key 'hot_recipes', 'recipes',                           name: 'fk_hot_recipes_1'
+add_foreign_key 'hot_recipes', 'hot_recipe_versions',               name: 'fk_hot_recipes_2'
 
 create_table 'hot_recipe_keywords', unsigned: true, force: :cascade do |t|
   t.bigint 'recipe_keyword_id', null: false, unsigned: true

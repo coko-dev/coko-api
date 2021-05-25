@@ -3,7 +3,7 @@
 class HotRecipeVersion < ApplicationRecord
   enum status_id: {
     enabled: 1,
-    disabled: 2,
+    disabled: 2
   }
 
   validates :version, uniqueness: true

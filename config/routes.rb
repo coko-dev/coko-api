@@ -55,6 +55,11 @@ Rails.application.routes.draw do
     post '/token', to: 'admin_users#token'
     put '/verificate', to: 'admin_users#verificate'
     resources :admin_users
+    resources :hot_recipe_versions, param: :version, only: %i[index create] do
+      member do
+        put '/enable', to: 'hot_recipe_versions#enable'
+      end
+    end
     resources :products do
       member do
         patch '/hide', to: 'products#hide'

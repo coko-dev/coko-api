@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 class Recipe < ApplicationRecord
+  enum status_id: {
+    published: 1,
+    hidden: 2
+  }
+
   validates :name, presence: true
   # TODO: validates :image
   validates :cooking_time, presence: true, length: { maximum: 3 }
@@ -9,6 +14,7 @@ class Recipe < ApplicationRecord
   belongs_to :recipe_category
 
   has_many :hot_recipes, dependent: :delete_all
+  has_many :hot_recipe_versions, through: :hot_recipes
   has_many :recipe_favorites, dependent: :delete_all
   has_many :recipe_keyword_lists, dependent: :delete_all
   has_many :recipe_keywords, through: :recipe_keyword_lists

@@ -48,13 +48,15 @@ Rails.application.routes.draw do
     resources :user_profiles
   end
 
-  # - - - - - - - - - - #
-  #        Admin        #
-  # - - - - - - - - - - #
+  # - - - - - - - - - -
+  # Admin
+  # - - - - - - - - - -
   namespace :admin do
     post '/token', to: 'admin_users#token'
     put '/verificate', to: 'admin_users#verificate'
     resources :admin_users
+    resources :hot_recipes, only: %i[create destroy]
+    delete '/hot_recipes', to: 'hot_recipes#destroy'
     resources :hot_recipe_versions, param: :version, only: %i[index create] do
       member do
         put '/enable', to: 'hot_recipe_versions#enable'

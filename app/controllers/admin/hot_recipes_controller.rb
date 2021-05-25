@@ -2,16 +2,30 @@
 
 module Admin
   class HotRecipesController < ApplicationController
-    api :POST, '/admin/hot_recipes', 'Register popular recipe'
+    before_action :set_recipe, only: %i[create destroy]
+    before_action :set_version, only: %i[create destroy]
+
+    api :POST, '/admin/hot_recipes', 'Register popular(hot) recipe'
     param :recipe_id, :number, required: true, desc: "Parent recipe's id"
-    param :version, String, required: true, desc: "Ex: '2021-10-5' or '2021-10-05'"
+    param :version, String, required: true, desc: 'Version name'
     def create
-      hot_recipe = @recipe.hot_recipes.build
-      hot_recipe.version = params[:added_on].to_date
+      hot_recipe = HotRecipe.find_or_initialize_by(recipe: @recipe, hot_recipe_version: @version)
       hot_recipe.save!
-      render content_type: 'application/json', json: ProductSerializer.new(
-        hot_recipe
+      render content_type: 'application/json', json: RecipeSerializer.new(
+        @recipe
       ), status: :ok
+    rescue StandardError => e
+      render_bad_request(e)
+    end
+
+    api :DELETE, '/admin/hot_recipes', 'Destroy hot recipe relation'
+    param :recipe_id, :number, required: true, desc: "Parent recipe's id"
+    param :version, String, required: true, desc: 'Version name'
+    def destroy
+      hot_recipe = HotRecipe.find_by!(recipe: @recipe, hot_recipe_version: @version).destroy!
+      render content_type: 'application/json', json: {
+        data: { meta: { is_deleted: hot_recipe.destroyed? } }
+      }, status: :ok
     rescue StandardError => e
       render_bad_request(e)
     end
@@ -20,6 +34,10 @@ module Admin
 
     def set_recipe
       @recipe = Recipe.published.find(params[:recipe_id])
+    end
+
+    def set_version
+      @version = HotRecipeVersion.find_by!(version: params[:version])
     end
 
     def hot_recipe_params

@@ -55,7 +55,7 @@ Rails.application.routes.draw do
     post '/token', to: 'admin_users#token'
     put '/verificate', to: 'admin_users#verificate'
     resources :admin_users
-    resources :hot_recipes, only: %i[create destroy]
+    resources :hot_recipes, only: %i[create]
     delete '/hot_recipes', to: 'hot_recipes#destroy'
     resources :hot_recipe_versions, param: :version, only: %i[index create] do
       member do

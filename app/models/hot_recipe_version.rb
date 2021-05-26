@@ -10,4 +10,6 @@ class HotRecipeVersion < ApplicationRecord
 
   has_many :hot_recipes, dependent: :delete_all
   has_many :recipes, through: :hot_recipes
+
+  scope :current, -> { enabled.order(created_at: :desc).first }
 end

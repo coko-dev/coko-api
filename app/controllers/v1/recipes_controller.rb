@@ -5,10 +5,16 @@ module V1
     before_action :set_recipe, only: %i[show update destroy create_favorite destroy_favorite]
 
     api :GET, '/v1/recipes', 'Show some recipes'
+    param :hot_recipes, [true, false], allow_blank: true, desc: 'Show popular recipes. Default: false'
     def index
-      recipes = Recipe.order(created_at: :desc).limit(12)
+      recipes =
+        if params[:hot_recipes].present?
+          HotRecipeVersion.current.recipes
+        else
+          Recipe.order(created_at: :desc)
+        end
       render content_type: 'application/json', json: RecipeSerializer.new(
-        recipes,
+        recipes.published.limit(12),
         include: association_for_recipes
       ), status: :ok
     end
@@ -146,6 +152,7 @@ module V1
 
     def association_for_a_recipe
       %i[
+        hot_recipe_versions
         recipe_steps
         recipe_products.product
         recipe_category

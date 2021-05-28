@@ -2,7 +2,7 @@
 
 module V1
   class RecipesController < ApplicationController
-    before_action :set_recipe, only: %i[show update destroy create_favorite destroy_favorite]
+    before_action :set_recipe, only: %i[show update destroy]
 
     api :GET, '/v1/recipes', 'Show some recipes'
     param :hot_recipes, [true, false], allow_blank: true, desc: 'Show popular recipes. Default: false'
@@ -118,30 +118,6 @@ module V1
       }, status: :ok
     rescue StandardError => e
       render_bad_request(e)
-    end
-
-    # TODO: Move to favorites controller
-    api :POST, '/v1/recipes/:recipe_id/favorite', 'Make a recipe favorite'
-    def create_favorite
-      is_new_favorite = RecipeFavorite.where(recipe: @recipe, user: @current_user).empty?
-      if is_new_favorite
-        favorite = RecipeFavorite.new(recipe: @recipe, user: @current_user)
-        favorite.save!
-      end
-      render content_type: 'application/json', json: {
-        data: { meta: { is_new_favorite: is_new_favorite } }
-      }, status: :ok
-    end
-
-    # TODO: Move to favorites controller
-    api :DELETE, '/v1/recipes/:recipe_id/favorite', 'Delete a recipe favorite'
-    def destroy_favorite
-      favorite = RecipeFavorite.find_by(recipe: @recipe, user: @current_user)
-      is_exists = favorite.present?
-      favorite.destroy! if is_exists
-      render content_type: 'application/json', json: {
-        data: { meta: { is_deleted: is_exists } }
-      }, status: :ok
     end
 
     private

@@ -31,7 +31,7 @@ module Admin
       admin_user.assign_attributes(password: params[:password], password_confirmation: params[:password_confirmation])
       admin_user.save!
       admin_user_id = admin_user.id
-      token = self.class.jwt_encode_for_general(subject: admin_user_id, type: 'admin_user')
+      token = self.class.jwt_encode_for_general(subject: admin_user_id)
       render content_type: 'application/json', json: {
         data: {
           meta: {
@@ -52,7 +52,7 @@ module Admin
       raise ForbiddenError unless admin_user.authenticate(params[:password])
 
       admin_user_id = admin_user.id
-      token = self.class.jwt_encode_for_general(subject: admin_user_id, type: 'admin_user')
+      token = self.class.jwt_encode_for_general(subject: admin_user_id)
       render content_type: 'application/json', json: {
         data: {
           meta: {

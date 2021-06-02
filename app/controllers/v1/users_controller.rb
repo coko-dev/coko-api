@@ -29,7 +29,7 @@ module V1
       user.save!
       code = user.code
       klass = self.class
-      token = Rails.env.development? ? klass.jwt_encode_for_general(subject: code) : klass.jwt_encode_for_firebase(subject: code)
+      token = Rails.env.development? ? klass.jwt_encode_for_general(subject: code) : klass.jwt_encode_for_firebase(user_code: code)
       render content_type: 'application/json', json: UserSerializer.new(
         user,
         meta: { token: token }

@@ -33,8 +33,8 @@ module AuthUtil
       JWT.decode(encoded_token, SECRET_KEY_BASE, true, algorithm: JWT_DEFAULT_ALGORITHM).first.symbolize_keys
     end
 
-    def jwt_encode_for_firebase(subject: nil, expire: 1.hour)
-      return if subject.blank?
+    def jwt_encode_for_firebase(user_code: nil, expire: 1.hour)
+      return if user_code.blank?
 
       service_account_email = firebase_credentials[:client_email]
       now_seconds = Time.zone.now.to_i
@@ -47,7 +47,7 @@ module AuthUtil
           aud: JWT_FIREBASE_AUDIENCE,
           exp: expired_at,
           iat: now_seconds,
-          uid: subject,
+          uid: user_code,
           typ: 'user'
         },
         firebase_private_key,

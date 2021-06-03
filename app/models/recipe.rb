@@ -24,6 +24,8 @@ class Recipe < ApplicationRecord
   has_many :recipe_sections, dependent: :delete_all
   has_many :recipe_steps, dependent: :delete_all
 
+  delegate :code, to: :author, prefix: true
+
   def build_or_update_each_sections(introduction:, advice:)
     RecipeSection.status_ids.keys.zip([introduction, advice]) do |st, body|
       next if body.blank?

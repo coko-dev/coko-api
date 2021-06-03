@@ -12,7 +12,7 @@ class RecipeSerializer < ApplicationSerializer
   end
 
   belongs_to :recipe_category
-  belongs_to :author, serializer: UserSerializer
+  belongs_to :author, serializer: UserSerializer, id_method_name: :author_code
 
   has_many :hot_recipe_versions
   has_many :recipe_steps

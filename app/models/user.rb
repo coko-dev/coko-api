@@ -42,10 +42,6 @@ class User < ApplicationRecord
   accepts_nested_attributes_for :profile
   accepts_nested_attributes_for :own_kitchen
 
-  def to_param
-    code
-  end
-
   def set_code
     return if self[:code].present?
 

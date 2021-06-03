@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UserSerializer < ApplicationSerializer
-  set_id :to_param
+  set_id :code
 
   attribute :email, if: proc { |record, params| myself_record?(record, params[:current_user]) }
 

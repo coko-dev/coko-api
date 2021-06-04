@@ -6,4 +6,6 @@ class KitchenShoppingList < ApplicationRecord
   belongs_to :kitchen
   belongs_to :user
   belongs_to :product
+
+  delegate :code, to: :user, prefix: true
 end

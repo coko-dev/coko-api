@@ -104,7 +104,7 @@ create_table 'kitchen_product_histories', unsigned: true, force: :cascade do |t|
   t.integer 'status_id',      null: false, unsigned: true, default: 1, comment: '{ added: 1, updated: 2, deleted: 3 }'
   t.date    'date',           null: false
   t.integer 'day_difference' # NOTE: Difference in expiration date
-  t.string  'note'
+  t.string  'note'           # TODO: Not used
   t.timestamps
 end
 add_index       'kitchen_product_histories', %w[kitchen_id product_id user_id], name: 'idx_kitchen_pdt_htr_on_kitchen_id_and_product_id_and_user_id'

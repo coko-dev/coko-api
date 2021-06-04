@@ -4,5 +4,5 @@ class KitchenShoppingListSerializer < ApplicationSerializer
   attributes :note
 
   belongs_to :product
-  belongs_to :user
+  belongs_to :user, id_method_name: :user_code
 end

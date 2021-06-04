@@ -8,6 +8,8 @@ class RecipeRecord < ApplicationRecord
 
   has_many :recipe_record_images, dependent: :delete_all
 
+  delegate :code, to: :author, prefix: true
+
   def build_each_images(image_params)
     return if image_params.blank?
 

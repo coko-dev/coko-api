@@ -8,5 +8,5 @@ class RecipeRecordSerializer < ApplicationSerializer
   end
 
   belongs_to :recipe
-  belongs_to :author, serializer: UserSerializer
+  belongs_to :author, serializer: UserSerializer, id_method_name: :author_code
 end

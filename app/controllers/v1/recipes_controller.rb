@@ -6,6 +6,10 @@ module V1
 
     api :GET, '/v1/recipes', 'Show some recipes'
     param :hot_recipes, [true, false], allow_blank: true, desc: 'Show popular recipes. Default: false'
+    param :recipe_category_id, :number, allow_blank: true, desc: 'Selected category id'
+    param :cooking_time_within, :number, allow_blank: true, desc: 'Cooking time limit'
+    param :with_few_products, [true, false], allow_blank: true, desc: 'Find recipes with few products'
+    param :can_be_made, [true, false], allow_blank: true, desc: 'Find recipes that you can make'
     def index
       recipes =
         if params[:hot_recipes].present?
@@ -13,6 +17,15 @@ module V1
         else
           Recipe.order(created_at: :desc)
         end
+
+      category_id = params[:recipe_category_id]
+      category = RecipeCategory.find_by(id: category_id)
+      cooking_time_within = params[:cooking_time_within]
+      recipes = recipes.where(recipe_category: category) if category.present?
+      recipes = recipes.where(cooking_time: 1..cooking_time_within) if cooking_time_within.present?
+      recipes = recipes.where(id: RecipeProduct.group(:recipe_id).having('count(*) < ?', 5).select(:recipe_id)) if params[:with_few_products]
+      # TODO: Add can_be_made
+
       render content_type: 'application/json', json: RecipeSerializer.new(
         recipes.published.limit(12),
         include: association_for_recipes

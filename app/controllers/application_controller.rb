@@ -18,7 +18,12 @@ class ApplicationController < ActionController::API
   def authenticate_with_api_token
     authenticate_or_request_with_http_token do |token, _options|
       klass = self.class
-      payload = Rails.env.development? || request_version == 'admin' ? klass.jwt_decode_for_general(token) : klass.jwt_decode_for_firebase(token)
+      payload =
+        if (Rails.env.development? || request_version == 'admin') && params[:decode_custom_token].blank?
+          klass.jwt_decode_for_general(token)
+        else
+          klass.jwt_decode_for_firebase(token)
+        end
       subject = payload[:uid] || payload[:sub]
       type = payload[:typ]
       raise ForbiddenError unless macthed_routing_for_user_type?(type)

@@ -172,8 +172,8 @@ create_table 'recipes', unsigned: true, force: :cascade do |t|
   t.integer 'status_id',          null: false, unsigned: true, default: 1, comment: '{ published: 1, hidden: 2 }'
   t.string  'image',              null: false, default: '', limit: 2_048
   t.bigint  'recipe_category_id', null: false, unsigned: true
-  t.integer 'cooking_time',       null: false, unsigned: true
-  t.integer 'servings',           null: false, unsigned: true
+  t.integer 'cooking_time',       null: false, unsigned: true, default: 30
+  t.integer 'servings',           null: false, unsigned: true, default: 4
   t.bigint  'favorite_count',     null: false, unsigned: true, default: 0
   t.timestamps
 end

@@ -8,6 +8,7 @@ module V1
     param :hot_recipes, [true, false], allow_blank: true, desc: 'Show popular recipes. Default: false'
     param :recipe_category_id, :number, allow_blank: true, desc: 'Selected category id'
     param :cooking_time_within, :number, allow_blank: true, desc: 'Cooking time limit'
+    param :servings, :number, allow_blank: true, desc: 'How many servings'
     param :with_few_products, [true, false], allow_blank: true, desc: 'Find recipes with few products'
     param :can_be_made, [true, false], allow_blank: true, desc: 'Find recipes that you can make'
     def index
@@ -20,9 +21,11 @@ module V1
 
       category_id = params[:recipe_category_id]
       category = RecipeCategory.find_by(id: category_id)
+      servings = params[:servings]
       cooking_time_within = params[:cooking_time_within]
       recipes = recipes.where(recipe_category: category) if category.present?
       recipes = recipes.where(cooking_time: 1..cooking_time_within) if cooking_time_within.present?
+      recipes = recipes.where(servings: servings) if servings.present?
       recipes = recipes.where(id: RecipeProduct.group(:recipe_id).having('count(*) < ?', 5).select(:recipe_id)) if params[:with_few_products]
       # TODO: Add can_be_made
 
@@ -44,7 +47,8 @@ module V1
     param :name, String, required: true, desc: 'Recipe name'
     param :image, String, required: true, desc: 'Recipe image url'
     param :recipe_category_id, :number, required: true, desc: "Parent category's id"
-    param :cooking_time, String, required: true, desc: 'Minutes to cook'
+    param :cooking_time, :number, required: true, desc: 'Minutes to cook'
+    param :servings, :number, required: true, desc: 'How many servings'
     param :introduction, String, required: true, desc: 'Recipe introduction'
     param :advice, String, required: true, desc: 'Recipe advice'
     param :recipe_keyword_ids, Array, allow_blank: true, desc: 'Recipe keyword ids. Ex: [1, 2, 3]'
@@ -80,7 +84,8 @@ module V1
     param :name, String, allow_blank: true, desc: 'Recipe name'
     param :image, String, allow_blank: true, desc: 'Recipe image url'
     param :recipe_category_id, :number, allow_blank: true, desc: "Parent category's id"
-    param :cooking_time, String, allow_blank: true, desc: 'Minutes to cook'
+    param :cooking_time, :number, allow_blank: true, desc: 'Minutes to cook'
+    param :servings, :number, allow_blank: true, desc: 'How many servings'
     param :introduction, String, allow_blank: true, desc: 'Recipe introduction'
     param :advice, String, allow_blank: true, desc: 'Recipe advice'
     param :recipe_keyword_ids, Array, allow_blank: true, desc: 'Recipe keyword ids. Ex: [1, 2, 3]'
@@ -161,7 +166,8 @@ module V1
         %i[
           name
           image
-          imagecooking_time
+          cooking_time
+          servings
         ]
       )
     end

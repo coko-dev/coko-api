@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class RecipeSerializer < ApplicationSerializer
-  attributes :name, :image, :cooking_time
+  attributes :name, :image, :cooking_time, :servings
 
   attribute :introduction do |object|
     object.recipe_sections.introduced.first.body

@@ -19,7 +19,7 @@ class ApplicationController < ActionController::API
     authenticate_or_request_with_http_token do |token, _options|
       klass = self.class
       payload =
-        if (Rails.env.development? || request_version == 'admin') && params[:decode_custom_token].blank?
+        if request_version == 'admin' || params[:decode_custom_token].blank? # TODO: Switch with env
           klass.jwt_decode_for_general(token)
         else
           klass.jwt_decode_for_firebase(token)

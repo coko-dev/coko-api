@@ -17,8 +17,14 @@ class ApplicationController < ActionController::API
 
   def authenticate_with_api_token
     authenticate_or_request_with_http_token do |token, _options|
-      payload = self.class.jwt_decode(token)
-      subject = payload[:sub]
+      klass = self.class
+      payload =
+        if (Rails.env.development? || request_version == 'admin') && params[:decode_custom_token].blank?
+          klass.jwt_decode_for_general(token)
+        else
+          klass.jwt_decode_for_firebase(token)
+        end
+      subject = payload[:uid] || payload[:sub]
       type = payload[:typ]
       raise ForbiddenError unless macthed_routing_for_user_type?(type)
 
@@ -40,7 +46,6 @@ class ApplicationController < ActionController::API
   end
 
   def macthed_routing_for_user_type?(type)
-    requested = request.path.match(%r{/(.+?)/})[1]
     settings = Settings.routing.namespace
 
     case type
@@ -48,7 +53,11 @@ class ApplicationController < ActionController::API
       settings.public
     when 'admin_user'
       settings.admin
-    end.include?(requested)
+    end.include?(request_version)
+  end
+
+  def request_version
+    request.path.match(%r{/(.+?)/})[1]
   end
 
   def authenticate_with_base_api_key

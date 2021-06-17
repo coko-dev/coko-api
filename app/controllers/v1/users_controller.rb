@@ -28,8 +28,8 @@ module V1
       user.build_own_kitchen
       user.save!
       code = user.code
-      token = self.class.jwt_encode(subject: code, type: 'user')
-      # TODO: Move to Json serializer
+      klass = self.class
+      token = Rails.env.development? ? klass.jwt_encode_for_general(subject: code) : klass.jwt_encode_for_firebase(user_code: code)
       render content_type: 'application/json', json: UserSerializer.new(
         user,
         meta: { token: token }

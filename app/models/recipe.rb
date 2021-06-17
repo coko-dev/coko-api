@@ -9,6 +9,7 @@ class Recipe < ApplicationRecord
   validates :name, presence: true
   # TODO: validates :image
   validates :cooking_time, presence: true, length: { maximum: 3 }
+  validates :servings, presence: true, length: { maximum: 2 }
 
   belongs_to :author, class_name: 'User', inverse_of: 'recipes'
   belongs_to :recipe_category

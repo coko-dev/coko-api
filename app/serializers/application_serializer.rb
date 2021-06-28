@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ApplicationSerializer
+  include StringUtil
   include JSONAPI::Serializer
 
   class << self

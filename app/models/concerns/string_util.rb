@@ -18,13 +18,13 @@ module StringUtil
     def number_for_display(number)
       digits = { 100_000_000 => '億', 10_000 => '万' }.freeze
       display_num = number
-      digit = ''
+      display_digit = ''
 
-      digits.each do |n, d|
-        next if number < n
+      digits.each do |num, digit|
+        next if number < num
 
-        display_num = (number.to_f / n).ceil(1)
-        digit = d
+        display_num = (number.to_f / num).ceil(1)
+        display_digit = digit
         break
       end
 
@@ -35,7 +35,7 @@ module StringUtil
           display_num.to_s
         end
 
-      "#{display_num}#{digit}"
+      "#{display_num}#{display_digit}"
     end
   end
 end

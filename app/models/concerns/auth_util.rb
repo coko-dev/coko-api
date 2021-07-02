@@ -11,7 +11,7 @@ module AuthUtil
   JWT_FIREBASE_AUDIENCE = 'https://identitytoolkit.googleapis.com/google.identity.identitytoolkit.v1.IdentityToolkit'
 
   module ClassMethods
-    def jwt_encode_for_general(subject: nil, expire: 30.days)
+    def jwt_encode_for_general(subject: nil, type: 'admin', expire: 30.days)
       return if subject.blank?
 
       expires_in = expire.from_now.to_i
@@ -22,7 +22,7 @@ module AuthUtil
           sub: subject,
           exp: expires_in,
           iat: Time.zone.now.to_i,
-          typ: 'admin'
+          typ: type
         },
         SECRET_KEY_BASE,
         JWT_DEFAULT_ALGORITHM

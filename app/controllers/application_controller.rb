@@ -25,7 +25,7 @@ class ApplicationController < ActionController::API
           klass.jwt_decode_for_general(token)
         end
       subject = payload[:uid] || payload[:sub]
-      type = payload[:typ]
+      type = payload[:typ] || 'user'
       raise ForbiddenError unless macthed_routing_for_user_type?(type)
 
       case type

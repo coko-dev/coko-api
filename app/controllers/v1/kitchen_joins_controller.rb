@@ -3,9 +3,9 @@
 module V1
   class KitchenJoinsController < ApplicationController
     api :POST, '/v1/kitchen_joins', 'Create kitchen joins'
-    param :user_code, :number, required: true, desc: 'code of a user to invite'
+    param :user_code, String, required: true, desc: 'code of a user to invite'
     def create
-      user = User.find(params[:user_code])
+      user = User.find_by!(code: params[:user_code])
 
       kitchen_join = KitchenJoin.new(
         user: user,
@@ -15,7 +15,7 @@ module V1
 
       kitchen_join.save!
       render content_type: 'application/json', json: {
-        message: 'Completion of registration'
+        join_code: kitchen_join.code
       }, status: :ok
     rescue StandardError => e
       render_bad_request(e)

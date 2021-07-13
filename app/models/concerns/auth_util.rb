@@ -47,8 +47,7 @@ module AuthUtil
           aud: JWT_FIREBASE_AUDIENCE,
           exp: expired_at,
           iat: now_seconds,
-          uid: user_code,
-          typ: 'user'
+          uid: user_code
         },
         firebase_private_key,
         JWT_FIREBASE_ALGORITHM,

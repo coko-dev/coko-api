@@ -2,12 +2,13 @@
 
 module V1
   class UsersController < ApplicationController
-    before_action :set_user, only: %i[update show]
+    before_action :set_user_with_code, only: %i[update]
+    before_action :set_user_with_display_id, only: %i[show]
 
     skip_before_action :authenticate_with_api_token, only: %i[create]
 
-    api :GET, '/v1/users/:code', 'Show user'
-    param :code, User::CODE_REGEX, required: true, desc: 'User a code'
+    api :GET, '/v1/users/:display_id', 'Show user'
+    param :display_id, String, required: true, desc: 'User display id'
     def show
       render content_type: 'application/json', json: UserSerializer.new(
         @user
@@ -60,8 +61,12 @@ module V1
 
     private
 
-    def set_user
+    def set_user_with_code
       @user = User.find_by!(code: params[:code])
+    end
+
+    def set_user_with_display_id
+      @user = UserProfile.find_by!(display_id: params[:display_id]).user
     end
 
     def user_params

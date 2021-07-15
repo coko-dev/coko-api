@@ -92,7 +92,7 @@ module V1
     end
 
     def set_user_with_display_id
-      @user = User.joins(:profile).find_by(user_profiles: { display_id: params[:display_id] })
+      @user = User.joins(:profile).find_by!(user_profiles: { display_id: params[:display_id] })
     end
 
     def user_params

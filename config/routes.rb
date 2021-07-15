@@ -4,6 +4,8 @@ Rails.application.routes.draw do
   apipie
 
   namespace :v1 do
+    post '/token', to: 'users#token'
+
     resources :kitchen_joins, param: :code, only: %i[create] do
       member do
         patch '/verification', to: 'kitchen_joins#verification'

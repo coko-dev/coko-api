@@ -307,7 +307,7 @@ create_table 'users', unsigned: true, force: :cascade do |t|
   t.bigint   'kitchen_id',             unsigned: true
   t.integer  'status_id',              null: false, unsigned: true, default: 1, comment: '{ is_private: 1, published: 2, official: 3 }'
   t.string   'email'
-  t.string   'encrypted_password',     null: false, default: ''
+  t.string   'password_digest',        null: false, default: ''
   t.integer  'following_count',        null: false, unsigned: true, default: 0
   t.integer  'follower_count',         null: false, unsigned: true, default: 0
   t.datetime 'last_sign_in_at'

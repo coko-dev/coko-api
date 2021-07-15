@@ -11,10 +11,14 @@ class User < ApplicationRecord
     official: 3
   }
 
+  has_secure_password
+
   before_validation :set_code, on: :create
   before_validation :set_default_email, on: :create
 
   validates :email, presence: true, uniqueness: true
+  validates :password, presence: true, length: { in: 8..36 }, format: { with: /\A[0-9a-zA-Z]+\z/ }, confirmation: true, on: %i[create update]
+  validates :password_confirmation, presence: true, on: %i[create update]
 
   belongs_to :kitchen, optional: true
 

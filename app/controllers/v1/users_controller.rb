@@ -2,10 +2,9 @@
 
 module V1
   class UsersController < ApplicationController
-    before_action :set_user_with_code, only: %i[update]
-    before_action :set_user_with_display_id, only: %i[show]
+    before_action :set_user_with_display_id, only: %i[show update]
 
-    skip_before_action :authenticate_with_api_token, only: %i[create]
+    skip_before_action :authenticate_with_api_token, only: %i[create token]
 
     api :GET, '/v1/users/:display_id', 'Show user'
     param :display_id, String, required: true, desc: 'User display id'
@@ -23,14 +22,17 @@ module V1
     end
 
     api :POST, '/v1/users', 'User registration'
+    param :display_id, String, required: true, desc: 'display id'
+    param :password, String, required: true, desc: 'Account password'
+    param :password_confirmation, String, required: true, desc: 'password confirmation'
     def create
-      user = User.new
-      user.build_profile
+      user = User.new(password: params[:password], password_confirmation: params[:password_confirmation])
+      user.build_profile(display_id: params[:display_id])
       user.build_own_kitchen
       user.save!
       code = user.code
       klass = self.class
-      token = Rails.env.development? ? klass.jwt_encode_for_general(subject: code) : klass.jwt_encode_for_firebase(user_code: code)
+      token = Rails.env.development? ? klass.jwt_encode_for_general(subject: code, type: 'user') : klass.jwt_encode_for_firebase(user_code: code)
       render content_type: 'application/json', json: UserSerializer.new(
         user,
         meta: { token: token }
@@ -39,7 +41,7 @@ module V1
       render_bad_request(e)
     end
 
-    api :PUT, '/v1/users/:code', "Update user's profile"
+    api :PUT, '/v1/users/:display_id', "Update user's profile"
     param :display_id, String, allow_blank: true, desc: 'User display id'
     param :name, String, allow_blank: true, desc: 'User name'
     param :birth_date, String, allow_blank: true, desc: 'Birth date'
@@ -59,6 +61,30 @@ module V1
       render_bad_request(e)
     end
 
+    api :POST, 'v1/token', 'Generate token. Account password and (code or display_id) required'
+    param :code, String, allow_blank: true, desc: 'User code'
+    param :display_id, String, allow_blank: true, desc: 'User display id'
+    param :password, String, required: true, desc: 'Current account password'
+    def token
+      params[:code].present? ? set_user_with_code : set_user_with_display_id
+
+      raise ForbiddenError unless @user.authenticate(params[:password])
+
+      user_code = @user.code
+      klass = self.class
+      token = Rails.env.development? ? klass.jwt_encode_for_general(subject: user_code, type: 'user') : klass.jwt_encode_for_firebase(user_code: user_code)
+      render content_type: 'application/json', json: {
+        data: {
+          meta: {
+            id: user_code,
+            token: token
+          }
+        }
+      }, status: :ok
+    rescue StandardError => e
+      render_bad_request(e)
+    end
+
     private
 
     def set_user_with_code
@@ -66,7 +92,7 @@ module V1
     end
 
     def set_user_with_display_id
-      @user = UserProfile.find_by!(display_id: params[:display_id]).user
+      @user = User.joins(:profile).find_by!(user_profiles: { display_id: params[:display_id] })
     end
 
     def user_params

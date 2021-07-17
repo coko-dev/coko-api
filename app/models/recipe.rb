@@ -67,4 +67,28 @@ class Recipe < ApplicationRecord
       recipe_products.build(product: prd, volume: param[:volume], note: param[:note])
     end
   end
+
+  class << self
+    def narrow_down_recipes(params)
+      recipes =
+        if params[:hot_recipes].present?
+          HotRecipeVersion.current.recipes
+        else
+          Recipe.order(created_at: :desc)
+        end
+
+      category_id = params[:recipe_category_id]
+      category = RecipeCategory.find_by(id: category_id)
+      user_id = params[:user_id]
+      author = User.find_by(code: user_id)
+      servings = params[:servings]
+      cooking_time_within = params[:cooking_time_within]
+      recipes = recipes.where(recipe_category: category) if category_id.present?
+      recipes = recipes.where(author: author) if user_id.present?
+      recipes = recipes.where(cooking_time: 1..cooking_time_within) if cooking_time_within.present?
+      recipes = recipes.where(servings: servings) if servings.present?
+      recipes = recipes.where(id: RecipeProduct.group(:recipe_id).having('count(*) < ?', 5).select(:recipe_id)) if params[:with_few_products]
+      recipes
+    end
+  end
 end

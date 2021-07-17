@@ -13,25 +13,7 @@ module V1
     param :with_few_products, [true, false], allow_blank: true, desc: 'Find recipes with few products'
     param :can_be_made, [true, false], allow_blank: true, desc: 'Find recipes that you can make'
     def index
-      recipes =
-        if params[:hot_recipes].present?
-          HotRecipeVersion.current.recipes
-        else
-          Recipe.order(created_at: :desc)
-        end
-
-      category_id = params[:recipe_category_id]
-      category = RecipeCategory.find_by(id: category_id)
-      user_id = params[:user_id]
-      author = User.find_by(code: user_id)
-      servings = params[:servings]
-      cooking_time_within = params[:cooking_time_within]
-      recipes = recipes.where(recipe_category: category) if category_id.present?
-      recipes = recipes.where(author: author) if user_id.present?
-      recipes = recipes.where(cooking_time: 1..cooking_time_within) if cooking_time_within.present?
-      recipes = recipes.where(servings: servings) if servings.present?
-      recipes = recipes.where(id: RecipeProduct.group(:recipe_id).having('count(*) < ?', 5).select(:recipe_id)) if params[:with_few_products]
-      # TODO: Add can_be_made
+      recipes = Recipe.narrow_down_recipes(recipe_narrow_down_params)
 
       render content_type: 'application/json', json: RecipeSerializer.new(
         recipes.published.limit(12),
@@ -181,6 +163,20 @@ module V1
         %i[
           introduction
           advice
+        ]
+      )
+    end
+
+    def recipe_narrow_down_params
+      params.permit(
+        %i[
+          hot_recipes
+          recipe_category_id
+          user_id
+          cooking_time_within
+          servings
+          with_few_products
+          can_be_made
         ]
       )
     end

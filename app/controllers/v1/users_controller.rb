@@ -10,14 +10,16 @@ module V1
     param :display_id, String, required: true, desc: 'User display id'
     def show
       render content_type: 'application/json', json: UserSerializer.new(
-        @user
+        @user,
+        params: serializer_params
       ), status: :ok
     end
 
     api :GET, '/v1/users/current', 'Show current user'
     def show_current_user
       render content_type: 'application/json', json: UserSerializer.new(
-        @current_user
+        @current_user,
+        params: serializer_params
       ), status: :ok
     end
 
@@ -35,7 +37,8 @@ module V1
       token = Rails.env.development? ? klass.jwt_encode_for_general(subject: code, type: 'user') : klass.jwt_encode_for_firebase(user_code: code)
       render content_type: 'application/json', json: UserSerializer.new(
         user,
-        meta: { token: token }
+        meta: { token: token },
+        params: serializer_params
       ), status: :ok
     rescue StandardError => e
       render_bad_request(e)
@@ -55,7 +58,8 @@ module V1
       profile.assign_attributes(user_profile_params)
       @user.save!
       render content_type: 'application/json', json: UserSerializer.new(
-        @user
+        @user,
+        params: serializer_params
       ), status: :ok
     rescue StandardError => e
       render_bad_request(e)
@@ -123,6 +127,12 @@ module V1
           base64_encoded_image
         ]
       )
+    end
+
+    def serializer_params
+      {
+        current_user: @current_user
+      }
     end
   end
 end

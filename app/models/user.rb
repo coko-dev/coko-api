@@ -17,8 +17,7 @@ class User < ApplicationRecord
   before_validation :set_default_email, on: :create
 
   validates :email, presence: true, uniqueness: true
-  validates :password_digest, presence: true, length: { in: 8..72 }, confirmation: true, on: %i[create update]
-  # validates :password_confirmation, presence: true, on: %i[create update]
+  validates :password_digest, presence: true, on: %i[create update]
 
   belongs_to :kitchen, optional: true
 

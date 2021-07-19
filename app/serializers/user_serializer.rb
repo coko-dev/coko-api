@@ -28,13 +28,11 @@ class UserSerializer < ApplicationSerializer
   end
 
   attribute :is_followed do |object, params|
-    current_user = params[:current_user]
-    current_user.present? && current_user.followed?(object)
+    params[:current_user]&.followed?(object)
   end
 
   attribute :is_following do |object, params|
-    current_user = params[:current_user]
-    current_user.present? && current_user.following?(object)
+    params[:current_user]&.following?(object)
   end
 
   attribute :display_id do |object|

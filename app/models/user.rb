@@ -17,8 +17,8 @@ class User < ApplicationRecord
   before_validation :set_default_email, on: :create
 
   validates :email, presence: true, uniqueness: true
-  validates :password, presence: true, length: { in: 8..36 }, format: { with: /\A[0-9a-zA-Z]+\z/ }, confirmation: true, on: %i[create update]
-  validates :password_confirmation, presence: true, on: %i[create update]
+  validates :password_digest, presence: true, length: { in: 8..72 }, confirmation: true, on: %i[create update]
+  # validates :password_confirmation, presence: true, on: %i[create update]
 
   belongs_to :kitchen, optional: true
 
@@ -60,6 +60,10 @@ class User < ApplicationRecord
     self[:email] = "#{code}@#{Settings.production.base_domain}"
   end
 
+  def myself?(current_user)
+    current_user.present? && self == current_user
+  end
+
   def my_kitchen?(kitchen)
     self.kitchen == kitchen
   end
@@ -77,6 +81,18 @@ class User < ApplicationRecord
     return false if uf.blank?
 
     uf.destroy.present?
+  end
+
+  def followed?(user)
+    return false if myself?(user)
+
+    follower_users.exists?(id: user.id)
+  end
+
+  def following?(user)
+    return false if myself?(user)
+
+    following_users.exists?(id: user.id)
   end
 
   class << self

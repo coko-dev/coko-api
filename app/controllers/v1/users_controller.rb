@@ -76,12 +76,14 @@ module V1
 
       user_code = @user.code
       klass = self.class
-      token = Rails.env.development? ? klass.jwt_encode_for_general(subject: user_code, type: 'user') : klass.jwt_encode_for_firebase(user_code: user_code)
+      general_token = klass.jwt_encode_for_general(subject: user_code, type: 'user')
+      firebase_custom_token = klass.jwt_encode_for_firebase(user_code: user_code)
       render content_type: 'application/json', json: {
         data: {
           meta: {
             id: user_code,
-            token: token
+            general_token: general_token,
+            firebase_custom_token: firebase_custom_token
           }
         }
       }, status: :ok

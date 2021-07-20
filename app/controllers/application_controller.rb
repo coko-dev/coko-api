@@ -17,15 +17,9 @@ class ApplicationController < ActionController::API
 
   def authenticate_with_api_token
     authenticate_or_request_with_http_token do |token, _options|
-      klass = self.class
-      payload =
-        if params[:decode_custom_token].present? # TODO: Switch with env and admin?
-          klass.jwt_decode_for_firebase(token)
-        else
-          klass.jwt_decode_for_general(token)
-        end
-      subject = payload[:uid] || payload[:sub]
-      type = payload[:typ] || 'user'
+      payload = self.class.jwt_decode_for_general(token)
+      subject = payload[:sub]
+      type = payload[:typ]
       raise ForbiddenError unless macthed_routing_for_user_type?(type)
 
       case type
@@ -61,9 +55,9 @@ class ApplicationController < ActionController::API
   end
 
   def authenticate_with_base_api_key
-    is_valid = request.headers[:HTTP_X_COKO_API_KEY] == Rails.application.credentials.api_access_key
+    return if request.headers[:HTTP_X_COKO_API_KEY] == Rails.application.credentials.api_access_key
 
-    raise StandardError unless is_valid
+    raise StandardError
   rescue StandardError
     render_manual_bad_request('access key is invalid')
   end

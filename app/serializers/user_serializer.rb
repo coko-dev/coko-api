@@ -3,6 +3,10 @@
 class UserSerializer < ApplicationSerializer
   set_id :code
 
+  attribute :is_current_user do |object, params|
+    params[:current_user].present? && myself_record?(object, params[:current_user])
+  end
+
   attribute :email, if: proc { |record, params| myself_record?(record, params[:current_user]) }
 
   attributes :following_count, :follower_count
@@ -21,6 +25,14 @@ class UserSerializer < ApplicationSerializer
 
   attribute :recipe_count_for_display do |object|
     number_for_display(object.recipes.count)
+  end
+
+  attribute :is_followed do |object, params|
+    params[:current_user]&.followed?(object)
+  end
+
+  attribute :is_following do |object, params|
+    params[:current_user]&.following?(object)
   end
 
   attribute :display_id do |object|

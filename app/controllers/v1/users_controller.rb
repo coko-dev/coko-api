@@ -34,10 +34,15 @@ module V1
       user.save!
       code = user.code
       klass = self.class
-      token = Rails.env.development? ? klass.jwt_encode_for_general(subject: code, type: 'user') : klass.jwt_encode_for_firebase(user_code: code)
+      general_token = klass.jwt_encode_for_general(subject: code, type: 'user')
+      firebase_custom_token = klass.jwt_encode_for_firebase(user_code: code)
       render content_type: 'application/json', json: UserSerializer.new(
         user,
-        meta: { token: token },
+        meta: {
+          id: code,
+          general_token: general_token,
+          firebase_custom_token: firebase_custom_token
+        },
         params: serializer_params
       ), status: :ok
     rescue StandardError => e

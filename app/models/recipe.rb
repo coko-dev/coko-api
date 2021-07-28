@@ -70,8 +70,9 @@ class Recipe < ApplicationRecord
 
   class << self
     def narrow_down_recipes(params, current_user)
+      recipes = self
       product_ids = current_user.kitchen.products.distinct.ids
-      recipes = Recipe.joins(:recipe_products).group(:id).having('COUNT(recipe_products.product_id IN (?) OR NULL) = COUNT(recipe_products.product_id)', product_ids) if params[:can_be_made].present?
+      recipes = recipes.joins(:recipe_products).group(:id).having('COUNT(recipe_products.product_id IN (?) OR NULL) = COUNT(recipe_products.product_id)', product_ids) if params[:can_be_made].present?
 
       recipes = recipes.joins(:hot_recipe_versions).where(hot_recipe_versions: { status_id: 'enabled' }) if params[:hot_recipes].present?
 

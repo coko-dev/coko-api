@@ -92,10 +92,5 @@ class Recipe < ApplicationRecord
       recipes = recipes.where(id: RecipeProduct.group(:recipe_id).having('count(*) < ?', 5).select(:recipe_id)) if params[:with_few_products]
       recipes
     end
-
-    def can_be_made_recipes(kitchen)
-      product_ids = kitchen.products.distinct.ids
-      Recipe.joins(:recipe_products).group(:id).having('COUNT(recipe_products.product_id IN (?) OR NULL) = COUNT(recipe_products.product_id)', product_ids)
-    end
   end
 end

@@ -5,7 +5,7 @@ module V1
     before_action :set_recipe, only: %i[show update destroy]
 
     api :GET, '/v1/recipes', 'Show some recipes'
-    param :hot_recipes, [true, false], allow_blank: true, desc: 'Show popular recipes. Default: false'
+    param :hot_recipes, [true, false], allow_blank: true, desc: 'Show popular recipes. Default: false. Filtering will be skipped if `true`'
     param :recipe_category_id, :number, allow_blank: true, desc: 'Selected category id'
     param :user_id, String, allow_blank: true, desc: 'Selected user id'
     param :cooking_time_within, :number, allow_blank: true, desc: 'Cooking time limit'
@@ -13,10 +13,15 @@ module V1
     param :with_few_products, [true, false], allow_blank: true, desc: 'Find recipes with few products'
     param :can_be_made, [true, false], allow_blank: true, desc: 'Find recipes that you can make'
     def index
-      recipes = Recipe.narrow_down_recipes(recipe_narrow_down_params)
+      recipes =
+        if params[:hot_recipes]
+          HotRecipeVersion.current.recipes
+        else
+          Recipe.narrow_down_recipes(recipe_narrow_down_params, @current_user)
+        end
 
       render content_type: 'application/json', json: RecipeSerializer.new(
-        recipes.published.limit(12),
+        recipes.published.order(created_at: :desc).limit(12),
         include: association_for_recipes
       ), status: :ok
     end
@@ -170,7 +175,6 @@ module V1
     def recipe_narrow_down_params
       params.permit(
         %i[
-          hot_recipes
           recipe_category_id
           user_id
           cooking_time_within

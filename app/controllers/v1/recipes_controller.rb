@@ -14,7 +14,7 @@ module V1
     param :can_be_made, [true, false], allow_blank: true, desc: 'Find recipes that you can make'
     def index
       recipes =
-        if params[:hot_recipes]
+        if params[:hot_recipes].present?
           HotRecipeVersion.current.recipes
         else
           Recipe.narrow_down_recipes(recipe_narrow_down_params, @current_user)

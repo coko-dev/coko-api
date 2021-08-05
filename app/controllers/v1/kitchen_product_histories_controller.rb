@@ -7,7 +7,8 @@ module V1
       histories = @current_user.kitchen.kitchen_product_histories.order(date: :desc, updated_at: :desc).limit(30)
       render content_type: 'application/json', json: KitchenProductHistorySerializer.new(
         histories,
-        include: associations_for_serialization
+        include: associations_for_serialization,
+        params: serializer_params
       ), status: :ok
     end
 
@@ -18,6 +19,12 @@ module V1
         user
         product
       ]
+    end
+
+    def serializer_params
+      {
+        current_user: @current_user
+      }
     end
   end
 end

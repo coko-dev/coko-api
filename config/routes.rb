@@ -6,6 +6,12 @@ Rails.application.routes.draw do
   namespace :v1 do
     post '/token', to: 'users#token'
 
+    resource :kitchen, only: %i[update]
+    resources :kitchens do
+      collection do
+        get '/current', to: 'kitchens#show_current_kitchen'
+      end
+    end
     resources :kitchen_joins, param: :code, only: %i[create] do
       member do
         patch '/verification', to: 'kitchen_joins#verification'

@@ -7,7 +7,8 @@ module V1
       ksls = @current_user.kitchen.kitchen_shopping_lists
       render content_type: 'application/json', json: KitchenShoppingListSerializer.new(
         ksls,
-        include: association_for_lists
+        include: association_for_lists,
+        params: serializer_params
       ), status: :ok
     end
 
@@ -23,7 +24,8 @@ module V1
       @current_user.save!
       render content_type: 'application/json', json: KitchenShoppingListSerializer.new(
         ksls,
-        include: association_for_lists
+        include: association_for_lists,
+        params: serializer_params
       ), status: :ok
     rescue StandardError => e
       render_bad_request(e)
@@ -49,6 +51,12 @@ module V1
         product
         user
       ]
+    end
+
+    def serializer_params
+      {
+        current_user: @current_user
+      }
     end
 
     def shopping_list_params

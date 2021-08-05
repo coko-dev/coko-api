@@ -53,7 +53,7 @@ module V1
     param :display_id, String, allow_blank: true, desc: 'User display id'
     param :name, String, allow_blank: true, desc: 'User name'
     param :birth_date, String, allow_blank: true, desc: 'Birth date'
-    param :housework_career, String, allow_blank: true, desc: 'housework_career'
+    param :housework_career, :number, allow_blank: true, desc: 'housework_career'
     param :image, String, allow_blank: true, desc: 'User image url'
     param :description, String, allow_blank: true, desc: 'Description'
     param :website_url, String, allow_blank: true, desc: 'Website url(link)'

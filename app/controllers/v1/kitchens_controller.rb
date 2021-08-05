@@ -15,7 +15,7 @@ module V1
       kitchen = @current_user.kitchen
       kitchen.update!(name: params[:name])
       render content_type: 'application/json', json: KitchenSerializer.new(
-        @current_user.kitchen
+        kitchen
       ), status: :ok
     rescue StandardError => e
       render_bad_request(e)

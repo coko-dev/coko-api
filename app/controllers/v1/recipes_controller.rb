@@ -22,7 +22,8 @@ module V1
 
       render content_type: 'application/json', json: RecipeSerializer.new(
         recipes.published.order(created_at: :desc).limit(12),
-        include: association_for_recipes
+        include: association_for_recipes,
+        params: serializer_params
       ), status: :ok
     end
 
@@ -30,7 +31,8 @@ module V1
     def show
       render content_type: 'application/json', json: RecipeSerializer.new(
         @recipe,
-        include: association_for_a_recipe
+        include: association_for_a_recipe,
+        params: serializer_params
       ), status: :ok
     end
 
@@ -65,7 +67,8 @@ module V1
       recipe.save!
       render content_type: 'application/json', json: RecipeSerializer.new(
         recipe,
-        include: association_for_a_recipe
+        include: association_for_a_recipe,
+        params: serializer_params
       ), status: :ok
     rescue StandardError => e
       render_bad_request(e)
@@ -113,7 +116,8 @@ module V1
       end
       render content_type: 'application/json', json: RecipeSerializer.new(
         @recipe,
-        include: association_for_a_recipe
+        include: association_for_a_recipe,
+        params: serializer_params
       ), status: :ok
     rescue StandardError => e
       render_bad_request(e)
@@ -150,6 +154,12 @@ module V1
         recipe_category
         author
       ]
+    end
+
+    def serializer_params
+      {
+        current_user: @current_user
+      }
     end
 
     def recipe_params

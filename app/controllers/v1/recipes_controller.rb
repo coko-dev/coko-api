@@ -12,6 +12,7 @@ module V1
     param :servings, :number, allow_blank: true, desc: 'How many servings'
     param :with_few_products, [true, false], allow_blank: true, desc: 'Find recipes with few products'
     param :can_be_made, [true, false], allow_blank: true, desc: 'Find recipes that you can make'
+    param :my_favorite, [true, false], allow_blank: true, desc: 'Find my favorite recipes'
     def index
       recipes =
         if params[:hot_recipes].present?
@@ -191,6 +192,7 @@ module V1
           servings
           with_few_products
           can_be_made
+          my_favorite
         ]
       )
     end

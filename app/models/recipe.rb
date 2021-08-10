@@ -91,6 +91,8 @@ class Recipe < ApplicationRecord
       recipes = recipes.where(cooking_time: 1..cooking_time_within) if cooking_time_within.present?
 
       recipes = recipes.where(id: RecipeProduct.group(:recipe_id).having('count(*) < ?', 5).select(:recipe_id)) if params[:with_few_products]
+
+      recipes = recipes.joins(:recipe_favorites).where(recipe_favorites: { user_id: current_user.id }) if params[:my_favorite]
       recipes
     end
   end

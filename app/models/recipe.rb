@@ -68,6 +68,10 @@ class Recipe < ApplicationRecord
     end
   end
 
+  def favorited?(user)
+    recipe_favorites.exists?(user: user)
+  end
+
   class << self
     def narrow_down_recipes(params, current_user)
       recipes = self

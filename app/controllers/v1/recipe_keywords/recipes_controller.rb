@@ -10,7 +10,8 @@ module V1
         recipes = @recipe_keyword.recipes.order(created_at: :desc).limit(12)
         render content_type: 'application/json', json: RecipeSerializer.new(
           recipes,
-          include: association_for_recipes
+          include: association_for_recipes,
+          params: serializer_params
         ), status: :ok
       end
 
@@ -25,6 +26,12 @@ module V1
           recipe_category
           author
         ]
+      end
+
+      def serializer_params
+        {
+          current_user: @current_user
+        }
       end
     end
   end

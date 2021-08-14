@@ -11,6 +11,10 @@ class RecipeSerializer < ApplicationSerializer
     object.recipe_sections.adviced.first&.body
   end
 
+  attribute :is_favorite do |object, params|
+    object.favorited?(params[:current_user])
+  end
+
   belongs_to :recipe_category
   belongs_to :author, serializer: UserSerializer, id_method_name: :author_code
 

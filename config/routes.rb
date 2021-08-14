@@ -29,10 +29,7 @@ Rails.application.routes.draw do
     resources :product_categories, only: %i[index]
     resources :recipes do
       resources :recipe_records, only: %i[index create], controller: 'recipes/recipe_records'
-      resources :recipe_favorites, param: :id, only: %i[create]
-      member do
-        delete '/recipe_favorites', to: 'recipe_favorites#destroy' # NOTE: No id required for favorites.
-      end
+      resource :recipe_favorite, only: %i[create destroy]
       collection do
         get '/latest', to: 'recipes#show_latest'
       end

@@ -57,8 +57,8 @@ class ApplicationController < ActionController::API
   def authenticate_with_base_api_key
     return if request.headers[:HTTP_X_COKO_API_KEY] == Rails.application.credentials.api_access_key
 
-    raise StandardError
-  rescue StandardError
-    render_manual_bad_request('access key is invalid')
+    raise StandardError, 'Access key is invalid'
+  rescue StandardError => e
+    render_bad_request(e)
   end
 end

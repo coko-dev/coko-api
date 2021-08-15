@@ -20,16 +20,6 @@ module RenderErrorUtil
     }, status: :bad_request
   end
 
-  def render_manual_bad_request(detail)
-    render content_type: 'application/json', json: {
-      errors: {
-        status: '400',
-        title: 'Bad request',
-        detail: detail
-      }
-    }, status: :bad_request
-  end
-
   def render_unauthorized
     render content_type: 'application/json', json: {
       errors: {

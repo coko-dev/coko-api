@@ -23,4 +23,19 @@ class Product < ApplicationRecord
   def upload_and_fetch_product_image(subject: nil, encoded_image: nil)
     self[:image] = self.class.upload_and_fetch_image(subject: subject, encoded_image: encoded_image, type: :product) || ''
   end
+
+  class << self
+    def find_from_string(body)
+      ocr_strs = ProductOcrString.official.order('CHAR_LENGTH(ocr_string) DESC')
+      prd_ids = []
+      ocr_strs.each do |ocr_str|
+        str = ocr_str.ocr_string
+        next unless body.include?(str)
+
+        prd_ids << ocr_str.product_id
+        body.gsub!(str, ' ')
+      end
+      Product.find(prd_ids)
+    end
+  end
 end

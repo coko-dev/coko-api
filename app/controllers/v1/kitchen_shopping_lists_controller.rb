@@ -2,6 +2,8 @@
 
 module V1
   class KitchenShoppingListsController < ApplicationController
+    before_action :set_shopping_list, only: %i[update]
+
     api :GET, '/v1/kitchen_shopping_lists', 'Show shopping lists'
     def index
       ksls = @current_user.kitchen.kitchen_shopping_lists
@@ -18,7 +20,7 @@ module V1
       param :note, String, allow_blank: true, desc: 'Note for list'
     end
     def create
-      ksls = @current_user.kitchen_shopping_lists.build(shopping_list_params)
+      ksls = @current_user.kitchen_shopping_lists.build(shopping_list_create_params)
       kitchen = @current_user.kitchen
       ksls.each { |ksl| ksl.kitchen = kitchen }
       @current_user.save!
@@ -29,6 +31,17 @@ module V1
       ), status: :ok
     rescue StandardError => e
       render_bad_request(e)
+    end
+
+    api :PUT, '/v1/kitchen_shopping_lists/:id', 'Update shopping list'
+    param :note, String, allow_blank: true, desc: 'Note for list'
+    def update
+      @shopping_list.update!(shopping_list_update_params)
+      render content_type: 'application/json', json: KitchenShoppingListSerializer.new(
+        @shopping_list,
+        include: association_for_lists,
+        params: serializer_params
+      ), status: :ok
     end
 
     api :DELETE, '/v1/kitchen_shopping_lists', 'Delete selected lists'
@@ -46,6 +59,10 @@ module V1
 
     private
 
+    def set_shopping_list
+      @shopping_list = KitchenShoppingList.find(params[:id])
+    end
+
     def association_for_lists
       %i[
         product
@@ -59,13 +76,21 @@ module V1
       }
     end
 
-    def shopping_list_params
+    def shopping_list_create_params
       params.permit(
         kitchen_shopping_lists: %i[
           product_id
           note
         ]
       )&.values&.first
+    end
+
+    def shopping_list_update_params
+      params.permit(
+        %i[
+          note
+        ]
+      )
     end
   end
 end

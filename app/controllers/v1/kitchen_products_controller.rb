@@ -47,8 +47,10 @@ module V1
       authorize(@kitchen_product)
       @kitchen_product.assign_attributes(kitchen_product_params)
       # NOTE: When building with params, no error occurs and it becomes nil.
-      @kitchen_product.added_on = params[:added_on]&.to_date
-      @kitchen_product.best_before = params[:best_before]&.to_date
+      added_on = params[:added_on]
+      @kitchen_product.added_on = added_on.to_date if added_on.present?
+      best_before = params[:best_before]
+      @kitchen_product.best_before = best_before.to_date if best_before.present?
       is_changed = @kitchen_product.changed?
       if is_changed
         kitchen = @kitchen_product.kitchen.touch_with_history_build(user: @current_user, product: @kitchen_product.product, status_id: 'updated')

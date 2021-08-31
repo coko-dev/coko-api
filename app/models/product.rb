@@ -16,12 +16,27 @@ class Product < ApplicationRecord
   has_many :recipe_products, dependent: :delete_all
   has_many :recipes, through: :recipe_products
 
+  after_save :save_default_ocr_string
+
   validates :name, presence: true, length: { maximum: 32 }, on: %i[create update]
   validates :name_hira, length: { maximum: 32 }
   validates :product_category_id, presence: true, on: %i[create update]
 
   def upload_and_fetch_product_image(subject: nil, encoded_image: nil)
     self[:image] = self.class.upload_and_fetch_image(subject: subject, encoded_image: encoded_image, type: :product) || ''
+  end
+
+  def save_default_ocr_string
+    before_name = saved_change_to_name.first
+    pos =
+      if before_name.present?
+        product_ocr_strings.find_by(ocr_string: before_name)
+      else
+        product_ocr_strings.build
+      end
+
+    pos.ocr_string = name
+    pos.save!
   end
 
   class << self

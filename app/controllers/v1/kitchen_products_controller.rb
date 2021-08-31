@@ -7,9 +7,8 @@ module V1
 
     api :GET, '/v1/kitchen_products', 'Show all products in own kitchen'
     def index
-      kitchen_products = @kitchen.kitchen_products
       render content_type: 'application/json', json: KitchenProductSerializer.new(
-        kitchen_products,
+        @kitchen.kitchen_products.order(:created_at),
         include: associations_for_serialization
       ), status: :ok
     end

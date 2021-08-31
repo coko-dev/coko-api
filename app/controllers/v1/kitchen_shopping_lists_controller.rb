@@ -6,9 +6,8 @@ module V1
 
     api :GET, '/v1/kitchen_shopping_lists', 'Show shopping lists'
     def index
-      ksls = @current_user.kitchen.kitchen_shopping_lists
       render content_type: 'application/json', json: KitchenShoppingListSerializer.new(
-        ksls,
+        @current_user.kitchen.kitchen_shopping_lists.order(:created_at),
         include: association_for_lists,
         params: serializer_params
       ), status: :ok

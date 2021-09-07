@@ -115,6 +115,13 @@ add_foreign_key 'kitchen_product_histories', 'kitchens',                        
 add_foreign_key 'kitchen_product_histories', 'products',                        name: 'fk_kitchen_product_histories_2'
 add_foreign_key 'kitchen_product_histories', 'users',                           name: 'fk_kitchen_product_histories_3'
 
+create_table 'kitchen_revenuecats', unsigned: true, force: :cascade do |t|
+  t.bigint 'kitchen_id', null: false, unsigned: true
+  t.string 'code',       null: false, unscoped: true
+end
+add_index       'kitchen_revenuecats', %w[kitchen_id], name: 'idx_kitchen_revenuecats_on_kitchen_id'
+add_foreign_key 'kitchen_revenuecats', 'kitchens',     name: 'fk_kitchen_revenuecats_1'
+
 create_table 'kitchen_shopping_lists', unsigned: true, force: :cascade do |t|
   t.bigint 'kitchen_id', null: false, unsigned: true
   t.bigint 'product_id', null: false, unsigned: true

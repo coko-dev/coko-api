@@ -155,6 +155,7 @@ create_table 'product_categories', unsigned: true, force: :cascade do |t|
   t.string 'name',                     null: false
   t.string 'name_slug',                null: false
   t.bigint 'product_category_id_from', unsigned: true
+  t.string 'color_code'
   t.timestamps
 end
 add_index       'product_categories', %w[product_category_id_from], name: 'idx_product_categories_on_product_category_id_from'
@@ -193,6 +194,7 @@ create_table 'recipe_categories', unsigned: true, force: :cascade do |t|
   t.string 'name',                    null: false
   t.string 'name_slug',               null: false
   t.bigint 'recipe_category_id_from', unsigned: true
+  t.string 'color_code'
   t.timestamps
 end
 add_index       'recipe_categories', %w[recipe_category_id_from], name: 'idx_recipe_categories_on_recipe_category_id_from'

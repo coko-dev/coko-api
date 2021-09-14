@@ -118,6 +118,7 @@ add_foreign_key 'kitchen_product_histories', 'users',                           
 create_table 'kitchen_revenuecats', unsigned: true, force: :cascade do |t|
   t.bigint 'kitchen_id',  null: false, unsigned: true
   t.string 'app_user_id', null: false, unscoped: true
+  t.string 'receipt'
 end
 add_index       'kitchen_revenuecats', %w[kitchen_id], name: 'idx_kitchen_revenuecats_on_kitchen_id'
 add_foreign_key 'kitchen_revenuecats', 'kitchens',     name: 'fk_kitchen_revenuecats_1'

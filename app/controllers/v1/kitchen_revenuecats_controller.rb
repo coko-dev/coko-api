@@ -3,8 +3,7 @@
 module V1
   class KitchenRevenuecatsController < ApplicationController
     api :POST, 'v1/kitchen_revenuecat', 'Create revenuecat for self kitchen'
-    param :app_user_id, String, required: :true, desc: 'Revenuecat app user id'
-    param :receipt, String, receipt: :true, desc: 'Revenuecat receipt'
+    param :app_user_id, String, required: true, desc: 'Revenuecat app user id'
     def create
       # TODO:
       # app_user_id と receipt で REST API を叩く
@@ -17,19 +16,19 @@ module V1
         },
         headers: {
           Accept: 'application/json',
-          X-Platform: 'platform',
-          Content-Type: 'application/json',
-          Authorization: 'Bearer REVENUECAT_API_KEY'
+          Authorization: 'Bearer REVENUECAT_API_KEY',
+          'X-Platform': 'platform',
+          'Content-Type': 'application/json'
         }
       )
 
       raise StandardError unless res.success?
 
       # TODO: 期限などはパラメータからではなく res の 値を使う（ユーザのレシート情報は参照しない）
-      revenuecat = KitchenRevenuecat.find_or_initialize_by(kitchen: @current_user.kitchen, app_user_id: 'app_user_id', receipt: 'receipt')
+      revenuecat = KitchenRevenuecat.find_or_initialize_by(kitchen: @current_user.kitchen, app_user_id: params[:app_user_id], receipt: 'receipt')
       if revenuecat.new_record?
-        revenuecat.save!
         # TODO: ステータス更新など
+        revenuecat.save!
       end
 
       render content_type: 'application/json', json: KitchenRevenuecatSerializer.new(

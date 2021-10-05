@@ -37,5 +37,16 @@ module StringUtil
 
       "#{display_num}#{display_digit}"
     end
+
+    def short_env_name
+      case Rails.env
+      when 'development'
+        'dev'
+      when 'staging'
+        'stg'
+      when 'production'
+        'prd'
+      end
+    end
   end
 end

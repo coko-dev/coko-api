@@ -4,7 +4,7 @@ include StringUtil
 
 class RevenuecatClient
   APP_UID_PREFIX = '$RCAnonymousID:'
-  TYPE_PREFIX = { kitchen: 'kitchen' }
+  TYPE_PREFIX = { kitchen: 'kitchen' }.freeze
   REVENUECAT_API_KEY = Rails.application.credentials.revenuecat[:api_key]
 
   class << self

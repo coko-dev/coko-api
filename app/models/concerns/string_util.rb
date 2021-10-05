@@ -39,14 +39,13 @@ module StringUtil
     end
 
     def short_env_name
-      case Rails.env
-      when 'development'
-        'dev'
-      when 'staging'
-        'stg'
-      when 'production'
-        'prd'
-      end
+      env_name = {
+        'development': 'dev',
+        'staging': 'stg',
+        'production': 'prd'
+      }
+
+      env_name[Rails.env]
     end
   end
 end

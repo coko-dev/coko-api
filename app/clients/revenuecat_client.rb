@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 class RevenuecatClient
-  include StringUtil
-
   APP_UID_PREFIX = '$RCAnonymousID:'
   TYPES = { kitchen: 'kitchen' }.freeze
   REVENUECAT_API_KEY = Rails.application.credentials.revenuecat[:api_key]
 
   class << self
+    include StringUtil
+
     def subscribed?(type: nil, id: nil)
       res = fetch_subscription(type: type, id: id)
       raise StandardError unless res.success?

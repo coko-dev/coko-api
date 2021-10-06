@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-include StringUtil
-
 class RevenuecatClient
+  include StringUtil
+
   APP_UID_PREFIX = '$RCAnonymousID:'
-  TYPE_PREFIX = { kitchen: 'kitchen' }.freeze
+  TYPES = { kitchen: 'kitchen' }.freeze
   REVENUECAT_API_KEY = Rails.application.credentials.revenuecat[:api_key]
 
   class << self
@@ -13,24 +13,28 @@ class RevenuecatClient
       raise StandardError unless res.success?
 
       body = JSON.parse(res.response_body, symbolize_names: true)
+      # NOTE: subscriptions が空、もしくは unsubscribe_detected_at に時刻があれば非課金
       return false if body.dig(:subscriber, :subscriptions).blank? || body.dig(:subscriber, :subscriptions, :plan_name, :unsubscribe_detected_at).present?
 
       true
     end
 
     def fetch_subscription(type: nil, id: nil)
-      type_prefix = TYPE_PREFIX[type]
-      return if type_prefix.blank? || id.blank?
+      type = TYPES[type]
+      return if type.blank? || id.blank?
 
-      app_user_id = "#{APP_UID_PREFIX}#{short_env_name}-#{type_prefix}-#{id}"
       Typhoeus.get(
-        "https://api.revenuecat.com/v1/subscribers/#{app_user_id}",
+        "https://api.revenuecat.com/v1/subscribers/#{app_user_id(type: type, id: id)}",
         headers: {
           Accept: 'application/json',
           Authorization: "Bearer #{REVENUECAT_API_KEY}",
           'Content-Type' => 'application/json'
         }
       )
+    end
+
+    def app_user_id(type: nil, id: nil)
+      "#{APP_UID_PREFIX}#{short_env_name}-#{type}-#{id}"
     end
   end
 end

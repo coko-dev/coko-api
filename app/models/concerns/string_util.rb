@@ -40,9 +40,9 @@ module StringUtil
 
     def short_env_name
       env_name = {
-        'development': 'dev',
-        'staging': 'stg',
-        'production': 'prd'
+        'development' => 'dev',
+        'staging' => 'stg',
+        'production' => 'prd'
       }
 
       env_name[Rails.env]

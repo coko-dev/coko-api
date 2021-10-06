@@ -37,5 +37,15 @@ module StringUtil
 
       "#{display_num}#{display_digit}"
     end
+
+    def short_env_name
+      env_name = {
+        'development': 'dev',
+        'staging': 'stg',
+        'production': 'prd'
+      }
+
+      env_name[Rails.env]
+    end
   end
 end

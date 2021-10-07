@@ -3,7 +3,6 @@
 class RevenuecatClient
   include StringUtil
 
-  APP_UID_PREFIX = '$RCAnonymousID:'
   TYPES = { kitchen: 'kitchen' }.freeze
   REVENUECAT_API_KEY = Rails.application.credentials.revenuecat[:api_key]
 
@@ -33,8 +32,8 @@ class RevenuecatClient
       )
     end
 
-    def app_user_id(type: nil, id: nil)
-      "#{APP_UID_PREFIX}#{short_env_name}-#{type}-#{id}"
+    def app_user_id(type:, id:)
+      "#{short_env_name}-#{type}-#{id}"
     end
   end
 end

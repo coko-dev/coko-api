@@ -4,6 +4,7 @@ class RevenuecatClient
   include StringUtil
 
   TYPES = { kitchen: 'kitchen' }.freeze
+  PLAN_NAMES = { general: 'tabecoko_150_1m_3w0', test: 'tabecokotest__150_1m' }.freeze
   REVENUECAT_API_KEY = Rails.application.credentials.revenuecat[:api_key]
 
   class << self
@@ -13,7 +14,7 @@ class RevenuecatClient
 
       body = JSON.parse(res.response_body, symbolize_names: true)
       # NOTE: subscriptions が空、もしくは unsubscribe_detected_at に時刻があれば非課金
-      return false if body.dig(:subscriber, :subscriptions).blank? || body.dig(:subscriber, :subscriptions, :plan_name, :unsubscribe_detected_at).present?
+      return false if body.dig(:subscriber, :subscriptions).blank? || body.dig(:subscriber, :subscriptions, PLAN_NAMES[:general].to_sym, :unsubscribe_detected_at).present? || body.dig(:subscriber, :subscriptions, PLAN_NAMES[:test].to_sym, :unsubscribe_detected_at).present?
 
       true
     end

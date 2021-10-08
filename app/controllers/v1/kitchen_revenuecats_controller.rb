@@ -12,7 +12,7 @@ module V1
       kitchen.save!
 
       render content_type: 'application/json', json: {
-        data: { meta: { is_became_subscriber: is_changed } }
+        data: { meta: { is_new_subscriber: is_changed } }
       }, status: :ok
     rescue StandardError => e
       render_bad_request(e)

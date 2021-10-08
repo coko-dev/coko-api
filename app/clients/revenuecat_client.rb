@@ -4,7 +4,7 @@ class RevenuecatClient
   include StringUtil
 
   TYPES = { kitchen: 'kitchen' }.freeze
-  PLAN_NAMES = { general: 'tabecoko_150_1m_3w0', test: 'tabecokotest__150_1m' }
+  PLAN_NAMES = { general: 'tabecoko_150_1m_3w0', test: 'tabecokotest__150_1m' }.freeze
   REVENUECAT_API_KEY = Rails.application.credentials.revenuecat[:api_key]
 
   class << self

@@ -9,6 +9,12 @@ module V1
     def create
       reported_user = User.find_by!(code: params[:user_id])
       ViolationReport.create!(reporting_user_id: @current_user.id, reported_user_id: reported_user.id, reason: params[:reason], description: params[:description])
+
+      render content_type: 'application/json', json: {
+        data: { meta: { success: true } }
+      }, status: :ok
+    rescue StandardError => e
+      render_bad_request(e)
     end
   end
 end

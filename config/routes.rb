@@ -52,7 +52,7 @@ Rails.application.routes.draw do
         delete '/unfollow', to: 'user_follows#destroy'
       end
     end
-    resources :user_profiles
+    resources :violation_reports, only: %i[create]
   end
 
   # - - - - - - - - - -

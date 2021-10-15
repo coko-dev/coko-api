@@ -317,3 +317,16 @@ create_table 'users', unsigned: true, force: :cascade do |t|
 end
 add_index 'users', %w[code],  name: 'idx_users_on_code',  unique: true
 add_index 'users', %w[email], name: 'idx_users_on_email', unique: true
+
+create_table 'violation_reports', unsigned: true, force: :cascade do |t|
+  t.bigint 'reporting_user_id', null: false
+  t.bigint 'reported_user_id',  null: false
+  t.string 'reason',            limit: 120
+  t.string 'description',       limit: 120
+  t.timestamps
+end
+add_index       'violation_reports', %w[reporting_user_id reported_user_id], name: 'idx_violation_reports_on_reporting_user_id_and_reported_user_id'
+add_index       'violation_reports', %w[reporting_user_id],                  name: 'idx_violation_reports_on_reporting_user_id'
+add_index       'violation_reports', %w[reported_user_id],                   name: 'idx_violation_reports_on_reported_user_id'
+add_foreign_key 'violation_reports', 'users',                                name: 'fk_violation_reports_2', column: 'reporting_user_id'
+add_foreign_key 'violation_reports', 'users',                                name: 'fk_violation_reports_1', column: 'reported_user_id'

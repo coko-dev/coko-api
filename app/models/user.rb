@@ -29,18 +29,22 @@ class User < ApplicationRecord
   has_many :kitchen_product_histories, dependent: :delete_all
   has_many :kitchen_shopping_lists, dependent: :delete_all
   has_many :followings, foreign_key: 'user_id_from', class_name: 'UserFollow', inverse_of: 'following_user', dependent: :delete_all
-  has_many :followers, foreign_key: 'user_id_to', class_name: 'UserFollow', inverse_of: 'follower_user', dependent: :delete_all
+  has_many :followers,  foreign_key: 'user_id_to',   class_name: 'UserFollow', inverse_of: 'follower_user',  dependent: :delete_all
   has_many :following_users, -> { merge(UserFollow.followed) }, through: :followings, source: :follower_user
-  has_many :follower_users, -> { merge(UserFollow.followed) }, through: :followers, source: :following_user
+  has_many :follower_users,  -> { merge(UserFollow.followed) }, through: :followers,  source: :following_user
   has_many :blocking_users, -> { merge(UserFollow.blocked) }, through: :followings, source: :follower_user
-  has_many :blocker_users, -> { merge(UserFollow.blocked) }, through: :followers, source: :following_user
+  has_many :blocker_users,  -> { merge(UserFollow.blocked) }, through: :followers,  source: :following_user
   has_many :muting_users, -> { merge(UserFollow.muted) }, through: :followings, source: :follower_user
-  has_many :muted_users, -> { merge(UserFollow.muted) }, through: :followers, source: :following_user
+  has_many :muted_users,  -> { merge(UserFollow.muted) }, through: :followers,  source: :following_user
   has_many :all_following_users, through: :followings, source: :follower_user
-  has_many :all_follower_users, through: :followers, source: :following_user
+  has_many :all_follower_users,  through: :followers,  source: :following_user
   has_many :recipes, foreign_key: 'author_id', class_name: 'Recipe', inverse_of: 'author', dependent: :nullify
   has_many :recipe_favorites, dependent: :delete_all
   has_many :recipe_records, foreign_key: 'author_id', class_name: 'RecipeRecord', inverse_of: 'author', dependent: :nullify
+  has_many :reportings, foreign_key: 'reporting_user_id', class_name: 'ViolationReport', inverse_of: 'reporting_user', dependent: :delete_all
+  has_many :reporteds,  foreign_key: 'reported_user_id',  class_name: 'ViolationReport', inverse_of: 'reported_user',  dependent: :delete_all
+  has_many :reporting_users, through: :reportings, source: :reporting_user
+  has_many :reported_users,  through: :reporteds,  source: :reported_user
 
   accepts_nested_attributes_for :profile
   accepts_nested_attributes_for :own_kitchen

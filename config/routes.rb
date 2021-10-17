@@ -82,5 +82,6 @@ Rails.application.routes.draw do
         get '/blacked', to: 'recipe_keywords#show_blacked'
       end
     end
+    resources :violation_reports, only: %i[index]
   end
 end

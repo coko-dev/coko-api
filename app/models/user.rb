@@ -100,6 +100,10 @@ class User < ApplicationRecord
 
   class << self
     def set_kitchen(user: nil, kitchen: nil)
+      current_kitchen = user.kitchen
+      # TODO: user.kitchenが重複
+      raise StandardError, "You can't leave subscribed kitchen" if current_kitchen.is_subscriber
+
       user.kitchen = kitchen
       user.save!
     end

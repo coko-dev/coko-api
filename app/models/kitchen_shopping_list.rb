@@ -2,7 +2,7 @@
 
 class KitchenShoppingList < ApplicationRecord
   MAXIMUM_NUMBER = 6
-  
+
   validates :note, length: { maximum: 32 }, allow_nil: true
 
   belongs_to :kitchen

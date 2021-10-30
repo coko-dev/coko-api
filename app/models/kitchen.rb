@@ -38,4 +38,8 @@ class Kitchen < ApplicationRecord
     kitchen_product_histories.build(user: user, product: product, date: Time.zone.today, status_id: status_id)
     self
   end
+
+  def todays_ocr_count
+    KitchenOcrHistory.todays_count(self)
+  end
 end

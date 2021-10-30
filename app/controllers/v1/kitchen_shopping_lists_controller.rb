@@ -19,8 +19,10 @@ module V1
       param :note, String, allow_blank: true, desc: 'Note for list'
     end
     def create
-      ksls = @current_user.kitchen_shopping_lists.build(shopping_list_create_params)
       kitchen = @current_user.kitchen
+      raise StandardError, 'Add failed. Exceeds the maximum number' if kitchen.is_subscriber.blank? && KitchenShoppingList.over_num_limit?(kitchen, add_num: params[:kitchen_shopping_lists].length)
+
+      ksls = @current_user.kitchen_shopping_lists.build(shopping_list_create_params)
       ksls.each { |ksl| ksl.kitchen = kitchen }
       @current_user.save!
       render content_type: 'application/json', json: KitchenShoppingListSerializer.new(

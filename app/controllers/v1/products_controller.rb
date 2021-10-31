@@ -9,7 +9,7 @@ module V1
       products =
         if receipt_string.present?
           kitchen = @current_user.kitchen
-          raise StandardError, 'Over limits' if kitchen.is_subscriber.blank? && KitchenOcrHistory.todays_count(kitchen) > KitchenOcrHistory::DAILY_LIMIT
+          raise StandardError, 'Over limits' if kitchen.is_subscriber.blank? && KitchenOcrHistory.todays_count(kitchen) >= KitchenOcrHistory::DAILY_LIMIT
 
           prds = Product.find_from_string(receipt_string)
           KitchenOcrHistory.create!(kitchen: kitchen, log: prds.map(&:id))

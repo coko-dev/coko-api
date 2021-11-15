@@ -14,24 +14,23 @@ module V1
     end
 
     api :POST, '/v1/kitchen_products', 'Create a kitchen product'
-    param :product_id, :number, required: true, desc: "Parent product's id"
-    param :note, String, desc: "User's memo"
-    param :added_on, String, desc: "Ex: '2021-10-5' or '2021-10-05'. Default: request date"
-    param :best_before, String, desc: "Ex: '2021-10-5' or '2021-10-05'"
+    param :kitchen_shopping_lists, Array, required: true, desc: 'Shopping lists' do
+      param :product_id, :number, required: true, desc: "Parent product's id"
+      param :note, String, desc: "User's memo"
+      param :added_on, String, desc: "Ex: '2021-10-5' or '2021-10-05'. Default: request date"
+      param :best_before, String, desc: "Ex: '2021-10-5' or '2021-10-05'"
+    end
     def create
-      product = Product.find(params[:product_id])
-      kitchen_product = product.kitchen_products.build(kitchen_product_params)
-      # NOTE: When building with params, no error occurs and it becomes nil.
-      kitchen_product.added_on = params[:added_on]&.to_date
-      kitchen_product.best_before = params[:best_before]&.to_date
-      kitchen_product.kitchen = @kitchen
-      @kitchen.touch_with_history_build(user: @current_user, product: product, status_id: 'added')
-      ApplicationRecord.transaction do
-        kitchen_product.save!
-        @kitchen.save!
+      kitchen_products = @kitchen.kitchen_products.build(kitchen_product_create_params)
+      kitchen_products.each |kitchen_product| do
+        # NOTE: When building with params, no error occurs and it becomes nil.
+        kitchen_product.added_on = params[:added_on]&.to_date
+        kitchen_product.best_before = params[:best_before]&.to_date
+        @kitchen.touch_with_history_build(user: @current_user, product: product, status_id: 'added')
       end
+      @kitchen.save!
       render content_type: 'application/json', json: KitchenProductSerializer.new(
-        kitchen_product,
+        kitchen_products,
         include: associations_for_serialization
       ), status: :ok
     rescue StandardError => e
@@ -98,6 +97,15 @@ module V1
         %i[
           note
         ]
+      )
+    end
+
+    def kitchen_product_create_params
+      params.permit(
+        kitchen_products: %i{
+          product_id
+          note
+        }
       )
     end
 

@@ -22,7 +22,7 @@ module V1
     end
     def create
       kitchen_products = @kitchen.kitchen_products.build(kitchen_product_create_params)
-      kitchen_products.each |kitchen_product| do
+      kitchen_products.each do |kitchen_product|
         # NOTE: When building with params, no error occurs and it becomes nil.
         kitchen_product.added_on = params[:added_on]&.to_date
         kitchen_product.best_before = params[:best_before]&.to_date
@@ -102,10 +102,10 @@ module V1
 
     def kitchen_product_create_params
       params.permit(
-        kitchen_products: %i{
+        kitchen_products: %i[
           product_id
           note
-        }
+        ]
       )
     end
 

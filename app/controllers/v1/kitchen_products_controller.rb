@@ -14,19 +14,22 @@ module V1
     end
 
     api :POST, '/v1/kitchen_products', 'Create a kitchen product'
-    param :kitchen_shopping_lists, Array, required: true, desc: 'Shopping lists' do
+    param :kitchen_products, Array, required: true, desc: 'Shopping lists' do
       param :product_id, :number, required: true, desc: "Parent product's id"
       param :note, String, desc: "User's memo"
       param :added_on, String, desc: "Ex: '2021-10-5' or '2021-10-05'. Default: request date"
       param :best_before, String, desc: "Ex: '2021-10-5' or '2021-10-05'"
     end
     def create
-      kitchen_products = @kitchen.kitchen_products.build(kitchen_product_create_params)
-      kitchen_products.each do |kitchen_product|
-        # NOTE: When building with params, no error occurs and it becomes nil.
-        kitchen_product.added_on = params[:added_on]&.to_date
-        kitchen_product.best_before = params[:best_before]&.to_date
+      kitchen_products = kitchen_product_create_params.map do |kitchen_product_param|
+        product = Product.find(kitchen_product_param[:product_id])
         @kitchen.touch_with_history_build(user: @current_user, product: product, status_id: 'added')
+        @kitchen.kitchen_products.build(
+          product: product,
+          note: kitchen_product_param[:note],
+          added_on: params[:added_on]&.to_date,
+          best_before: params[:best_before]&.to_date
+        )
       end
       @kitchen.save!
       render content_type: 'application/json', json: KitchenProductSerializer.new(
@@ -43,7 +46,7 @@ module V1
     param :best_before, String, desc: "Ex: '2021-10-5' or '2021-10-05'"
     def update
       authorize(@kitchen_product)
-      @kitchen_product.assign_attributes(kitchen_product_params)
+      @kitchen_product.assign_attributes(kitchen_product_update_params)
       # NOTE: When building with params, no error occurs and it becomes nil.
       added_on = params[:added_on]
       @kitchen_product.added_on = added_on.to_date if added_on.present?
@@ -92,7 +95,7 @@ module V1
     end
 
     # NOTE: Don't include 'best_before' in params to make an error if it cannot be converted to date type.
-    def kitchen_product_params
+    def kitchen_product_update_params
       params.permit(
         %i[
           note
@@ -105,8 +108,10 @@ module V1
         kitchen_products: %i[
           product_id
           note
+          added_on
+          best_before
         ]
-      )
+      )&.values&.first
     end
 
     def set_kitchen

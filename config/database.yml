@@ -8,11 +8,11 @@ default: &default
 
 development:
   <<: *default
-  database: coko_api_development
+  database: coko_development
 
 test:
   <<: *default
-  database: coko_api_test
+  database: coko_test
 
 production:
   <<: *default

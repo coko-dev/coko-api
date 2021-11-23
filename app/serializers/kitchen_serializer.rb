@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 class KitchenSerializer < ApplicationSerializer
-  # TODO: last_action_at, todays_ocr_count は自身のキッチンの場合のみ表示
-  attribute :name, :is_subscriber, :owner_user_id, :last_action_at, :todays_ocr_count
+  attributes :name, :owner_user_id
+
+  attributes :is_subscriber, :last_action_at, :todays_ocr_count, if: proc { |record, params| params[:current_user]&.my_kitchen?(record) }
+
+  has_many :users, id_method_name: :code do |object|
+    object.users
+  end
 end

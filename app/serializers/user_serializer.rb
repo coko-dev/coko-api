@@ -58,4 +58,6 @@ class UserSerializer < ApplicationSerializer
   attribute :website_url do |object|
     object.profile.website_url
   end
+
+  belongs_to :kitchen
 end

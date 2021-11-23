@@ -3,11 +3,12 @@
 module V1
   class KitchenShoppingListsController < ApplicationController
     before_action :set_shopping_list, only: %i[update]
+    before_action :set_kitchen, only: %i[index create destroy]
 
     api :GET, '/v1/kitchen_shopping_lists', 'Show shopping lists'
     def index
       render content_type: 'application/json', json: KitchenShoppingListSerializer.new(
-        @current_user.kitchen.kitchen_shopping_lists.order(:created_at),
+        @kitchen.kitchen_shopping_lists.order(:created_at),
         include: association_for_lists,
         params: serializer_params
       ), status: :ok
@@ -19,11 +20,10 @@ module V1
       param :note, String, allow_blank: true, desc: 'Note for list'
     end
     def create
-      kitchen = @current_user.kitchen
-      raise StandardError, 'Add failed. Exceeds the maximum number' if kitchen.is_subscriber.blank? && KitchenShoppingList.over_num_limit?(kitchen, add_num: params[:kitchen_shopping_lists].length)
+      raise StandardError, 'Add failed. Exceeds the maximum number' if @kitchen.is_subscriber.blank? && KitchenShoppingList.over_num_limit?(@kitchen, add_num: params[:kitchen_shopping_lists].length)
 
       ksls = @current_user.kitchen_shopping_lists.build(shopping_list_create_params)
-      ksls.each { |ksl| ksl.kitchen = kitchen }
+      ksls.each { |ksl| ksl.kitchen = @kitchen }
       @current_user.save!
       render content_type: 'application/json', json: KitchenShoppingListSerializer.new(
         ksls,
@@ -37,6 +37,7 @@ module V1
     api :PUT, '/v1/kitchen_shopping_lists/:id', 'Update shopping list'
     param :note, String, allow_blank: true, desc: 'Note for list'
     def update
+      authorize(@shopping_list)
       @shopping_list.update!(shopping_list_update_params)
       render content_type: 'application/json', json: KitchenShoppingListSerializer.new(
         @shopping_list,
@@ -48,8 +49,7 @@ module V1
     api :DELETE, '/v1/kitchen_shopping_lists', 'Delete selected lists'
     param :kitchen_shopping_list_ids, Array, required: true, desc: 'Shopping list ids. Ex: [1, 2, 3]'
     def destroy
-      ids = params[:kitchen_shopping_list_ids]
-      ksls = @current_user.kitchen.kitchen_shopping_lists.where(id: ids)
+      ksls = @kitchen.kitchen_shopping_lists.where(id: params[:kitchen_shopping_list_ids])
       destroyed = ksls.destroy_all
       render content_type: 'application/json', json: {
         data: { meta: { destroyed_count: destroyed.size } }
@@ -62,6 +62,10 @@ module V1
 
     def set_shopping_list
       @shopping_list = KitchenShoppingList.find(params[:id])
+    end
+
+    def set_kitchen
+      @kitchen = @current_user.kitchen
     end
 
     def association_for_lists

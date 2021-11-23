@@ -36,7 +36,6 @@ class Kitchen < ApplicationRecord
   def touch_with_history_build(user:, product:, status_id:)
     touch_last_action_at
     kitchen_product_histories.build(user: user, product: product, date: Time.zone.today, status_id: status_id)
-    self
   end
 
   def todays_ocr_count

@@ -20,7 +20,8 @@ Rails.application.routes.draw do
         patch '/confirm', to: 'kitchen_joins#confirm'
       end
     end
-    resources :kitchen_products
+    resources :kitchen_products, only: %i[index create update]
+    delete 'kitchen_products', to: 'kitchen_products#destroy'
     resources :kitchen_product_histories, only: %i[index]
     resource :kitchen_revenuecat, only: %i[update]
     resources :kitchen_shopping_lists, only: %i[index create update]

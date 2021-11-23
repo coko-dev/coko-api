@@ -1,6 +1,6 @@
 FROM ruby:2.6.6
 ENV LANG C.UTF-8
-RUN apt-get update -qq && apt-get install -y build-essential libpq-dev nodejs
+RUN apt-get update -qq && apt-get install -y build-essential libpq-dev nodejs vim
 
 RUN curl -o- -L https://yarnpkg.com/install.sh | bash
 ENV PATH /root/.yarn/bin:/root/.config/yarn/global/node_modules/.bin:$PATH

@@ -158,9 +158,7 @@ module V1
     end
 
     def serializer_params
-      {
-        current_user: @current_user
-      }
+      { current_user: @current_user }
     end
 
     def recipe_params

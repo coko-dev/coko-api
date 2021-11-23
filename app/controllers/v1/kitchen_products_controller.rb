@@ -2,8 +2,8 @@
 
 module V1
   class KitchenProductsController < ApplicationController
-    before_action :set_kitchen,                     only: %i[index create]
-    before_action :set_kitchen_product,             only: %i[update destroy]
+    before_action :set_kitchen,                     only: %i[index create update destroy]
+    before_action :set_kitchen_product,             only: %i[update]
 
     api :GET, '/v1/kitchen_products', 'Show all products in own kitchen'
     def index
@@ -54,10 +54,10 @@ module V1
       @kitchen_product.best_before = best_before.to_date if best_before.present?
       is_changed = @kitchen_product.changed?
       if is_changed
-        kitchen = @kitchen_product.kitchen.touch_with_history_build(user: @current_user, product: @kitchen_product.product, status_id: 'updated')
+        @kitchen.touch_with_history_build(user: @current_user, product: @kitchen_product.product, status_id: 'updated')
         ApplicationRecord.transaction do
           @kitchen_product.save!
-          kitchen.save!
+          @kitchen.save!
         end
       end
       render content_type: 'application/json', json: KitchenProductSerializer.new(
@@ -71,16 +71,17 @@ module V1
       render_bad_request(e)
     end
 
-    api :DELETE, '/v1/kitchen_products/:id', 'Delete a kitchen product'
+    api :DELETE, '/v1/kitchen_products', 'Delete kitchen products'
+    param :kitchen_product_ids, Array, required: true, desc: 'Kitchen product ids. Ex: [1, 2, 3]'
     def destroy
-      authorize(@kitchen_product)
-      kitchen = @kitchen_product.kitchen.touch_with_history_build(user: @current_user, product: @kitchen_product.product, status_id: 'deleted')
-      ApplicationRecord.transaction do
-        @kitchen_product.destroy!
-        kitchen.save!
+      kitchen_products = @kitchen.kitchen_products.where(id: params[:kitchen_product_ids])
+      kitchen_products.each { |kp| @kitchen.touch_with_history_build(user: @current_user, product: kp.product, status_id: 'deleted') }
+      destroyed = ApplicationRecord.transaction do
+        @kitchen.save!
+        kitchen_products.destroy_all
       end
       render content_type: 'application/json', json: {
-        data: { meta: { is_deleted: @kitchen_product.destroyed? } }
+        data: { meta: { destroyed_count: destroyed.size } }
       }, status: :ok
     rescue StandardError => e
       render_bad_request(e)

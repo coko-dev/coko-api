@@ -16,7 +16,7 @@ module V1
 
     api :POST, '/v1/kitchen_shopping_lists', 'Create shopping lists'
     param :kitchen_shopping_lists, Array, required: true, desc: 'Shopping lists' do
-      param :product_id, :number, required: true, desc: "Parent product's id"
+      param :product_id, String, required: true, desc: "Parent product's id"
       param :note, String, allow_blank: true, desc: 'Note for list'
     end
     def create

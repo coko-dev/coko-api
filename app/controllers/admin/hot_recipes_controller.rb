@@ -6,7 +6,7 @@ module Admin
     before_action :set_version, only: %i[create destroy]
 
     api :POST, '/admin/hot_recipes', 'Register popular(hot) recipe'
-    param :recipe_id, :number, required: true, desc: "Parent recipe's id"
+    param :recipe_id, String, required: true, desc: "Parent recipe's id"
     param :version, String, required: true, desc: 'Version name'
     def create
       hot_recipe = HotRecipe.find_or_initialize_by(recipe: @recipe, hot_recipe_version: @version)
@@ -19,7 +19,7 @@ module Admin
     end
 
     api :DELETE, '/admin/hot_recipes', 'Destroy hot recipe relation'
-    param :recipe_id, :number, required: true, desc: "Parent recipe's id"
+    param :recipe_id, String, required: true, desc: "Parent recipe's id"
     param :version, String, required: true, desc: 'Version name'
     def destroy
       hot_recipe = HotRecipe.find_by!(recipe: @recipe, hot_recipe_version: @version).destroy!

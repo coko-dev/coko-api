@@ -6,7 +6,7 @@ module V1
 
     api :GET, '/v1/recipes', 'Show some recipes'
     param :hot_recipes, [true, false], allow_blank: true, desc: 'Show popular recipes. Default: false. Filtering will be skipped if `true`'
-    param :recipe_category_id, :number, allow_blank: true, desc: 'Selected category id'
+    param :recipe_category_id, String, allow_blank: true, desc: 'Selected category id'
     param :user_id, String, allow_blank: true, desc: 'Selected user id'
     param :cooking_time_within, :number, allow_blank: true, desc: 'Cooking time limit'
     param :servings, :number, allow_blank: true, desc: 'How many servings'
@@ -40,7 +40,7 @@ module V1
     api :POST, '/v1/recipes', 'Posting a recipe'
     param :name, String, required: true, desc: 'Recipe name'
     param :image, String, required: true, desc: 'Recipe image url'
-    param :recipe_category_id, :number, required: true, desc: "Parent category's id"
+    param :recipe_category_id, String, required: true, desc: "Parent category's id"
     param :cooking_time, :number, required: true, desc: 'Minutes to cook'
     param :servings, :number, required: true, desc: 'How many servings'
     param :introduction, String, required: true, desc: 'Recipe introduction'
@@ -51,7 +51,7 @@ module V1
       param :image, String, allow_blank: true, desc: 'Step image url'
     end
     param :recipe_products, Array, required: true, desc: 'Products required for recipe' do
-      param :product_id, :number, required: true, desc: "Parent product's id"
+      param :product_id, String, required: true, desc: "Parent product's id"
       param :volume, String, allow_blank: true, desc: 'Amount to use'
       param :note, String, allow_blank: true, desc: 'Note for cook'
     end
@@ -89,7 +89,7 @@ module V1
       param :image, String, allow_blank: true, desc: 'Step image url'
     end
     param :recipe_products, Array, allow_blank: true, desc: 'Products required for recipe' do
-      param :product_id, :number, required: true, desc: "Parent product's id"
+      param :product_id, String, required: true, desc: "Parent product's id"
       param :volume, String, allow_blank: true, desc: 'Amount to use'
       param :note, String, allow_blank: true, desc: 'Note for cook'
     end

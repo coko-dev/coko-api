@@ -6,6 +6,7 @@ Apipie.configure do |config|
   config.doc_base_url = '/apidoc'
   config.api_controllers_matcher = Rails.root.join('app/controllers/**/*.rb')
   config.api_routes = Rails.application.routes
+  config.validate = false # TODO: クライアント側がstring idに対応し次第削除
   config.translate = false
   config.authenticate = proc {
     basic_auth = Rails.application.credentials[:basic_auth]

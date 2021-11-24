@@ -27,8 +27,8 @@ module V1
         @kitchen.kitchen_products.build(
           product: product,
           note: kitchen_product_param[:note],
-          added_on: params[:added_on]&.to_date,
-          best_before: params[:best_before]&.to_date
+          added_on: kitchen_product_param[:added_on]&.to_date,
+          best_before: kitchen_product_param[:best_before]&.to_date
         )
       end
       @kitchen.save!

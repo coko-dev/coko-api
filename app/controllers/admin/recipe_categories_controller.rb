@@ -16,7 +16,7 @@ module Admin
     api :POST, '/admin/recipe_categories', 'Create a recipe category'
     param :name, String, required: true, desc: 'Category name for display'
     param :name_slug, String, required: true, desc: 'Category name slug'
-    param :parent_category_id, :number, desc: "Parent category's key"
+    param :parent_category_id, String, desc: "Parent category's key"
     def create
       recipe_category = RecipeCategory.new(recipe_category_params)
       parent_category_id = params[:parent_category_id]
@@ -32,7 +32,7 @@ module Admin
     api :PUT, '/admin/recipe_categories', 'Update recipe category'
     param :name, String, allow_blank: true, desc: 'Category name for display'
     param :name_slug, String, allow_blank: true, desc: 'Category name slug'
-    param :parent_category_id, :number, allow_blank: true, desc: "Parent recipe's key"
+    param :parent_category_id, String, allow_blank: true, desc: "Parent recipe's key"
     def update
       @recipe_category.assign_attributes(recipe_category_params)
       parent_category_id = params[:parent_category_id]

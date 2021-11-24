@@ -16,7 +16,7 @@ module Admin
     api :POST, '/admin/product_categories', 'Create product category'
     param :name, String, required: true, desc: 'Category name for display'
     param :name_slug, String, required: true, desc: 'Category name slug'
-    param :parent_category_id, :number, allow_blank: true, desc: "Parent category's key"
+    param :parent_category_id, String, allow_blank: true, desc: "Parent category's key"
     def create
       product_category = ProductCategory.new(product_category_params)
       parent_category_id = params[:parent_category_id]
@@ -32,7 +32,7 @@ module Admin
     api :PUT, '/admin/product_categories', 'Update product category'
     param :name, String, allow_blank: true, desc: 'Category name for display'
     param :name_slug, String, allow_blank: true, desc: 'Category name slug'
-    param :parent_category_id, :number, allow_blank: true, desc: "Parent category's key"
+    param :parent_category_id, String, allow_blank: true, desc: "Parent category's key"
     def update
       @product_category.assign_attributes(product_category_params)
       parent_category_id = params[:parent_category_id]

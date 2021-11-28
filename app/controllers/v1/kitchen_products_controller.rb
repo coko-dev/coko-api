@@ -21,6 +21,8 @@ module V1
       param :best_before, String, desc: "Ex: '2021-10-5' or '2021-10-05'"
     end
     def create
+      raise StandardError, 'Add failed. Exceeds the maximum number' if @kitchen.is_subscriber.blank? && KitchenProduct.over_num_limit?(@kitchen, add_num: params[:kitchen_shopping_lists].length)
+
       kitchen_products = kitchen_product_create_params.map do |kitchen_product_param|
         product = Product.find(kitchen_product_param[:product_id])
         @kitchen.touch_with_history_build(user: @current_user, product: product, status_id: 'added')

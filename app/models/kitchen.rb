@@ -25,6 +25,8 @@ class Kitchen < ApplicationRecord
 
   accepts_nested_attributes_for :kitchen_product_histories
 
+  delegate :code, to: :owner, prefix: true
+
   def touch_last_action_at
     self.last_action_at = Time.zone.now
   end

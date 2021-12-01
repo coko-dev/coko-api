@@ -16,7 +16,7 @@ gem 'apipie-rails'
 gem 'bootsnap', '>= 1.4.2', require: false
 gem 'puma', '~> 4.1'
 gem 'rack-cors', require: 'rack/cors'
-gem 'rails', '~> 6.0.3', '>= 6.0.3.3'
+gem 'rails', '~> 6.1'
 
 # DB
 gem 'pg'

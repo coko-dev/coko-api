@@ -62,7 +62,7 @@ group :development, :test do
   ### Testing
   gem 'rails-controller-testing'
   gem 'rspec'
-  gem 'rspec-rails', github: 'rspec/rspec-rails', tag: 'v4.0.0.beta3' # NOTE: Temporary for Rails 6
+  gem 'rspec-rails'
 
   ### Hooking
   gem 'overcommit'

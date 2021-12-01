@@ -16,7 +16,7 @@ gem 'apipie-rails'
 gem 'bootsnap', '>= 1.4.2', require: false
 gem 'puma', '~> 4.1'
 gem 'rack-cors', require: 'rack/cors'
-gem 'rails', '~> 6.0.3', '>= 6.0.3.3'
+gem 'rails', '~> 6.1'
 
 # DB
 gem 'pg'
@@ -62,7 +62,7 @@ group :development, :test do
   ### Testing
   gem 'rails-controller-testing'
   gem 'rspec'
-  gem 'rspec-rails', github: 'rspec/rspec-rails', tag: 'v4.0.0.beta3' # NOTE: Temporary for Rails 6
+  gem 'rspec-rails'
 
   ### Hooking
   gem 'overcommit'

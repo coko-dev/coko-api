@@ -145,10 +145,11 @@ add_foreign_key 'products', 'product_categories',    name: 'fk_products_1'
 add_foreign_key 'products', 'admin_users',           name: 'fk_products_2', column: 'author_id'
 
 create_table 'product_categories', unsigned: true, force: :cascade do |t|
-  t.string 'name',                     null: false
-  t.string 'name_slug',                null: false
-  t.bigint 'product_category_id_from', unsigned: true
-  t.string 'color_code'
+  t.string  'name',                     null: false
+  t.string  'name_slug',                null: false
+  t.integer 'sort_order',               null: false, unsigned: true, default: 1
+  t.bigint  'product_category_id_from', unsigned: true
+  t.string  'color_code'
   t.timestamps
 end
 add_index       'product_categories', %w[product_category_id_from], name: 'idx_product_categories_on_product_category_id_from'

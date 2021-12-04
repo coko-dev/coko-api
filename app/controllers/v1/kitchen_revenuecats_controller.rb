@@ -11,6 +11,8 @@ module V1
 
       render content_type: 'application/json', json: KitchenSerializer.new(
         @kitchen,
+        include: associations_for_serialization,
+        params: serializer_params,
         meta: {
           is_changed: @kitchen.saved_changes?
         }
@@ -23,6 +25,16 @@ module V1
 
     def set_kitchen
       @kitchen = @current_user.kitchen
+    end
+
+    def associations_for_serialization
+      %i[
+        users
+      ]
+    end
+
+    def serializer_params
+      { current_user: @current_user }
     end
   end
 end

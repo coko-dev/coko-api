@@ -7,7 +7,7 @@ class UserProfile < ApplicationRecord
   before_validation :set_default_display_id, on: :create
 
   validates :display_id, presence: true, uniqueness: { case_sensitive: true }, format: { with: /\A[0-9a-zA-Z]+\z/, message: '半角英数文字のみが使えます' }, on: %i[create update]
-  validates :name, presence: true, length: { in: 2..25 }, on: %i[update]
+  validates :name, presence: true, length: { in: 1..25 }, on: %i[update]
   validates :housework_career, length: { maximum: 3 }, numericality: { only_integer: true }, allow_nil: true, on: %i[update]
   validates :description, length: { maximum: 120 }, on: %i[update]
   validates :website_url, length: { maximum: 100 }, on: %i[update]

@@ -54,7 +54,7 @@ create_table 'kitchens', unsigned: true, force: :cascade do |t|
   t.boolean  'is_subscriber',          null: false, default: false
   t.datetime 'subscription_expires_at'
   t.integer  'status_id',              null: false, unsigned: true, default: 1, comment: '{ is_private: 1, published: 2, official: 3, blacked: 4 }'
-  t.bigint   'owner_user_id',          null: false, unsigned: true
+  t.bigint   'owner_user_id',          unsigned: true
   t.datetime 'last_action_at'
   t.timestamps
 end

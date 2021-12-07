@@ -10,9 +10,9 @@ class Kitchen < ApplicationRecord
     official: 3
   }
 
-  validates :name, presence: true, length: { in: 2..25 }
+  validates :name, presence: true, length: { in: 1..25 }
 
-  belongs_to :owner, foreign_key: 'owner_user_id', class_name: 'User', inverse_of: :own_kitchen
+  belongs_to :owner, foreign_key: 'owner_user_id', class_name: 'User', inverse_of: :own_kitchen, optional: true
 
   has_many :kitchen_joins, dependent: :delete_all
   has_many :kitchen_ocr_histories, dependent: :delete_all

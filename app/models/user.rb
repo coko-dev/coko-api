@@ -103,8 +103,12 @@ class User < ApplicationRecord
       current_kitchen = user.kitchen
       raise StandardError, "You can't leave subscribed kitchen" if current_kitchen&.is_subscriber
 
-      user.kitchen = kitchen
-      user.save!
+      ApplicationRecord.transaction do
+        # NOTE: ユーザ作成日が古いユーザを自動的にオーナーに割り振る. ユーザがいない場合 nil
+        next_owner = current_kitchen.users.where.not(id: user.id).order(created_at: :desc).first
+        current_kitchen.update!(owner: next_owner)
+        user.update!(kitchen: kitchen)
+      end
     end
   end
 end

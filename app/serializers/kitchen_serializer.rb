@@ -3,7 +3,7 @@
 class KitchenSerializer < ApplicationSerializer
   attributes :name
 
-  attributes :is_subscriber, :last_action_at, :todays_ocr_count, if: proc { |record, params| params[:current_user]&.my_kitchen?(record) }
+  attributes :is_subscriber, :subscription_expires_at, :last_action_at, :todays_ocr_count, if: proc { |record, params| params[:current_user]&.my_kitchen?(record) }
 
   belongs_to :owner, serializer: UserSerializer, id_method_name: :owner_code
   has_many :users, id_method_name: :code, &:users

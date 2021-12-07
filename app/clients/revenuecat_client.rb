@@ -8,18 +8,18 @@ class RevenuecatClient
   REVENUECAT_API_KEY = Rails.application.credentials.revenuecat[:api_key]
 
   class << self
-    def subscribed?(type: nil, id: nil)
-      res = fetch_subscription(type: type, id: id)
+    def subscription(type: nil, id: nil)
+      res = fetch_revenuecat(type: type, id: id)
       raise StandardError unless res.success?
 
       body = JSON.parse(res.response_body, symbolize_names: true)
       # NOTE: subscriptions が空、もしくは unsubscribe_detected_at に時刻があれば非課金
-      return false if body.dig(:subscriber, :subscriptions).blank? || body.dig(:subscriber, :subscriptions, PLAN_NAMES[:general].to_sym, :unsubscribe_detected_at).present? || body.dig(:subscriber, :subscriptions, PLAN_NAMES[:test].to_sym, :unsubscribe_detected_at).present?
+      return if body.dig(:subscriber, :subscriptions).blank? || body.dig(:subscriber, :subscriptions, plan_name(body).to_sym, :unsubscribe_detected_at).present?
 
-      true
+      body
     end
 
-    def fetch_subscription(type: nil, id: nil)
+    def fetch_revenuecat(type: nil, id: nil)
       type = TYPES[type]
       return if type.blank? || id.blank?
 
@@ -32,6 +32,12 @@ class RevenuecatClient
         }
       )
     end
+
+    def plan_name(body)
+      body.dig(:subscriber, :subscriptions).first.first.to_s
+    end
+
+    private
 
     def app_user_id(type:, id:)
       "#{short_env_name}-#{type}-#{id}"

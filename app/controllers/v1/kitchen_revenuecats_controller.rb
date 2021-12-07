@@ -8,7 +8,8 @@ module V1
     def update
       response_body = RevenuecatClient.subscription(type: :kitchen, id: @kitchen.id)
       is_subscriber = response_body.present?
-      fetched_expires_date = response_body.dig(:subscriber, :subscriptions, RevenuecatClient.plan_name(response_body).to_sym, :expires_date)&.to_datetime if is_subscriber && @kitchen.subscription_expires_at&.past?
+      subscription_expires_at = @kitchen.subscription_expires_at
+      fetched_expires_date = response_body.dig(:subscriber, :subscriptions, RevenuecatClient.plan_name(response_body)&.to_sym, :expires_date)&.to_datetime if is_subscriber && (subscription_expires_at.blank? || subscription_expires_at&.past?)
 
       @kitchen.update!(is_subscriber: is_subscriber, subscription_expires_at: fetched_expires_date)
       render content_type: 'application/json', json: KitchenSerializer.new(

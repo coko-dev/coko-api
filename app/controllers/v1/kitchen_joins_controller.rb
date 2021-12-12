@@ -45,7 +45,7 @@ module V1
         message: 'Succeeded in participating in the kitchen'
       }, status: :ok
     rescue StandardError => e
-      logger.error(e.messages)
+      render_bad_request(e)
     end
   end
 end

@@ -47,7 +47,7 @@ class UserSerializer < ApplicationSerializer
     object.profile.description
   end
 
-  attribute :birth_date, if: proc { |record, params| myself_record?(record, params[:current_user]) } do |object| 
+  attribute :birth_date, if: proc { |record, params| myself_record?(record, params[:current_user]) } do |object|
     object.profile.birth_date
   end
 

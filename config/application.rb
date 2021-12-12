@@ -40,6 +40,8 @@ module CokoApi
       ErrorsController.action(:show).call(env)
     end
 
+    config.time_zone = 'Asia/Tokyo'
+
     # i18n
     config.i18n.load_path += Dir[Rails.root.join('config/locales/**/*.yml').to_s]
     config.i18n.available_locales = %i[ja en]

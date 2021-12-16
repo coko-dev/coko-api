@@ -98,6 +98,17 @@ class User < ApplicationRecord
     following_users.exists?(id: user.id)
   end
 
+  # NOTE: ブロックしている、ブロックされている、ミュートしているユーザの id
+  def filter_user_ids
+    UserFollow
+      .where(<<~SQL, id, id, UserFollow.status_ids[:blocked], id, UserFollow.status_ids[:muted])
+        ((user_id_to = ? OR user_id_from = ?) AND user_follows.status_id = ? )
+        OR (user_id_from = ? AND user_follows.status_id = ? )
+      SQL
+      .select(:user_id_from, :user_id_to)
+      .map { |i| i.user_id_to == id ? i.user_id_from : i.user_id_to }.uniq
+  end
+
   class << self
     def set_kitchen(user: nil, kitchen: nil)
       current_kitchen = user.kitchen

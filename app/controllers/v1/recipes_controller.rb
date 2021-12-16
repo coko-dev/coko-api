@@ -22,7 +22,7 @@ module V1
         end
 
       render content_type: 'application/json', json: RecipeSerializer.new(
-        recipes.published.order(created_at: :desc).limit(12),
+        recipes.filtered(user).published.order(created_at: :desc).limit(12),
         include: association_for_recipes,
         params: serializer_params
       ), status: :ok

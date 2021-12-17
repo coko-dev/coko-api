@@ -76,31 +76,26 @@ class Recipe < ApplicationRecord
   end
 
   class << self
-    def narrow_down_recipes(params, current_user)
+    def narrow_down_recipes(current_user: nil, recipe_category_id: nil, user_id: nil, cooking_time_within: nil, servings: nil, with_few_products: false, can_be_made: false, my_favorite: false)
       recipes = self
 
-      product_ids = current_user.kitchen.products.distinct.ids
-      recipes = recipes.joins(:recipe_products).group(:id).having('COUNT(recipe_products.product_id IN (?) OR NULL) = COUNT(recipe_products.product_id)', product_ids) if params[:can_be_made].present?
+      product_ids = current_user.kitchen.products.distinct.ids if current_user.present?
+      recipes = recipes.joins(:recipe_products).group(:id).having('COUNT(recipe_products.product_id IN (?) OR NULL) = COUNT(recipe_products.product_id)', product_ids) if can_be_made.present?
 
-      recipes = recipes.joins(:hot_recipe_versions).where(hot_recipe_versions: { status_id: 'enabled' }) if params[:hot_recipes].present?
+      # TODO: おすすめレシピの絞り込みを有効にする際に使用
+      # recipes = recipes.joins(:hot_recipe_versions).where(hot_recipe_versions: { status_id: 'enabled' }) if hot_recipes.present?
 
-      category_id = params[:recipe_category_id]
-      category = RecipeCategory.find_by(id: category_id)
-      recipes = recipes.where(recipe_category: category) if category_id.present?
+      recipes = recipes.where(recipe_category_id: recipe_category_id) if recipe_category_id.present?
 
-      user_id = params[:user_id]
-      author = User.find_by(code: user_id)
-      recipes = recipes.where(author: author) if user_id.present?
+      recipes = recipes.where(author_id: user_id) if user_id.present?
 
-      servings = params[:servings]
       recipes = recipes.where(servings: servings) if servings.present?
 
-      cooking_time_within = params[:cooking_time_within]
       recipes = recipes.where(cooking_time: 1..cooking_time_within) if cooking_time_within.present?
 
-      recipes = recipes.where(id: RecipeProduct.group(:recipe_id).having('count(*) < ?', 5).select(:recipe_id)) if params[:with_few_products]
+      recipes = recipes.where(id: RecipeProduct.group(:recipe_id).having('count(*) < ?', 5).select(:recipe_id)) if with_few_products.present?
 
-      recipes = recipes.joins(:recipe_favorites).where(recipe_favorites: { user_id: current_user.id }) if params[:my_favorite]
+      recipes = recipes.joins(:recipe_favorites).where(recipe_favorites: { user_id: current_user.id }) if current_user.present? && my_favorite.present?
       recipes
     end
   end

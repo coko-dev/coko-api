@@ -7,7 +7,7 @@ module V1
 
       api :GET, '/v1/recipe_keywords/:recipe_keyword_id/recipes', 'Show some recipes related a keyword'
       def index
-        recipes = @recipe_keyword.recipes.order(created_at: :desc).limit(12)
+        recipes = @recipe_keyword.recipes.filtered(@current_user).order(created_at: :desc).limit(12)
         render content_type: 'application/json', json: RecipeSerializer.new(
           recipes,
           include: association_for_recipes,

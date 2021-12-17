@@ -283,10 +283,10 @@ create_table 'user_follows', unsigned: true, force: :cascade do |t|
   t.integer 'status_id',    null: false, unsigned: true, default: 1, comment: '{ followed: 1, blocked: 2, muted: 3 }'
   t.timestamps
 end
-add_index       'user_follows', %w[user_id_from user_id_to], name: 'idx_user_follows_on_user_id_from_and_user_id_to', unique: true
-add_index       'user_follows', %w[user_id_to],              name: 'idx_user_follows_on_user_id_to'
-add_foreign_key 'user_follows', 'users',                     name: 'fk_user_follows_1', column: 'user_id_from'
-add_foreign_key 'user_follows', 'users',                     name: 'fk_user_follows_2', column: 'user_id_to'
+add_index       'user_follows', %w[user_id_from user_id_to status_id], name: 'idx_user_follows_on_user_id_from_and_user_id_to_and_status_id', unique: true
+add_index       'user_follows', %w[user_id_to],                        name: 'idx_user_follows_on_user_id_to'
+add_foreign_key 'user_follows', 'users',                               name: 'fk_user_follows_1', column: 'user_id_from'
+add_foreign_key 'user_follows', 'users',                               name: 'fk_user_follows_2', column: 'user_id_to'
 
 create_table 'user_profiles', unsigned: true, force: :cascade do |t|
   t.bigint  'user_id',          null: false, unsigned: true

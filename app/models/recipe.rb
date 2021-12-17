@@ -27,6 +27,9 @@ class Recipe < ApplicationRecord
 
   delegate :code, to: :author, prefix: true
 
+  # TODO: Use policy scope after introducing query layer
+  scope :filtered, ->(user) { where.not(author_id: user.filter_user_ids) }
+
   def build_or_update_each_sections(introduction:, advice:)
     RecipeSection.status_ids.keys.zip([introduction, advice]) do |st, body|
       next if body.blank?
@@ -75,6 +78,7 @@ class Recipe < ApplicationRecord
   class << self
     def narrow_down_recipes(params, current_user)
       recipes = self
+
       product_ids = current_user.kitchen.products.distinct.ids
       recipes = recipes.joins(:recipe_products).group(:id).having('COUNT(recipe_products.product_id IN (?) OR NULL) = COUNT(recipe_products.product_id)', product_ids) if params[:can_be_made].present?
 

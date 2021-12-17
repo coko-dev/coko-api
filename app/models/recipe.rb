@@ -78,6 +78,8 @@ class Recipe < ApplicationRecord
   class << self
     # rubocop:disable Metrics/AbcSize
     # rubocop:disable Metrics/ParameterLists
+    # :reek:DuplicateMethodCall { exclude: ['narrow_down_recipes'] }
+    # :reek:LongParameterList { exclude: ['narrow_down_recipes'] }
     def narrow_down_recipes(current_user: nil, recipe_category_id: nil, user_id: nil, cooking_time_within: nil, servings: nil, with_few_products: false, can_be_made: false, my_favorite: false)
       recipes = self
 

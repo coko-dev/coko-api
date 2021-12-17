@@ -72,12 +72,12 @@ class User < ApplicationRecord
   end
 
   def follow(user)
-    uf = followings.find_or_initialize_by(user_id_to: user.id, status_id: UserFollow.status_ids[:followed])
+    uf = followings.find_or_initialize_by(user_id_to: user.id, status_id: :followed)
     uf.new_record? && uf.save
   end
 
   def unfollow(user)
-    uf = followings.find_by(user_id_to: user.id, status_id: UserFollow.status_ids[:followed])
+    uf = followings.find_by(user_id_to: user.id, status_id: :followed)
     return false if uf.blank?
 
     uf.destroy.present?
@@ -96,24 +96,24 @@ class User < ApplicationRecord
   end
 
   def block(user)
-    uf = followings.find_or_initialize_by(user_id_to: user.id, status_id: UserFollow.status_ids[:blocked])
+    uf = followings.find_or_initialize_by(user_id_to: user.id, status_id: :blocked)
     uf.new_record? && uf.save
   end
 
   def unblock(user)
-    uf = followings.find_by(user_id_to: user.id, status_id: UserFollow.status_ids[:blocked])
+    uf = followings.find_by(user_id_to: user.id, status_id: :blocked)
     return false if uf.blank?
 
     uf.destroy.present?
   end
 
   def mute(user)
-    uf = followings.find_or_initialize_by(user_id_to: user.id, status_id: UserFollow.status_ids[:muted])
+    uf = followings.find_or_initialize_by(user_id_to: user.id, status_id: :muted)
     uf.new_record? && uf.save
   end
 
   def unmute(user)
-    uf = followings.find_by(user_id_to: user.id, status_id: UserFollow.status_ids[:muted])
+    uf = followings.find_by(user_id_to: user.id, status_id: :muted)
     return false if uf.blank?
 
     uf.destroy.present?
@@ -121,13 +121,14 @@ class User < ApplicationRecord
 
   # NOTE: ブロックしている、ブロックされている、ミュートしているユーザの id
   def filter_user_ids
-    UserFollow
+    usf = UserFollow
       .where(<<~SQL, id, id, UserFollow.status_ids[:blocked], id, UserFollow.status_ids[:muted])
         ((user_id_to = ? OR user_id_from = ?) AND user_follows.status_id = ? )
         OR (user_id_from = ? AND user_follows.status_id = ? )
       SQL
       .select(:user_id_from, :user_id_to)
-      .map { |i| i.user_id_to == id ? i.user_id_from : i.user_id_to }.uniq
+      # .map { |uf| uf.user_id_to == id ? uf.user_id_from : uf.user_id_to }.uniq
+    binding.pry
   end
 
   class << self

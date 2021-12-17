@@ -27,7 +27,7 @@ module V1
         params: serializer_params
       ), status: :ok
     end
-    
+
     api :GET, '/v1/users/mutings', 'Show user mutings'
     def show_mutings
       render content_type: 'application/json', json: UserSerializer.new(

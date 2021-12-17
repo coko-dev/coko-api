@@ -127,8 +127,7 @@ class User < ApplicationRecord
         OR (user_id_from = ? AND user_follows.status_id = ? )
       SQL
       .select(:user_id_from, :user_id_to)
-      # .map { |uf| uf.user_id_to == id ? uf.user_id_from : uf.user_id_to }.uniq
-    binding.pry
+      .map { |uf| uf.user_id_to == id ? uf.user_id_from : uf.user_id_to }.uniq
   end
 
   class << self

@@ -20,14 +20,14 @@ module V1
           HotRecipeVersion.current.recipes
         else
           Recipe.narrow_down_recipes(
-            current_user:        @current_user,
-            recipe_category_id:  params[:recipe_category_id],
-            user_id:             params[:my_recipes].present? ? @current_user.id : params[:user_id],
+            current_user: @current_user,
+            recipe_category_id: params[:recipe_category_id],
+            user_id: params[:my_recipes].present? ? @current_user.id : params[:user_id],
             cooking_time_within: params[:cooking_time_within],
-            servings:            params[:servings],
-            with_few_products:   params[:with_few_products],
-            can_be_made:         params[:can_be_made],
-            my_favorite:         params[:my_favorite]
+            servings: params[:servings],
+            with_few_products: params[:with_few_products],
+            can_be_made: params[:can_be_made],
+            my_favorite: params[:my_favorite]
           )
         end
 

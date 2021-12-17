@@ -76,27 +76,23 @@ class Recipe < ApplicationRecord
   end
 
   class << self
+    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/ParameterLists
     def narrow_down_recipes(current_user: nil, recipe_category_id: nil, user_id: nil, cooking_time_within: nil, servings: nil, with_few_products: false, can_be_made: false, my_favorite: false)
       recipes = self
 
       product_ids = current_user.kitchen.products.distinct.ids if current_user.present?
       recipes = recipes.joins(:recipe_products).group(:id).having('COUNT(recipe_products.product_id IN (?) OR NULL) = COUNT(recipe_products.product_id)', product_ids) if can_be_made.present?
 
-      # TODO: おすすめレシピの絞り込みを有効にする際に使用
-      # recipes = recipes.joins(:hot_recipe_versions).where(hot_recipe_versions: { status_id: 'enabled' }) if hot_recipes.present?
-
       recipes = recipes.where(recipe_category_id: recipe_category_id) if recipe_category_id.present?
-
       recipes = recipes.where(author_id: user_id) if user_id.present?
-
       recipes = recipes.where(servings: servings) if servings.present?
-
       recipes = recipes.where(cooking_time: 1..cooking_time_within) if cooking_time_within.present?
-
       recipes = recipes.where(id: RecipeProduct.group(:recipe_id).having('count(*) < ?', 5).select(:recipe_id)) if with_few_products.present?
-
       recipes = recipes.joins(:recipe_favorites).where(recipe_favorites: { user_id: current_user.id }) if current_user.present? && my_favorite.present?
       recipes
     end
+    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/ParameterLists
   end
 end

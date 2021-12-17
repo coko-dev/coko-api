@@ -72,15 +72,14 @@ class User < ApplicationRecord
   end
 
   def follow(user)
-    user_id_to = user.id
     return false if self == user
 
-    uf = followings.find_or_initialize_by(user_id_to: user_id_to)
+    uf = followings.find_or_initialize_by(user_id_to: user.id, status_id: UserFollow.status_ids[:followed])
     uf.new_record? && uf.save
   end
 
   def unfollow(user)
-    uf = followings.find_by(user_id_to: user.id, status_id: :followed)
+    uf = followings.find_by(user_id_to: user.id, status_id: UserFollow.status_ids[:followed])
     return false if uf.blank?
 
     uf.destroy.present?
@@ -96,6 +95,34 @@ class User < ApplicationRecord
     return false if myself?(user)
 
     following_users.exists?(id: user.id)
+  end
+
+  def block(user)
+    return false if self == user
+
+    uf = followings.find_or_initialize_by(user_id_to: user.id, status_id: UserFollow.status_ids[:blocked])
+    uf.new_record? && uf.save
+  end
+
+  def unblock(user)
+    uf = followings.find_by(user_id_to: user.id, status_id: UserFollow.status_ids[:blocked])
+    return false if uf.blank?
+
+    uf.destroy.present?
+  end
+
+  def mute(user)
+    return false if self == user
+
+    uf = followings.find_or_initialize_by(user_id_to: user.id, status_id: UserFollow.status_ids[:muted])
+    uf.new_record? && uf.save
+  end
+
+  def unmute(user)
+    uf = followings.find_by(user_id_to: user.id, status_id: UserFollow.status_ids[:muted])
+    return false if uf.blank?
+
+    uf.destroy.present?
   end
 
   # NOTE: ブロックしている、ブロックされている、ミュートしているユーザの id

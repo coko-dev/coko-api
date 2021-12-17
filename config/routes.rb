@@ -47,10 +47,14 @@ Rails.application.routes.draw do
         get '/current', to: 'users#show_current_user'
       end
       member do
-        get '/followers', to: 'user_follows#show_followers'
-        get '/followings', to: 'user_follows#show_followings'
-        post '/follow', to: 'user_follows#create'
-        delete '/unfollow', to: 'user_follows#destroy'
+        get    'followers',  to: 'user_follows#show_followers'
+        get    'followings', to: 'user_follows#show_followings'
+        post   'follow',     to: 'user_follows#create'
+        delete 'unfollow',   to: 'user_follows#destroy'
+        post   'block',      to: 'user_follows#block'
+        delete 'unblock',    to: 'user_follows#unblock'
+        post   'mute',       to: 'user_follows#mute'
+        delete 'unmute',     to: 'user_follows#unmute'
       end
     end
     resources :violation_reports, only: %i[create]

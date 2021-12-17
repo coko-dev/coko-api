@@ -22,17 +22,43 @@ module V1
 
     api :POST, '/v1/users/:display_id/follow', 'Follow a user'
     def create
-      is_new_record = @current_user.follow(@user)
       render content_type: 'application/json', json: {
-        data: { meta: { is_followed: is_new_record } }
+        data: { meta: { is_followed: @current_user.follow(@user) } }
       }, status: :ok
     end
 
     api :DELETE, '/v1/users/:display_id/unfollow', 'Unfollow a user'
     def destroy
-      is_deleted = @current_user.unfollow(@user)
       render content_type: 'application/json', json: {
-        data: { meta: { is_deleted: is_deleted } }
+        data: { meta: { is_deleted: @current_user.unfollow(@user) } }
+      }, status: :ok
+    end
+
+    api :POST, '/v1/users/:display_id/block', 'Block a user'
+    def block
+      render content_type: 'application/json', json: {
+        data: { meta: { is_blocked: @current_user.block(@user) } }
+      }, status: :ok
+    end
+
+    api :DELETE, '/v1/users/:display_id/unblock', 'Unblock a user'
+    def unblock
+      render content_type: 'application/json', json: {
+        data: { meta: { is_unblocked: @current_user.unblock(@user) } }
+      }, status: :ok
+    end
+
+    api :POST, '/v1/users/:display_id/mute', 'Mute a user'
+    def mute
+      render content_type: 'application/json', json: {
+        data: { meta: { is_muted: @current_user.mute(@user) } }
+      }, status: :ok
+    end
+
+    api :DELETE, '/v1/users/:display_id/unmute', 'Unmute a user'
+    def unmute
+      render content_type: 'application/json', json: {
+        data: { meta: { is_unmuted: @current_user.unmute(@user) } }
       }, status: :ok
     end
 

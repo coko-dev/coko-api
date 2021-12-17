@@ -7,6 +7,7 @@ module V1
     api :GET, '/v1/recipes', 'Show some recipes'
     param :hot_recipes, [true, false], allow_blank: true, desc: 'Show popular recipes. Default: false. Filtering will be skipped if `true`'
     param :recipe_category_id, String, allow_blank: true, desc: 'Selected category id'
+    param :my_recipes, [true, false], allow_blank: true, desc: 'Show my recipes. Default: false'
     param :user_id, String, allow_blank: true, desc: 'Selected user id'
     param :cooking_time_within, :number, allow_blank: true, desc: 'Cooking time limit'
     param :servings, :number, allow_blank: true, desc: 'How many servings'
@@ -18,11 +19,20 @@ module V1
         if params[:hot_recipes].present?
           HotRecipeVersion.current.recipes
         else
-          Recipe.narrow_down_recipes(recipe_narrow_down_params, @current_user)
+          Recipe.narrow_down_recipes(
+            current_user: @current_user,
+            recipe_category_id: params[:recipe_category_id],
+            user_id: params[:my_recipes].present? ? @current_user.id : params[:user_id],
+            cooking_time_within: params[:cooking_time_within],
+            servings: params[:servings],
+            with_few_products: params[:with_few_products],
+            can_be_made: params[:can_be_made],
+            my_favorite: params[:my_favorite]
+          )
         end
 
       render content_type: 'application/json', json: RecipeSerializer.new(
-        recipes.filtered(@current_user).published.order(created_at: :desc).limit(12),
+        recipes.filtered(@current_user).published.order(created_at: :desc).limit(20),
         include: association_for_recipes,
         params: serializer_params
       ), status: :ok
@@ -177,20 +187,6 @@ module V1
         %i[
           introduction
           advice
-        ]
-      )
-    end
-
-    def recipe_narrow_down_params
-      params.permit(
-        %i[
-          recipe_category_id
-          user_id
-          cooking_time_within
-          servings
-          with_few_products
-          can_be_made
-          my_favorite
         ]
       )
     end

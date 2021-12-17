@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
 class UserFollow < ApplicationRecord
+  include ActiveModel::Validations
+
   enum status_id: {
     followed: 1,
     blocked: 2,
     muted: 3
   }
+
+  validates_with UserFollowValidator
 
   # NOTE: after_save は削除時にコールバックされない
   after_commit :recount_for_follow

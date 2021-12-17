@@ -72,10 +72,7 @@ class User < ApplicationRecord
   end
 
   def follow(user)
-    user_id_to = user.id
-    return false if self == user
-
-    uf = followings.find_or_initialize_by(user_id_to: user_id_to)
+    uf = followings.find_or_initialize_by(user_id_to: user.id, status_id: :followed)
     uf.new_record? && uf.save
   end
 
@@ -96,6 +93,43 @@ class User < ApplicationRecord
     return false if myself?(user)
 
     following_users.exists?(id: user.id)
+  end
+
+  def block(user)
+    uf = followings.find_or_initialize_by(user_id_to: user.id, status_id: :blocked)
+    uf.new_record? && uf.save
+  end
+
+  def unblock(user)
+    uf = followings.find_by(user_id_to: user.id, status_id: :blocked)
+    return false if uf.blank?
+
+    uf.destroy.present?
+  end
+
+  def mute(user)
+    uf = followings.find_or_initialize_by(user_id_to: user.id, status_id: :muted)
+    uf.new_record? && uf.save
+  end
+
+  def unmute(user)
+    uf = followings.find_by(user_id_to: user.id, status_id: :muted)
+    return false if uf.blank?
+
+    uf.destroy.present?
+  end
+
+  # NOTE: ブロックしている、ブロックされている、ミュートしているユーザの id
+  # :reek:DuplicateMethodCall { exclude: [filter_user_ids] }
+  def filter_user_ids
+    uf_status_ids = UserFollow.status_ids
+    UserFollow
+      .where(<<~SQL, id, id, uf_status_ids[:blocked], id, uf_status_ids[:muted])
+        ((user_id_to = ? OR user_id_from = ?) AND user_follows.status_id = ? )
+        OR (user_id_from = ? AND user_follows.status_id = ? )
+      SQL
+      .select(:user_id_from, :user_id_to)
+      .map { |uf| uf.user_id_to == id ? uf.user_id_from : uf.user_id_to }.uniq
   end
 
   class << self

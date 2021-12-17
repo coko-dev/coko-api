@@ -72,8 +72,6 @@ class User < ApplicationRecord
   end
 
   def follow(user)
-    return false if self == user
-
     uf = followings.find_or_initialize_by(user_id_to: user.id, status_id: UserFollow.status_ids[:followed])
     uf.new_record? && uf.save
   end
@@ -98,8 +96,6 @@ class User < ApplicationRecord
   end
 
   def block(user)
-    return false if self == user
-
     uf = followings.find_or_initialize_by(user_id_to: user.id, status_id: UserFollow.status_ids[:blocked])
     uf.new_record? && uf.save
   end
@@ -112,8 +108,6 @@ class User < ApplicationRecord
   end
 
   def mute(user)
-    return false if self == user
-
     uf = followings.find_or_initialize_by(user_id_to: user.id, status_id: UserFollow.status_ids[:muted])
     uf.new_record? && uf.save
   end

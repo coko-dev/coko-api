@@ -44,7 +44,9 @@ Rails.application.routes.draw do
     resources :users, param: :display_id do
       resources :recipe_records, only: %i[index], controller: 'users/recipe_records'
       collection do
-        get '/current', to: 'users#show_current_user'
+        get 'current',   to: 'users#show_current_user'
+        get 'blockings', to: 'user_follows#show_blockings'
+        get 'mutings',   to: 'user_follows#show_mutings'
       end
       member do
         get    'followers',  to: 'user_follows#show_followers'

@@ -2,7 +2,7 @@
 
 module V1
   class UserFollowsController < ApplicationController
-    before_action :set_user
+    before_action :set_user, except: %i[show_blockings show_mutings]
 
     api :GET, '/v1/users/:display_id/followers', 'Show user followers'
     def show_followers
@@ -16,6 +16,22 @@ module V1
     def show_followings
       render content_type: 'application/json', json: UserSerializer.new(
         @user.following_users,
+        params: serializer_params
+      ), status: :ok
+    end
+
+    api :GET, '/v1/users/blockings', 'Show user blockings'
+    def show_blockings
+      render content_type: 'application/json', json: UserSerializer.new(
+        @current_user.blocking_users,
+        params: serializer_params
+      ), status: :ok
+    end
+    
+    api :GET, '/v1/users/mutings', 'Show user mutings'
+    def show_mutings
+      render content_type: 'application/json', json: UserSerializer.new(
+        @current_user.muting_users,
         params: serializer_params
       ), status: :ok
     end

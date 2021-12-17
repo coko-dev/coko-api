@@ -121,7 +121,7 @@ class User < ApplicationRecord
 
   # NOTE: ブロックしている、ブロックされている、ミュートしているユーザの id
   def filter_user_ids
-    usf = UserFollow
+    UserFollow
       .where(<<~SQL, id, id, UserFollow.status_ids[:blocked], id, UserFollow.status_ids[:muted])
         ((user_id_to = ? OR user_id_from = ?) AND user_follows.status_id = ? )
         OR (user_id_from = ? AND user_follows.status_id = ? )

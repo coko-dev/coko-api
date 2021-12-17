@@ -120,9 +120,11 @@ class User < ApplicationRecord
   end
 
   # NOTE: ブロックしている、ブロックされている、ミュートしているユーザの id
+  # :reek:DuplicateMethodCall { exclude: [filter_user_ids] }
   def filter_user_ids
+    uf_status_ids = UserFollow.status_ids
     UserFollow
-      .where(<<~SQL, id, id, UserFollow.status_ids[:blocked], id, UserFollow.status_ids[:muted])
+      .where(<<~SQL, id, id, uf_status_ids[:blocked], id, uf_status_ids[:muted])
         ((user_id_to = ? OR user_id_from = ?) AND user_follows.status_id = ? )
         OR (user_id_from = ? AND user_follows.status_id = ? )
       SQL

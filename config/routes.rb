@@ -4,20 +4,20 @@ Rails.application.routes.draw do
   apipie
 
   namespace :v1 do
-    post '/token', to: 'users#token'
+    post 'token', to: 'users#token'
 
     resource :kitchen, only: %i[update]
     resources :kitchens do
       collection do
-        get '/current', to: 'kitchens#show_current_kitchen'
+        get 'current', to: 'kitchens#show_current_kitchen'
       end
     end
     resources :kitchen_joins, param: :code, only: %i[create] do
       member do
-        patch '/verification', to: 'kitchen_joins#verification'
+        patch 'verification', to: 'kitchen_joins#verification'
       end
       collection do
-        patch '/confirm', to: 'kitchen_joins#confirm'
+        patch 'confirm', to: 'kitchen_joins#confirm'
       end
     end
     resources :kitchen_products, only: %i[index create update]
@@ -33,7 +33,7 @@ Rails.application.routes.draw do
       resources :recipe_records, only: %i[index create], controller: 'recipes/recipe_records'
       resource :recipe_favorite, only: %i[create destroy]
       collection do
-        get '/latest', to: 'recipes#show_latest'
+        get 'latest', to: 'recipes#show_latest'
       end
     end
     resources :recipe_keywords do

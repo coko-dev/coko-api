@@ -78,6 +78,8 @@ class Recipe < ApplicationRecord
   class << self
     # rubocop:disable Metrics/AbcSize
     # rubocop:disable Metrics/ParameterLists
+    # rubocop:disable Metrics/PerceivedComplexity
+    # rubocop:disable Metrics/CyclomaticComplexity
     # :reek:DuplicateMethodCall { exclude: ['narrow_down_recipes'] }
     # :reek:LongParameterList { exclude: ['narrow_down_recipes'] }
     def narrow_down_recipes(current_user: nil, recipe_category_id: nil, user_id: nil, cooking_time_within: nil, servings: nil, with_few_products: false, can_be_made: false, my_favorite: false)
@@ -86,8 +88,9 @@ class Recipe < ApplicationRecord
       product_ids = current_user.kitchen.products.distinct.ids if current_user.present?
       recipes = recipes.joins(:recipe_products).group(:id).having('COUNT(recipe_products.product_id IN (?) OR NULL) = COUNT(recipe_products.product_id)', product_ids) if can_be_made.present?
 
+      user = User.find_by(code: user_id) if user_id.present?
+      recipes = recipes.where(author: user) if user.present?
       recipes = recipes.where(recipe_category_id: recipe_category_id) if recipe_category_id.present?
-      recipes = recipes.where(author_id: user_id) if user_id.present?
       recipes = recipes.where(servings: servings) if servings.present?
       recipes = recipes.where(cooking_time: 1..cooking_time_within) if cooking_time_within.present?
       recipes = recipes.where(id: RecipeProduct.group(:recipe_id).having('count(*) < ?', 5).select(:recipe_id)) if with_few_products.present?
@@ -96,5 +99,7 @@ class Recipe < ApplicationRecord
     end
     # rubocop:enable Metrics/AbcSize
     # rubocop:enable Metrics/ParameterLists
+    # rubocop:enable Metrics/PerceivedComplexity
+    # rubocop:enable Metrics/CyclomaticComplexity
   end
 end

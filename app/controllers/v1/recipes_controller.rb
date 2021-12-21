@@ -22,7 +22,7 @@ module V1
           Recipe.narrow_down_recipes(
             current_user: @current_user,
             recipe_category_id: params[:recipe_category_id],
-            user_id: params[:my_recipes].present? ? @current_user.id : params[:user_id],
+            user_id: params[:my_recipes].present? ? @current_user.code : params[:user_id],
             cooking_time_within: params[:cooking_time_within],
             servings: params[:servings],
             with_few_products: params[:with_few_products],

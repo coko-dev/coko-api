@@ -2,7 +2,7 @@
 
 module V1
   class UsersController < ApplicationController
-    before_action :set_user_with_display_id, only: %i[show update]
+    before_action :set_user_with_display_id, only: %i[show]
 
     skip_before_action :authenticate_with_api_token, only: %i[create token]
 
@@ -49,7 +49,7 @@ module V1
       render_bad_request(e)
     end
 
-    api :PUT, '/v1/users/:display_id', "Update user's profile"
+    api :PUT, '/v1/user', "Update current user's profile"
     param :display_id, String, allow_blank: true, desc: 'User display id'
     param :name, String, allow_blank: true, desc: 'User name'
     param :birth_date, String, allow_blank: true, desc: 'Birth date'
@@ -58,12 +58,11 @@ module V1
     param :description, String, allow_blank: true, desc: 'Description'
     param :website_url, String, allow_blank: true, desc: 'Website url(link)'
     def update
-      authorize(@user)
-      profile = @user.profile
+      profile = @current_user.profile
       profile.assign_attributes(user_profile_params)
-      @user.save!
+      @current_user.save!
       render content_type: 'application/json', json: UserSerializer.new(
-        @user,
+        @current_user,
         params: serializer_params
       ), status: :ok
     rescue StandardError => e

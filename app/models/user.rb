@@ -83,18 +83,6 @@ class User < ApplicationRecord
     uf.destroy.present?
   end
 
-  def followed?(user)
-    return false if myself?(user)
-
-    follower_users.exists?(id: user.id)
-  end
-
-  def following?(user)
-    return false if myself?(user)
-
-    following_users.exists?(id: user.id)
-  end
-
   def block(user)
     uf = followings.find_or_initialize_by(user_id_to: user.id, status_id: :blocked)
     uf.new_record? && uf.save
@@ -117,6 +105,30 @@ class User < ApplicationRecord
     return false if uf.blank?
 
     uf.destroy.present?
+  end
+
+  def followed?(user)
+    return false if myself?(user)
+
+    follower_users.exists?(id: user.id)
+  end
+
+  def following?(user)
+    return false if myself?(user)
+
+    following_users.exists?(id: user.id)
+  end
+
+  def blocking?(user)
+    return false if myself?(user)
+
+    blocking_users.exists?(id: user.id)
+  end
+
+  def muting?(user)
+    return false if myself?(user)
+
+    muting_users.exists?(id: user.id)
   end
 
   # NOTE: ブロックしている、ブロックされている、ミュートしているユーザの id

@@ -35,6 +35,14 @@ class UserSerializer < ApplicationSerializer
     params[:current_user]&.following?(object)
   end
 
+  attribute :is_blocking do |object, params|
+    params[:current_user]&.blocking?(object)
+  end
+
+  attribute :is_muting do |object, params|
+    params[:current_user]&.muting?(object)
+  end
+
   attribute :display_id do |object|
     object.profile.display_id
   end

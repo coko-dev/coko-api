@@ -108,31 +108,22 @@ class User < ApplicationRecord
   end
 
   def followed?(user)
-    return false if myself?(user)
-
     follower_users.exists?(id: user.id)
   end
 
   def following?(user)
-    return false if myself?(user)
-
     following_users.exists?(id: user.id)
   end
 
   def blocking?(user)
-    return false if myself?(user)
-
     blocking_users.exists?(id: user.id)
   end
 
   def muting?(user)
-    return false if myself?(user)
-
     muting_users.exists?(id: user.id)
   end
 
   # NOTE: ブロックしている、ブロックされている、ミュートしているユーザの id
-  # :reek:DuplicateMethodCall { exclude: [filter_user_ids] }
   def filter_user_ids
     uf_status_ids = UserFollow.status_ids
     UserFollow
@@ -141,7 +132,11 @@ class User < ApplicationRecord
         OR (user_id_from = ? AND user_follows.status_id = ? )
       SQL
       .select(:user_id_from, :user_id_to)
-      .map { |uf| uf.user_id_to == id ? uf.user_id_from : uf.user_id_to }.uniq
+      .map do |uf|
+        uid_to = uf.user_id_to
+        uid_from = uf.user_id_from
+        uid_to == id ? uid_from : uid_to
+      end.uniq
   end
 
   class << self

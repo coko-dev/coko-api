@@ -24,3 +24,9 @@ Style/Documentation:
 
 Style/Lambda:
   Enabled: false
+
+Layout/ExtraSpacing:
+  Enabled: false
+
+Layout/SpaceBeforeFirstArg:
+  Enabled: false

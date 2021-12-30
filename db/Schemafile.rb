@@ -24,8 +24,8 @@ end
 add_index       'hot_recipes', %w[recipe_id hot_recipe_version_id], name: 'idx_hot_recipes_on_recipe_id_and_hot_recipe_version_id'
 add_index       'hot_recipes', %w[recipe_id],                       name: 'idx_hot_recipes_on_recipe_id'
 add_index       'hot_recipes', %w[hot_recipe_version_id],           name: 'idx_hot_recipes_on_hot_recipe_version_id'
-add_foreign_key 'hot_recipes', 'recipes',                           name: 'fk_hot_recipes_1'
-add_foreign_key 'hot_recipes', 'hot_recipe_versions',               name: 'fk_hot_recipes_2'
+# add_foreign_key 'hot_recipes', 'recipes',                           name: 'fk_hot_recipes_1'
+# add_foreign_key 'hot_recipes', 'hot_recipe_versions',               name: 'fk_hot_recipes_2'
 
 create_table 'hot_recipe_keywords', id: :string, force: :cascade do |t|
   t.string 'recipe_keyword_id', null: false
@@ -36,7 +36,7 @@ create_table 'hot_recipe_keywords', id: :string, force: :cascade do |t|
 end
 add_index       'hot_recipe_keywords', %w[recipe_keyword_id version], name: 'idx_hot_recipe_keywords_on_recipe_keyword_id_and_version', unique: true
 add_index       'hot_recipe_keywords', %w[recipe_keyword_id],         name: 'idx_hot_recipe_keywords_on_recipe_keyword_id'
-add_foreign_key 'hot_recipe_keywords', 'recipe_keywords',             name: 'fk_hot_recipe_keywords_1'
+# add_foreign_key 'hot_recipe_keywords', 'recipe_keywords',             name: 'fk_hot_recipe_keywords_1'
 
 create_table 'hot_users', id: :string, force: :cascade do |t|
   t.string 'user_id',               null: false
@@ -47,7 +47,7 @@ create_table 'hot_users', id: :string, force: :cascade do |t|
 end
 add_index       'hot_users', %w[user_id version], name: 'idx_hot_users_on_user_id_and_version', unique: true
 add_index       'hot_users', %w[user_id],         name: 'idx_hot_users_on_user_id'
-add_foreign_key 'hot_users', 'users',             name: 'fk_hot_users_1'
+# add_foreign_key 'hot_users', 'users',             name: 'fk_hot_users_1'
 
 create_table 'kitchens', id: :string, force: :cascade do |t|
   t.string   'name',                   null: false, default: 'My Kitchen'
@@ -59,7 +59,7 @@ create_table 'kitchens', id: :string, force: :cascade do |t|
   t.timestamps
 end
 add_index       'kitchens', %w[owner_user_id], name: 'idx_kitchens_on_owner_user_id'
-add_foreign_key 'kitchens', 'users',           name: 'fk_kitchens_1', column: 'owner_user_id'
+# add_foreign_key 'kitchens', 'users',           name: 'fk_kitchens_1', column: 'owner_user_id'
 
 create_table 'kitchen_joins', id: :string, force: :cascade do |t|
   t.integer  'code',          null: false, unsigned: true
@@ -73,8 +73,8 @@ end
 add_index       'kitchen_joins', %w[kitchen_id user_id], name: 'idx_kitchen_joins_on_kitchen_id_and_user_id'
 add_index       'kitchen_joins', %w[kitchen_id],         name: 'idx_kitchen_joins_on_kitchen_id'
 add_index       'kitchen_joins', %w[user_id],            name: 'idx_kitchen_joins_on_user_id'
-add_foreign_key 'kitchen_joins', 'kitchens',             name: 'fk_kitchen_joins_1'
-add_foreign_key 'kitchen_joins', 'users',                name: 'fk_kitchen_joins_2'
+# add_foreign_key 'kitchen_joins', 'kitchens',             name: 'fk_kitchen_joins_1'
+# add_foreign_key 'kitchen_joins', 'users',                name: 'fk_kitchen_joins_2'
 
 create_table 'kitchen_ocr_histories', id: :string, force: :cascade do |t|
   t.string 'kitchen_id', null: false
@@ -82,7 +82,7 @@ create_table 'kitchen_ocr_histories', id: :string, force: :cascade do |t|
   t.timestamps
 end
 add_index       'kitchen_ocr_histories', %w[kitchen_id], name: 'idx_kitchen_ocr_histories_on_kitchen_id'
-add_foreign_key 'kitchen_ocr_histories', 'kitchens',     name: 'fk_kitchen_ocr_histories_1'
+# add_foreign_key 'kitchen_ocr_histories', 'kitchens',     name: 'fk_kitchen_ocr_histories_1'
 
 create_table 'kitchen_products', id: :string, force: :cascade do |t|
   t.string 'kitchen_id', null: false
@@ -95,8 +95,8 @@ end
 add_index       'kitchen_products', %w[kitchen_id product_id], name: 'idx_kitchen_products_on_kitchen_id_and_product_id'
 add_index       'kitchen_products', %w[kitchen_id],            name: 'idx_kitchen_products_on_kitchen_id'
 add_index       'kitchen_products', %w[product_id],            name: 'idx_kitchen_products_on_and_product_id'
-add_foreign_key 'kitchen_products', 'kitchens',                name: 'fk_kitchen_products_1'
-add_foreign_key 'kitchen_products', 'products',                name: 'fk_kitchen_products_2'
+# add_foreign_key 'kitchen_products', 'kitchens',                name: 'fk_kitchen_products_1'
+# add_foreign_key 'kitchen_products', 'products',                name: 'fk_kitchen_products_2'
 
 create_table 'kitchen_product_histories', id: :string, force: :cascade do |t|
   t.string  'kitchen_id',     null: false
@@ -112,9 +112,9 @@ add_index       'kitchen_product_histories', %w[kitchen_id product_id user_id], 
 add_index       'kitchen_product_histories', %w[kitchen_id],                    name: 'idx_kitchen_product_histories_on_kitchen_id'
 add_index       'kitchen_product_histories', %w[product_id],                    name: 'idx_kitchen_product_histories_on_product_id'
 add_index       'kitchen_product_histories', %w[user_id],                       name: 'idx_kitchen_product_histories_on_user_id'
-add_foreign_key 'kitchen_product_histories', 'kitchens',                        name: 'fk_kitchen_product_histories_1'
-add_foreign_key 'kitchen_product_histories', 'products',                        name: 'fk_kitchen_product_histories_2'
-add_foreign_key 'kitchen_product_histories', 'users',                           name: 'fk_kitchen_product_histories_3'
+# add_foreign_key 'kitchen_product_histories', 'kitchens',                        name: 'fk_kitchen_product_histories_1'
+# add_foreign_key 'kitchen_product_histories', 'products',                        name: 'fk_kitchen_product_histories_2'
+# add_foreign_key 'kitchen_product_histories', 'users',                           name: 'fk_kitchen_product_histories_3'
 
 create_table 'kitchen_shopping_lists', id: :string, force: :cascade do |t|
   t.string 'kitchen_id', null: false
@@ -127,9 +127,9 @@ add_index       'kitchen_shopping_lists', %w[kitchen_id product_id user_id], nam
 add_index       'kitchen_shopping_lists', %w[kitchen_id],                    name: 'idx_kitchen_shopping_lists_on_kitchen_id'
 add_index       'kitchen_shopping_lists', %w[product_id],                    name: 'idx_kitchen_shopping_lists_on_product_id'
 add_index       'kitchen_shopping_lists', %w[user_id],                       name: 'idx_kitchen_shopping_lists_on_user_id'
-add_foreign_key 'kitchen_shopping_lists', 'kitchens',                        name: 'fk_kitchen_shopping_lists_1'
-add_foreign_key 'kitchen_shopping_lists', 'products',                        name: 'fk_kitchen_shopping_lists_2'
-add_foreign_key 'kitchen_shopping_lists', 'users',                           name: 'fk_kitchen_shopping_lists_3'
+# add_foreign_key 'kitchen_shopping_lists', 'kitchens',                        name: 'fk_kitchen_shopping_lists_1'
+# add_foreign_key 'kitchen_shopping_lists', 'products',                        name: 'fk_kitchen_shopping_lists_2'
+# add_foreign_key 'kitchen_shopping_lists', 'users',                           name: 'fk_kitchen_shopping_lists_3'
 
 create_table 'products', id: :string, force: :cascade do |t|
   t.string  'name_hira'
@@ -142,8 +142,8 @@ create_table 'products', id: :string, force: :cascade do |t|
 end
 add_index       'products', %w[product_category_id], name: 'idx_products_on_product_category_id'
 add_index       'products', %w[author_id],           name: 'idx_products_on_author_id'
-add_foreign_key 'products', 'product_categories',    name: 'fk_products_1'
-add_foreign_key 'products', 'admin_users',           name: 'fk_products_2', column: 'author_id'
+# add_foreign_key 'products', 'product_categories',    name: 'fk_products_1'
+# add_foreign_key 'products', 'admin_users',           name: 'fk_products_2', column: 'author_id'
 
 create_table 'product_categories', id: :string, force: :cascade do |t|
   t.string 'name',                     null: false
@@ -153,7 +153,7 @@ create_table 'product_categories', id: :string, force: :cascade do |t|
   t.timestamps
 end
 add_index       'product_categories', %w[product_category_id_from], name: 'idx_product_categories_on_product_category_id_from'
-add_foreign_key 'product_categories', 'product_categories',         name: 'fk_product_categories_1', column: 'product_category_id_from'
+# add_foreign_key 'product_categories', 'product_categories',         name: 'fk_product_categories_1', column: 'product_category_id_from'
 
 create_table 'product_ocr_strings', id: :string, force: :cascade do |t|
   t.string  'product_id', null: false
@@ -165,8 +165,8 @@ end
 add_index       'product_ocr_strings', %w[product_id kitchen_id], name: 'idx_product_ocr_strings_on_product_id_and_kitchen_id'
 add_index       'product_ocr_strings', %w[product_id],            name: 'idx_product_ocr_strings_on_product_id'
 add_index       'product_ocr_strings', %w[kitchen_id],            name: 'idx_product_ocr_strings_on_kitchen_id'
-add_foreign_key 'product_ocr_strings', 'products',                name: 'fk_product_ocr_strings_1'
-add_foreign_key 'product_ocr_strings', 'kitchens',                name: 'fk_product_ocr_strings_2'
+# add_foreign_key 'product_ocr_strings', 'products',                name: 'fk_product_ocr_strings_1'
+# add_foreign_key 'product_ocr_strings', 'kitchens',                name: 'fk_product_ocr_strings_2'
 
 create_table 'recipes', id: :string, force: :cascade do |t|
   t.string  'name',               null: false
@@ -181,8 +181,8 @@ create_table 'recipes', id: :string, force: :cascade do |t|
 end
 add_index       'recipes', %w[author_id],          name: 'idx_recipes_on_author_id'
 add_index       'recipes', %w[recipe_category_id], name: 'idx_recipes_on_recipe_category_id'
-add_foreign_key 'recipes', 'users',                name: 'fk_recipes_1', column: 'author_id'
-add_foreign_key 'recipes', 'recipe_categories',    name: 'fk_recipes_2'
+# add_foreign_key 'recipes', 'users',                name: 'fk_recipes_1', column: 'author_id'
+# add_foreign_key 'recipes', 'recipe_categories',    name: 'fk_recipes_2'
 
 create_table 'recipe_categories', id: :string, force: :cascade do |t|
   t.string 'name',                    null: false
@@ -192,7 +192,7 @@ create_table 'recipe_categories', id: :string, force: :cascade do |t|
   t.timestamps
 end
 add_index       'recipe_categories', %w[recipe_category_id_from], name: 'idx_recipe_categories_on_recipe_category_id_from'
-add_foreign_key 'recipe_categories', 'recipe_categories',         name: 'fk_recipe_categories_1', column: 'recipe_category_id_from'
+# add_foreign_key 'recipe_categories', 'recipe_categories',         name: 'fk_recipe_categories_1', column: 'recipe_category_id_from'
 
 create_table 'recipe_favorites', id: :string, force: :cascade do |t|
   t.string 'recipe_id', null: false
@@ -202,8 +202,8 @@ end
 add_index       'recipe_favorites', %w[recipe_id user_id], name: 'idx_recipe_favorites_on_recipe_id_and_user_id'
 add_index       'recipe_favorites', %w[recipe_id],         name: 'idx_recipe_favorites_on_recipe_id'
 add_index       'recipe_favorites', %w[user_id],           name: 'idx_recipe_favorites_on_user_id'
-add_foreign_key 'recipe_favorites', 'recipes',             name: 'fk_recipe_favorites_1'
-add_foreign_key 'recipe_favorites', 'users',               name: 'fk_recipe_favorites_2'
+# add_foreign_key 'recipe_favorites', 'recipes',             name: 'fk_recipe_favorites_1'
+# add_foreign_key 'recipe_favorites', 'users',               name: 'fk_recipe_favorites_2'
 
 create_table 'recipe_keywords', id: :string, force: :cascade do |t|
   t.string  'name',       null: false
@@ -213,7 +213,7 @@ create_table 'recipe_keywords', id: :string, force: :cascade do |t|
   t.timestamps
 end
 add_index       'recipe_keywords', %w[author_id], name: 'idx_recipe_keywords_on_author_id'
-add_foreign_key 'recipe_keywords', 'admin_users', name: 'fk_recipe_keywords_1', column: 'author_id'
+# add_foreign_key 'recipe_keywords', 'admin_users', name: 'fk_recipe_keywords_1', column: 'author_id'
 
 create_table 'recipe_keyword_lists', id: :string, force: :cascade do |t|
   t.string 'recipe_id',         null: false
@@ -222,8 +222,8 @@ create_table 'recipe_keyword_lists', id: :string, force: :cascade do |t|
 end
 add_index       'recipe_keyword_lists', %w[recipe_id],         name: 'idx_recipe_keyword_lists_on_recipe_id'
 add_index       'recipe_keyword_lists', %w[recipe_keyword_id], name: 'idx_recipe_keyword_lists_on_recipe_keyword_id'
-add_foreign_key 'recipe_keyword_lists', 'recipes',             name: 'fk_recipe_keyword_lists_1'
-add_foreign_key 'recipe_keyword_lists', 'recipe_keywords',     name: 'fk_recipe_keyword_lists_2'
+# add_foreign_key 'recipe_keyword_lists', 'recipes',             name: 'fk_recipe_keyword_lists_1'
+# add_foreign_key 'recipe_keyword_lists', 'recipe_keywords',     name: 'fk_recipe_keyword_lists_2'
 
 create_table 'recipe_products', id: :string, force: :cascade do |t|
   t.string 'recipe_id',  null: false
@@ -235,8 +235,8 @@ end
 add_index       'recipe_products', %w[recipe_id product_id], name: 'idx_recipe_products_on_recipe_id_and_product_id'
 add_index       'recipe_products', %w[recipe_id],            name: 'idx_recipe_products_on_recipe_id'
 add_index       'recipe_products', %w[product_id],           name: 'idx_recipe_products_on_product_id'
-add_foreign_key 'recipe_products', 'recipes',                name: 'fk_recipe_products_1'
-add_foreign_key 'recipe_products', 'products',               name: 'fk_recipe_products_2'
+# add_foreign_key 'recipe_products', 'recipes',                name: 'fk_recipe_products_1'
+# add_foreign_key 'recipe_products', 'products',               name: 'fk_recipe_products_2'
 
 create_table 'recipe_records', id: :string, force: :cascade do |t|
   t.string 'author_id', null: false
@@ -247,8 +247,8 @@ end
 add_index       'recipe_records', %w[author_id recipe_id], name: 'idx_recipe_records_on_author_id_and_recipe_id'
 add_index       'recipe_records', %w[author_id],           name: 'idx_recipe_records_on_author_id'
 add_index       'recipe_records', %w[recipe_id],           name: 'idx_recipe_records_on_recipe_id'
-add_foreign_key 'recipe_records', 'users',                 name: 'fk_recipe_records_1', column: 'author_id'
-add_foreign_key 'recipe_records', 'recipes',               name: 'fk_recipe_records_2'
+# add_foreign_key 'recipe_records', 'users',                 name: 'fk_recipe_records_1', column: 'author_id'
+# add_foreign_key 'recipe_records', 'recipes',               name: 'fk_recipe_records_2'
 
 create_table 'recipe_record_images', id: :string, force: :cascade do |t|
   t.string 'recipe_record_id', null: false
@@ -256,7 +256,7 @@ create_table 'recipe_record_images', id: :string, force: :cascade do |t|
   t.timestamps
 end
 add_index       'recipe_record_images', %w[recipe_record_id], name: 'idx_recipe_record_images_on_recipe_record_id'
-add_foreign_key 'recipe_record_images', 'recipe_records',     name: 'fk_recipe_record_images_1'
+# add_foreign_key 'recipe_record_images', 'recipe_records',     name: 'fk_recipe_record_images_1'
 
 create_table 'recipe_sections', id: :string, force: :cascade do |t|
   t.string  'recipe_id', null: false
@@ -265,7 +265,7 @@ create_table 'recipe_sections', id: :string, force: :cascade do |t|
   t.timestamps
 end
 add_index       'recipe_sections', %w[recipe_id], name: 'idx_recipe_sections_on_recipe_id'
-add_foreign_key 'recipe_sections', 'recipes',     name: 'fk_recipe_sections_1'
+# add_foreign_key 'recipe_sections', 'recipes',     name: 'fk_recipe_sections_1'
 
 create_table 'recipe_steps', id: :string, force: :cascade do |t|
   t.string  'recipe_id',  null: false
@@ -275,7 +275,7 @@ create_table 'recipe_steps', id: :string, force: :cascade do |t|
   t.timestamps
 end
 add_index       'recipe_steps', %w[recipe_id], name: 'idx_recipe_steps_on_recipe_id'
-add_foreign_key 'recipe_steps', 'recipes',     name: 'fk_recipe_steps_1'
+# add_foreign_key 'recipe_steps', 'recipes',     name: 'fk_recipe_steps_1'
 
 create_table 'user_follows', id: :string, force: :cascade do |t|
   t.string  'user_id_from', null: false
@@ -285,8 +285,8 @@ create_table 'user_follows', id: :string, force: :cascade do |t|
 end
 add_index       'user_follows', %w[user_id_from user_id_to status_id], name: 'idx_user_follows_on_user_id_from_and_user_id_to_and_status_id', unique: true
 add_index       'user_follows', %w[user_id_to],                        name: 'idx_user_follows_on_user_id_to'
-add_foreign_key 'user_follows', 'users',                               name: 'fk_user_follows_1', column: 'user_id_from'
-add_foreign_key 'user_follows', 'users',                               name: 'fk_user_follows_2', column: 'user_id_to'
+# add_foreign_key 'user_follows', 'users',                               name: 'fk_user_follows_1', column: 'user_id_from'
+# add_foreign_key 'user_follows', 'users',                               name: 'fk_user_follows_2', column: 'user_id_to'
 
 create_table 'user_profiles', id: :string, force: :cascade do |t|
   t.string  'user_id',          null: false
@@ -300,7 +300,7 @@ create_table 'user_profiles', id: :string, force: :cascade do |t|
   t.timestamps
 end
 add_index       'user_profiles', %w[user_id], name: 'idx_user_profiles_on_user_id'
-add_foreign_key 'user_profiles', 'users',     name: 'fk_user_profiles_1'
+# add_foreign_key 'user_profiles', 'users',     name: 'fk_user_profiles_1'
 
 create_table 'users', id: :string, force: :cascade do |t|
   t.string   'code',                   null: false, default: ''
@@ -329,5 +329,5 @@ end
 add_index       'violation_reports', %w[reporting_user_id reported_user_id], name: 'idx_violation_reports_on_reporting_user_id_and_reported_user_id'
 add_index       'violation_reports', %w[reporting_user_id],                  name: 'idx_violation_reports_on_reporting_user_id'
 add_index       'violation_reports', %w[reported_user_id],                   name: 'idx_violation_reports_on_reported_user_id'
-add_foreign_key 'violation_reports', 'users',                                name: 'fk_violation_reports_2', column: 'reporting_user_id'
-add_foreign_key 'violation_reports', 'users',                                name: 'fk_violation_reports_1', column: 'reported_user_id'
+# add_foreign_key 'violation_reports', 'users',                                name: 'fk_violation_reports_2', column: 'reporting_user_id'
+# add_foreign_key 'violation_reports', 'users',                                name: 'fk_violation_reports_1', column: 'reported_user_id'

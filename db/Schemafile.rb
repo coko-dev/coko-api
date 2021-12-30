@@ -52,8 +52,8 @@ add_foreign_key 'hot_users', 'users',             name: 'fk_hot_users_1'
 create_table 'kitchens', id: :string, force: :cascade do |t|
   t.string   'name',                   null: false, default: 'My Kitchen'
   t.boolean  'is_subscriber',          null: false, default: false
-  t.datetime 'subscription_expires_at'
   t.integer  'status_id',              null: false, unsigned: true, default: 1, comment: '{ is_private: 1, published: 2, official: 3, blacked: 4 }'
+  t.datetime 'subscription_expires_at'
   t.string   'owner_user_id'
   t.datetime 'last_action_at'
   t.timestamps
@@ -132,8 +132,8 @@ add_foreign_key 'kitchen_shopping_lists', 'products',                        nam
 add_foreign_key 'kitchen_shopping_lists', 'users',                           name: 'fk_kitchen_shopping_lists_3'
 
 create_table 'products', id: :string, force: :cascade do |t|
-  t.string  'name',                null: false
   t.string  'name_hira'
+  t.string  'name',                null: false
   t.string  'image',               null: false, default: '', limit: 2_048
   t.string  'product_category_id', null: false
   t.string  'author_id',           null: false
@@ -308,8 +308,8 @@ create_table 'users', id: :string, force: :cascade do |t|
   t.string   'firebase_id_token',      null: false, default: ''
   t.string   'firebase_refresh_token', null: false, default: ''
   t.string   'kitchen_id'
-  t.integer  'status_id',              null: false, unsigned: true, default: 1, comment: '{ is_private: 1, published: 2, official: 3 }'
   t.string   'email'
+  t.integer  'status_id',              null: false, unsigned: true, default: 1, comment: '{ is_private: 1, published: 2, official: 3 }'
   t.string   'password_digest',        null: false, default: ''
   t.integer  'following_count',        null: false, unsigned: true, default: 0
   t.integer  'follower_count',         null: false, unsigned: true, default: 0

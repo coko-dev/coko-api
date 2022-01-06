@@ -71,4 +71,6 @@ jobs:
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               git push https://heroku:$HEROKU_API_KEY@git.heroku.com/coko-api.git master
+            elif [ "${CIRCLE_BRANCH}" == "develop" ]; then
+              git push https://staging:$HEROKU_API_KEY@git.heroku.com/coko-api.git develop
             fi

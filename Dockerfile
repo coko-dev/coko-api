@@ -17,4 +17,4 @@ ADD . $APP_ROOT
 
 RUN gem uninstall yarn -aIx
 
-# RUN rails webpacker:install
+CMD rails s

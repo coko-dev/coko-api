@@ -1,0 +1,23 @@
+name: Deploy to STAGING heroku.
+
+on:
+  push:
+    branches: [develop]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build, Push and Release a Docker container to STAGING Heroku.
+        uses: gonuit/heroku-docker-deploy@v1.3.3
+        with:
+          email: ${{ secrets.HEROKU_EMAIL }}
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: coko-api-stg
+          dockerfile_directory: ./     # (Optional, default: "./")
+          dockerfile_name: Dockerfile  # (Optional, default: "Dockerfile")
+          docker_options: "--no-cache" # (Optional, default: "")
+          process_type: web            # (Optional, default: "web")

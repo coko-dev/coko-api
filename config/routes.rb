@@ -29,6 +29,7 @@ Rails.application.routes.draw do
 
     resources :products, only: %i[index]
     resources :product_categories, only: %i[index]
+    resources :product_requests, only: %i[create]
     resources :recipes do
       resources :recipe_records, only: %i[index create], controller: 'recipes/recipe_records'
       resource :recipe_favorite, only: %i[create destroy]

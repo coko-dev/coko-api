@@ -7,8 +7,8 @@ class AbstractRequest < ApplicationRecord
     pending: 1,
     done: 2
   }
-  
-  validates :body, presence: true, length: { maximum: 400 }
 
-  belongs_to :user, optional: true
+  belongs_to :user
+
+  delegate :code, to: :user, prefix: true
 end

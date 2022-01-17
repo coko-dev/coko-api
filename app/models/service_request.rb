@@ -6,4 +6,6 @@ class ServiceRequest < AbstractRequest
     report: 2,
     other: 3
   }
+
+  validates :body, presence: true, length: { maximum: 400 }
 end

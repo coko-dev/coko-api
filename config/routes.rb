@@ -42,6 +42,7 @@ Rails.application.routes.draw do
     end
     resources :recipe_records
     resources :recipe_categories, only: %i[index show]
+    resources :service_requests, only: %i[create]
     resource :user, only: %i[update]
     resources :users, param: :display_id, only: %i[show create] do
       resources :recipe_records, only: %i[index], controller: 'users/recipe_records'

@@ -309,7 +309,7 @@ create_table 'users', id: :string, force: :cascade do |t|
   t.string   'firebase_refresh_token', null: false, default: ''
   t.string   'kitchen_id'
   t.string   'email'
-  t.integer  'status_id',              null: false, unsigned: true, default: 1, comment: '{ is_private: 1, published: 2, official: 3 }'
+  t.integer  'status_id',              null: false, unsigned: true, default: 1, comment: '{ is_private: 1, published: 2, official: 3, black: 4 }'
   t.string   'password_digest',        null: false, default: ''
   t.integer  'following_count',        null: false, unsigned: true, default: 0
   t.integer  'follower_count',         null: false, unsigned: true, default: 0

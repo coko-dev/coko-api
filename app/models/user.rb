@@ -8,7 +8,8 @@ class User < ApplicationRecord
   enum status_id: {
     is_private: 1,
     published: 2,
-    official: 3
+    official: 3,
+    black: 4
   }
 
   has_secure_password

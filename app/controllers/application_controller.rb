@@ -24,7 +24,7 @@ class ApplicationController < ActionController::API
 
       case type
       when 'user'
-        @current_user = User.find_by!(code: subject)
+        @current_user = User.black.find_by!(code: subject)
       when 'admin_user'
         @admin_user = AdminUser.find(subject)
       end
@@ -34,6 +34,9 @@ class ApplicationController < ActionController::API
     rescue ForbiddenError => e
       logger.warn(e)
       render_forbidden
+    rescue RecordNotFound => e
+      logger.warn(e)
+      render_not_found
     rescue StandardError => e
       render_bad_request(e)
     end

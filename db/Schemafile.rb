@@ -168,6 +168,17 @@ add_index       'product_ocr_strings', %w[kitchen_id],            name: 'idx_pro
 add_foreign_key 'product_ocr_strings', 'products',                name: 'fk_product_ocr_strings_1'
 add_foreign_key 'product_ocr_strings', 'kitchens',                name: 'fk_product_ocr_strings_2'
 
+create_table 'product_requests', id: :string, force: :cascade do |t|
+  t.string  'user_id',            null: false
+  t.string  'name',               null: false
+  t.text    'body'
+  t.integer 'status_id',          null: false, unsigned: true, default: 1, comment: '{ pending: 1, done: 2 }'
+  t.boolean 'is_required_notice', null: false, default: false
+  t.timestamps
+end
+add_index       'product_requests', %w[user_id], name: 'idx_product_requests_on_user_id'
+add_foreign_key 'product_requests', 'users',     name: 'fk_product_requests_1'
+
 create_table 'recipes', id: :string, force: :cascade do |t|
   t.string  'name',               null: false
   t.string  'author_id',          null: false
@@ -276,6 +287,17 @@ create_table 'recipe_steps', id: :string, force: :cascade do |t|
 end
 add_index       'recipe_steps', %w[recipe_id], name: 'idx_recipe_steps_on_recipe_id'
 add_foreign_key 'recipe_steps', 'recipes',     name: 'fk_recipe_steps_1'
+
+create_table 'service_requests', id: :string, force: :cascade do |t|
+  t.string  'user_id',            null: false
+  t.text    'body',               null: false
+  t.integer 'type_id',            null: false, unsigned: true, default: 1, comment: '{ request: 1, report: 2, other: 3 }'
+  t.integer 'status_id',          null: false, unsigned: true, default: 1, comment: '{ pending: 1, done: 2 }'
+  t.boolean 'is_required_notice', null: false, default: false
+  t.timestamps
+end
+add_index       'service_requests', %w[user_id], name: 'idx_service_requests_on_user_id'
+add_foreign_key 'service_requests', 'users',     name: 'fk_service_requests_1'
 
 create_table 'user_follows', id: :string, force: :cascade do |t|
   t.string  'user_id_from', null: false

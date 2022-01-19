@@ -46,6 +46,8 @@ class User < ApplicationRecord
   has_many :reporteds,  foreign_key: 'reported_user_id',  class_name: 'ViolationReport', inverse_of: 'reported_user',  dependent: :delete_all
   has_many :reporting_users, through: :reportings, source: :reporting_user
   has_many :reported_users,  through: :reporteds,  source: :reported_user
+  has_many :product_requests, dependent: :nullify
+  has_many :service_requests, dependent: :nullify
 
   accepts_nested_attributes_for :profile
   accepts_nested_attributes_for :own_kitchen

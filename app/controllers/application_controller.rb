@@ -24,7 +24,7 @@ class ApplicationController < ActionController::API
 
       case type
       when 'user'
-        @current_user = User.black.find_by!(code: subject)
+        @current_user = User.where.not(status_id: 'black').find_by!(code: subject)
       when 'admin_user'
         @admin_user = AdminUser.find(subject)
       end

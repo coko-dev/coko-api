@@ -24,7 +24,7 @@ class ApplicationController < ActionController::API
 
       case type
       when 'user'
-        @current_user = User.where(is_allowed: true).find_by!(code: subject)
+        @current_user = User.allowed.find_by!(code: subject)
       when 'admin_user'
         @admin_user = AdminUser.find(subject)
       end

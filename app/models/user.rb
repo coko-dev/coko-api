@@ -51,6 +51,9 @@ class User < ApplicationRecord
   accepts_nested_attributes_for :profile
   accepts_nested_attributes_for :own_kitchen
 
+  scope :allowed, -> { where(is_allowed: true) }
+  scope :denied, -> { where(is_allowed: false) }
+
   def set_code
     return if self[:code].present?
 

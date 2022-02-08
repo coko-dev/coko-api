@@ -4,7 +4,7 @@ module V1
   class UsersController < ApplicationController
     before_action :set_user_with_display_id, only: %i[show]
 
-    skip_before_action :authenticate_with_api_token, only: %i[create token]
+    skip_before_action :authenticate_with_api_token, only: %i[create]
 
     api :GET, '/v1/users/:display_id', 'Show user'
     param :display_id, String, required: true, desc: 'User display id'

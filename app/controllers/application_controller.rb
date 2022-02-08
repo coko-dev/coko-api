@@ -17,23 +17,12 @@ class ApplicationController < ActionController::API
 
   def authenticate_with_api_token
     authenticate_or_request_with_http_token do |token, _options|
-      payload = self.class.jwt_decode_for_general(token)
+      payload = self.class.jwt_decode_for_firebase(token)
       subject = payload[:sub]
-      type = payload[:typ]
-      raise ForbiddenError unless macthed_routing_for_user_type?(type)
-
-      case type
-      when 'user'
-        @current_user = User.allowed.find_by!(code: subject)
-      when 'admin_user'
-        @admin_user = AdminUser.find(subject)
-      end
+      @current_user = User.allowed.find_by!(code: subject)
     rescue JWT::DecodeError => e
       logger.warn(e)
       render_unauthorized
-    rescue ForbiddenError => e
-      logger.warn(e)
-      render_forbidden
     rescue RecordNotFound => e
       logger.warn(e)
       render_not_found

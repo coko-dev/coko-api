@@ -4,7 +4,7 @@ module V1
   class ProductRequestsController < ApplicationController
     api :POST, '/v1/product_requests', 'Create product request'
     param :name, String, allow_blank: true, desc: 'Requested product name'
-    param :body, String, required: true, desc: "Discription for request"
+    param :body, String, required: true, desc: 'Discription for request'
     param :is_required_notice, [true, false], allow_blank: true, desc: 'Does the user need notification?. Default: false'
     def create
       product_request = ProductRequest.new(user: @current_user, status_id: :pending)

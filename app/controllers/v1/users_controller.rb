@@ -27,7 +27,7 @@ module V1
     def create
       payload = authenticate_or_request_with_http_token { |token, _option| self.class.jwt_decode_for_firebase(token) }
 
-      user = User.new(payload[:sub])
+      user = User.new(code: payload[:sub])
       user.build_profile(name: payload[:name], image: payload[:picture] || '')
       user.build_own_kitchen
       user.save!

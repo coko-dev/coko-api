@@ -31,21 +31,6 @@ class ApplicationController < ActionController::API
     end
   end
 
-  def macthed_routing_for_user_type?(type)
-    settings = Settings.routing.namespace
-
-    case type
-    when 'user'
-      settings.public
-    when 'admin_user'
-      settings.admin
-    end.include?(request_version)
-  end
-
-  def request_version
-    request.path.match(%r{/(.+?)/})[1]
-  end
-
   def authenticate_with_base_api_key
     return if request.headers[:HTTP_X_COKO_API_KEY] == Rails.application.credentials.api_access_key
 

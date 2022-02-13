@@ -4,10 +4,7 @@ class UserProfile < ApplicationRecord
   include StringUtil
   include GoogleCloudStorageUtil
 
-  DEFAULT_NICKNAME = 'ニックネーム'
-
   before_validation :set_default_display_id, on: :create
-  before_validation :set_default_name, on: :create
 
   validates :display_id, presence: true, uniqueness: { case_sensitive: true }, format: { with: /\A[0-9a-zA-Z]+\z/, message: '半角英数文字のみが使えます' }, on: %i[create update]
   validates :name, presence: true, length: { in: 1..25 }, on: %i[update]
@@ -26,12 +23,6 @@ class UserProfile < ApplicationRecord
       generated_code = klass.generate_random_code(length: 8)
       break generated_code unless klass.exists?(display_id: generated_code)
     end
-  end
-
-  def set_default_name
-    return if self[:name].present?
-
-    self[:name] = DEFAULT_NICKNAME
   end
 
   def upload_and_fetch_user_image(encoded_image: nil)

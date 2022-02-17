@@ -21,6 +21,7 @@ class ApplicationController < ActionController::API
       @current_user = User.allowed.find_by(code: subject)
       return if @current_user.present?
 
+      # NOTE: ブラックリストのユーザではない場合
       raise UserNotFoundError unless User.exists?(code: subject)
 
       raise StandardError, 'Allowed User Not Found'

@@ -6,6 +6,7 @@ class ErrorsController < ActionController::API
   rescue_from StandardError, with: :render_server_error
   rescue_from UnauthorizedError, with: :render_unauthorized
   rescue_from ForbiddenError, with: :render_forbidden
+  rescue_from UserNotFoundError, with: :render_user_not_found
   rescue_from Pundit::NotAuthorizedError, with: :render_forbidden
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
   rescue_from ActionController::RoutingError, with: :render_not_found

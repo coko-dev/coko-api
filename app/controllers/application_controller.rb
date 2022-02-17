@@ -17,15 +17,19 @@ class ApplicationController < ActionController::API
 
   def authenticate_with_api_token
     authenticate_or_request_with_http_token do |token, _options|
-      payload = self.class.jwt_decode_for_firebase(token)
-      subject = payload[:sub]
-      @current_user = User.allowed.find_by!(code: subject)
+      subject = self.class.jwt_decode_for_firebase(token)[:sub]
+      @current_user = User.allowed.find_by(code: subject)
+      return if @current_user.present?
+
+      raise UserNotFoundError unless User.exists?(code: subject)
+
+      raise StandardError, 'Allowed User Not Found'
     rescue JWT::DecodeError => e
       logger.warn(e)
       render_unauthorized
-    rescue RecordNotFound => e
+    rescue UserNotFoundError => e
       logger.warn(e)
-      render_not_found
+      render_user_not_found
     rescue StandardError => e
       render_bad_request(e)
     end

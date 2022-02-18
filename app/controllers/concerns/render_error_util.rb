@@ -6,6 +6,7 @@ module RenderErrorUtil
   # rubocop:disable Layout/EmptyLineBetweenDefs
   class UnauthorizedError < StandardError; end
   class ForbiddenError < StandardError; end
+  class UserNotFoundError < StandardError; end
   # rubocop:enable Layout/EmptyLineBetweenDefs
 
   def render_bad_request(exception = nil)
@@ -37,6 +38,15 @@ module RenderErrorUtil
         title: 'Forbidden'
       }
     }, status: :forbidden
+  end
+
+  def render_user_not_found
+    render content_type: 'application/json', json: {
+      errors: {
+        status: '404',
+        title: 'User Not Found'
+      }
+    }, status: :not_found
   end
 
   def render_not_found

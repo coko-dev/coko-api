@@ -17,44 +17,23 @@ class ApplicationController < ActionController::API
 
   def authenticate_with_api_token
     authenticate_or_request_with_http_token do |token, _options|
-      payload = self.class.jwt_decode_for_general(token)
-      subject = payload[:sub]
-      type = payload[:typ]
-      raise ForbiddenError unless macthed_routing_for_user_type?(type)
+      subject = self.class.jwt_decode_for_firebase(token)[:sub]
+      @current_user = User.allowed.find_by(code: subject)
+      return if @current_user.present?
 
-      case type
-      when 'user'
-        @current_user = User.allowed.find_by!(code: subject)
-      when 'admin_user'
-        @admin_user = AdminUser.find(subject)
-      end
+      # NOTE: ブラックリストのユーザではない場合
+      raise UserNotFoundError unless User.exists?(code: subject)
+
+      raise StandardError, 'Allowed User Not Found'
     rescue JWT::DecodeError => e
       logger.warn(e)
       render_unauthorized
-    rescue ForbiddenError => e
+    rescue UserNotFoundError => e
       logger.warn(e)
-      render_forbidden
-    rescue RecordNotFound => e
-      logger.warn(e)
-      render_not_found
+      render_user_not_found
     rescue StandardError => e
       render_bad_request(e)
     end
-  end
-
-  def macthed_routing_for_user_type?(type)
-    settings = Settings.routing.namespace
-
-    case type
-    when 'user'
-      settings.public
-    when 'admin_user'
-      settings.admin
-    end.include?(request_version)
-  end
-
-  def request_version
-    request.path.match(%r{/(.+?)/})[1]
   end
 
   def authenticate_with_base_api_key

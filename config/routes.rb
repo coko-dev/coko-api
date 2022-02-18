@@ -4,8 +4,6 @@ Rails.application.routes.draw do
   apipie
 
   namespace :v1 do
-    post 'token', to: 'users#token'
-
     resource :kitchen, only: %i[update]
     resources :kitchens do
       collection do
@@ -63,35 +61,5 @@ Rails.application.routes.draw do
       end
     end
     resources :violation_reports, only: %i[create]
-  end
-
-  # - - - - - - - - - -
-  # Admin
-  # - - - - - - - - - -
-  namespace :admin do
-    post '/token', to: 'admin_users#token'
-    put '/verificate', to: 'admin_users#verificate'
-    resources :admin_users
-    resources :hot_recipes, only: %i[create]
-    delete '/hot_recipes', to: 'hot_recipes#destroy'
-    resources :hot_recipe_versions, param: :version, only: %i[index create] do
-      member do
-        put '/enable', to: 'hot_recipe_versions#enable'
-      end
-    end
-    resources :products do
-      member do
-        patch '/hide', to: 'products#hide'
-        patch '/publish', to: 'products#publish'
-      end
-    end
-    resources :product_categories
-    resources :recipe_categories
-    resources :recipe_keywords do
-      collection do
-        get '/blacked', to: 'recipe_keywords#show_blacked'
-      end
-    end
-    resources :violation_reports, only: %i[index]
   end
 end

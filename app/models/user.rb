@@ -11,13 +11,13 @@ class User < ApplicationRecord
     official: 3
   }
 
-  has_secure_password
+  # has_secure_password  # NOTE: パスワードをFirebaseで管理するため使わない
 
   before_validation :set_code, on: :create
   before_validation :set_default_email, on: :create
 
   validates :email, presence: true, uniqueness: true
-  validates :password_digest, presence: true, on: %i[create update]
+  # validates :password_digest, presence: true, on: %i[create update]  # NOTE: パスワードをFirebaseで管理するため使わない
 
   belongs_to :kitchen, optional: true
 

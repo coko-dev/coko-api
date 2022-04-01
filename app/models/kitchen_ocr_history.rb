@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class KitchenOcrHistory < ApplicationRecord
-  DAILY_LIMIT = 3
+  DAILY_LIMIT = 5
 
   belongs_to :kitchen
 

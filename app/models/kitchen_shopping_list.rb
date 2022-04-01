@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class KitchenShoppingList < ApplicationRecord
-  MAXIMUM_NUMBER = 6
+  MAXIMUM_NUMBER = 30
 
   validates :note, length: { maximum: 32 }, allow_nil: true
 

@@ -44,6 +44,7 @@ gem 'google-cloud-storage'
 # Utils
 gem 'bcrypt'
 gem 'config'
+gem 'acts_as_list'
 
 group :development, :test do
   ### Server

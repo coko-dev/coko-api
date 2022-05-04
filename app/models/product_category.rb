@@ -7,4 +7,6 @@ class ProductCategory < ApplicationRecord
 
   has_many :child_categories, foreign_key: 'product_category_id_from', class_name: 'ProductCategory', inverse_of: 'parent_category', dependent: :nullify
   has_many :products, dependent: :nullify
+
+  acts_as_list
 end

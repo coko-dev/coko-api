@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ProductCategorySerializer < ApplicationSerializer
-  attribute :name, :name_slug
+  attribute :name, :name_slug, :position
 
   belongs_to :parent_category do |object|
     object&.parent_category

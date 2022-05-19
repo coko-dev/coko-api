@@ -148,7 +148,7 @@ add_foreign_key 'products', 'admin_users',           name: 'fk_products_2', colu
 create_table 'product_categories', id: :string, force: :cascade do |t|
   t.string  'name',                     null: false
   t.string  'name_slug',                null: false
-  t.integer 'position',                 unsigned: true
+  t.integer 'position',                 null: false, unsigned: true
   t.string  'product_category_id_from'
   t.string  'color_code'
   t.timestamps

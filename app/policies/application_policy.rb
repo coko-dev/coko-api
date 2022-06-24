@@ -36,6 +36,11 @@ class ApplicationPolicy
     false
   end
 
+  # NOTE: アカウント認証をしているか
+  def account_based?
+    false
+  end
+
   class Scope
     attr_reader :user, :scope
 

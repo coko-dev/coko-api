@@ -37,8 +37,9 @@ class ApplicationPolicy
   end
 
   # NOTE: アカウント認証をしているか
+  # TODO: トークンか、テーブル情報から判定する
   def account_based?
-    false
+    true
   end
 
   class Scope

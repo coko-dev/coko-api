@@ -17,6 +17,8 @@ detectors:
     max_methods: 30
   TooManyStatements:
     max_statements: 50
+  TooManyConstants:
+    max_constants: 10
   # NOTE: We prefer rubocop linter
   # https://rubocop.readthedocs.io/en/latest/cops_naming/#namingrescuedexceptionsvariablename
   UncommunicativeVariableName:

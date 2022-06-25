@@ -39,7 +39,7 @@ class ApplicationPolicy
   # NOTE: アカウント認証をしているか
   # TODO: トークンか、テーブル情報から判定する
   def account_based?
-    true
+    user.account_based?
   end
 
   class Scope

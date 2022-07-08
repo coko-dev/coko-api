@@ -7,6 +7,8 @@ module V1
     param :body, String, required: true, desc: 'Discription for request'
     param :is_required_notice, [true, false], allow_blank: true, desc: 'Does the user need notification?. Default: false'
     def create
+      authorize :application, :account_based?
+
       product_request = ProductRequest.new(user: @current_user, status_id: :pending)
       product_request.assign_attributes(product_request_params)
       product_request.save!

@@ -4,6 +4,9 @@ class User < ApplicationRecord
   include StringUtil
 
   CODE_REGEX = /[0-9a-zA-Z_.]+/.freeze
+  ANONYMOUS_PROVIDER_NAME = 'anonymous'
+
+  attribute :provider_id
 
   enum status_id: {
     is_private: 1,
@@ -126,6 +129,11 @@ class User < ApplicationRecord
 
   def muting?(user)
     muting_users.exists?(id: user.id)
+  end
+
+  # NOTE: アカウント認証をしているか
+  def account_based?
+    provider_id != ANONYMOUS_PROVIDER_NAME
   end
 
   # NOTE: ブロックしている、ブロックされている、ミュートしているユーザの id

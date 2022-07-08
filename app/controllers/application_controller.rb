@@ -17,8 +17,10 @@ class ApplicationController < ActionController::API
 
   def authenticate_with_api_token
     authenticate_or_request_with_http_token do |token, _options|
-      subject = self.class.jwt_decode_for_firebase(token)[:sub]
+      decoded_token = self.class.jwt_decode_for_firebase(token)
+      subject = decoded_token[:sub]
       @current_user = User.allowed.find_by(code: subject)
+      @current_user.provider_id = decoded_token[:provider_id]
       return if @current_user.present?
 
       # NOTE: ブラックリストのユーザではない場合

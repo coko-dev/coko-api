@@ -6,8 +6,6 @@ module V1
 
     api :POST, '/v1/recipes/:id/recipe_favorite', 'Make a recipe favorite'
     def create
-      authorize :application, :account_based?
-
       is_new_favorite = RecipeFavorite.where(recipe: @recipe, user: @current_user).empty?
       if is_new_favorite
         favorite = RecipeFavorite.new(recipe: @recipe, user: @current_user)

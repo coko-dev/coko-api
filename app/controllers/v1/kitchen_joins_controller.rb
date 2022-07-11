@@ -5,8 +5,6 @@ module V1
     api :POST, '/v1/kitchen_joins', 'Create kitchen joins'
     param :user_code, String, required: true, desc: 'code of a user to invite'
     def create
-      authorize :application, :account_based?
-
       user = User.find_by!(code: params[:user_code])
 
       kitchen_join = KitchenJoin.new(
@@ -25,8 +23,6 @@ module V1
 
     api :PATCH, '/v1/kitchen_joins/:code/verification', 'Verification kitchen join'
     def verification
-      authorize :application, :account_based?
-
       matched_kitchen_join = KitchenJoin.open.find_by!(code: params[:code], user: @current_user)
       kitchen = matched_kitchen_join.kitchen
       matched_kitchen_join.is_confirming = true

@@ -38,8 +38,6 @@ module V1
 
     api :POST, '/v1/users/:display_id/follow', 'Follow a user'
     def create
-      authorize :application, :account_based?
-
       render content_type: 'application/json', json: {
         data: { meta: { is_followed: @current_user.follow(@user) } }
       }, status: :ok
@@ -54,8 +52,6 @@ module V1
 
     api :POST, '/v1/users/:display_id/block', 'Block a user'
     def block
-      authorize :application, :account_based?
-
       render content_type: 'application/json', json: {
         data: { meta: { is_blocked: @current_user.block(@user) } }
       }, status: :ok
@@ -70,8 +66,6 @@ module V1
 
     api :POST, '/v1/users/:display_id/mute', 'Mute a user'
     def mute
-      authorize :application, :account_based?
-
       render content_type: 'application/json', json: {
         data: { meta: { is_muted: @current_user.mute(@user) } }
       }, status: :ok

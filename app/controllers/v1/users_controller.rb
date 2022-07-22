@@ -59,6 +59,25 @@ module V1
       render_bad_request(e)
     end
 
+    api :DELETE, '/v1/user', 'Delete current user (and create UserTrash)'
+    def destroy
+      binding.pry
+      payload = @current_user.attributes
+      profile = @current_user.profile
+      payload['profile'] = profile.attributes
+      payload = payload.to_json
+      user_trash = UserTrash.new(code: @current_user.code, display_id: profile.display_id, payload: payload)
+      ApplicationRecord.transaction do
+        user_trash.save!
+        @current_user.destroy!
+      end
+      render content_type: 'application/json', json: {
+        data: { meta: { is_deleted: @current_user.destroyed? } }
+      }, status: :ok
+    rescue StandardError => e
+      render_bad_request(e)
+    end
+
     private
 
     def set_user_with_code

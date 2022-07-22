@@ -325,6 +325,12 @@ end
 add_index       'user_profiles', %w[user_id], name: 'idx_user_profiles_on_user_id'
 add_foreign_key 'user_profiles', 'users',     name: 'fk_user_profiles_1'
 
+create_table 'user_trashes', id: :string, force: :cascade do |t|
+  t.string 'code',       null: false
+  t.string 'display_id', null: false
+  t.json   'payload',    null: false, default: '{}'
+end
+
 create_table 'users', id: :string, force: :cascade do |t|
   t.string   'code',                   null: false, default: ''
   t.string   'api_token',              null: false, default: ''

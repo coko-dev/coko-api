@@ -61,7 +61,6 @@ module V1
 
     api :DELETE, '/v1/user', 'Delete current user (and create UserTrash)'
     def destroy
-      binding.pry
       payload = @current_user.attributes
       profile = @current_user.profile
       payload['profile'] = profile.attributes

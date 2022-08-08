@@ -36,12 +36,6 @@ class ApplicationPolicy
     false
   end
 
-  # NOTE: アカウント認証をしているか
-  # TODO: トークンか、テーブル情報から判定する
-  def account_based?
-    user.account_based?
-  end
-
   class Scope
     attr_reader :user, :scope
 

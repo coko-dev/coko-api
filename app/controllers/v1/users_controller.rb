@@ -48,8 +48,6 @@ module V1
     param :description, String, allow_blank: true, desc: 'Description'
     param :website_url, String, allow_blank: true, desc: 'Website url(link)'
     def update
-      authorize :application, :account_based?
-
       profile = @current_user.profile
       profile.assign_attributes(user_profile_params)
       @current_user.save!
@@ -57,6 +55,24 @@ module V1
         @current_user,
         params: serializer_params
       ), status: :ok
+    rescue StandardError => e
+      render_bad_request(e)
+    end
+
+    api :DELETE, '/v1/user', 'Delete current user (and create UserTrash)'
+    def destroy
+      payload = @current_user.attributes
+      profile = @current_user.profile
+      payload['profile'] = profile.attributes
+      payload = payload.to_json
+      user_trash = UserTrash.new(code: @current_user.code, display_id: profile.display_id, payload: payload)
+      ApplicationRecord.transaction do
+        user_trash.save!
+        @current_user.destroy!
+      end
+      render content_type: 'application/json', json: {
+        data: { meta: { is_deleted: @current_user.destroyed? } }
+      }, status: :ok
     rescue StandardError => e
       render_bad_request(e)
     end

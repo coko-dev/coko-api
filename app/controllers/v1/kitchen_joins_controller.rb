@@ -1,21 +1,16 @@
 # frozen_string_literal: true
+require 'securerandom'
 
 module V1
   class KitchenJoinsController < ApplicationController
     api :POST, '/v1/kitchen_joins', 'Create kitchen joins'
     param :user_code, String, required: true, desc: 'code of a user to invite'
     def create
-      user = User.find_by!(code: params[:user_code])
+      guest = User.find_by!(code: params[:user_code])
+      @current_user.update(invitation_code: SecureRandom.alphanumeric(10))
 
-      kitchen_join = KitchenJoin.new(
-        user: user,
-        kitchen: @current_user.kitchen,
-        expired_at: Time.zone.now + 3.minutes
-      )
-
-      kitchen_join.save!
       render content_type: 'application/json', json: {
-        join_code: kitchen_join.code
+        code: @current_user.invitaion_code
       }, status: :ok
     rescue StandardError => e
       render_bad_request(e)
@@ -23,13 +18,12 @@ module V1
 
     api :PATCH, '/v1/kitchen_joins/:code/verification', 'Verification kitchen join'
     def verification
-      matched_kitchen_join = KitchenJoin.open.find_by!(code: params[:code], user: @current_user)
-      kitchen = matched_kitchen_join.kitchen
-      matched_kitchen_join.is_confirming = true
-      matched_kitchen_join.save!
+      inviter = User.find_by!(invitation_code: params[:code])
+      kitchen = Kitchen.find_by!(id: inviter.kitchen)
       render content_type: 'application/json', json: {
         message: 'Completion of registration',
-        kitchen_name: kitchen.name
+        code: inviter.invitation_code,
+        kitchen: kitchen
       }, status: :ok
     rescue StandardError => e
       render_bad_request(e)

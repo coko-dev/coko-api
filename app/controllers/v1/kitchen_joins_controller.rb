@@ -10,7 +10,7 @@ module V1
       @current_user.update(invitation_code: SecureRandom.alphanumeric(10))
 
       render content_type: 'application/json', json: {
-        code: @current_user.invitaion_code
+        code: @current_user.invitation_code
       }, status: :ok
     rescue StandardError => e
       render_bad_request(e)

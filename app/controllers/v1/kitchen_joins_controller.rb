@@ -31,9 +31,8 @@ module V1
 
     api :PATCH, '/v1/kitchen_joins/confirm', 'Confirm kitchen join'
     def confirm
-      matched_kitchen_join = KitchenJoin.open.find_by!(user: @current_user)
-      User.set_kitchen(user: @current_user, kitchen: matched_kitchen_join.kitchen)
-      matched_kitchen_join.closed!
+      inviter = User.find_by!(invitation_code: params[:code])
+      User.set_kitchen(user: @current_user, kitchen: inviter.kitchen)
 
       render content_type: 'application/json', json: {
         message: 'Succeeded in participating in the kitchen'

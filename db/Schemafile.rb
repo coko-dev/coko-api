@@ -61,21 +61,6 @@ end
 add_index       'kitchens', %w[owner_user_id], name: 'idx_kitchens_on_owner_user_id'
 add_foreign_key 'kitchens', 'users',           name: 'fk_kitchens_1', column: 'owner_user_id'
 
-create_table 'kitchen_joins', id: :string, force: :cascade do |t|
-  t.integer  'code',          null: false, unsigned: true
-  t.string   'kitchen_id',    null: false
-  t.string   'user_id',       null: false
-  t.boolean  'is_confirming', null: false, default: false
-  t.integer  'status_id',     null: false, default: 1, comment: '{ open: 1, closed: 2 }'
-  t.datetime 'expired_at',    null: false
-  t.timestamps
-end
-add_index       'kitchen_joins', %w[kitchen_id user_id], name: 'idx_kitchen_joins_on_kitchen_id_and_user_id'
-add_index       'kitchen_joins', %w[kitchen_id],         name: 'idx_kitchen_joins_on_kitchen_id'
-add_index       'kitchen_joins', %w[user_id],            name: 'idx_kitchen_joins_on_user_id'
-add_foreign_key 'kitchen_joins', 'kitchens',             name: 'fk_kitchen_joins_1'
-add_foreign_key 'kitchen_joins', 'users',                name: 'fk_kitchen_joins_2'
-
 create_table 'kitchen_ocr_histories', id: :string, force: :cascade do |t|
   t.string 'kitchen_id', null: false
   t.string 'log'

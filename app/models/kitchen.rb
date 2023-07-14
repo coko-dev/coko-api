@@ -14,7 +14,6 @@ class Kitchen < ApplicationRecord
 
   belongs_to :owner, foreign_key: 'owner_user_id', class_name: 'User', inverse_of: :own_kitchen, optional: true
 
-  has_many :kitchen_joins, dependent: :delete_all
   has_many :kitchen_ocr_histories, dependent: :delete_all
   has_many :kitchen_products, dependent: :delete_all
   has_many :products, through: :kitchen_products

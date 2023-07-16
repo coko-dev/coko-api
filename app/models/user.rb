@@ -150,7 +150,7 @@ class User < ApplicationRecord
 
       ApplicationRecord.transaction do
         # NOTE: 離れるキッチンのオーナーだった場合、ユーザ作成日が古いユーザを自動的にオーナーに割り振る。ユーザがいない場合 nil
-        if current_kitchen&.owner = user
+        if current_kitchen&.owner == user
           next_owner = current_kitchen.users.where.not(id: user.id).order(created_at: :desc).first
           current_kitchen.update!(owner: next_owner)
         end

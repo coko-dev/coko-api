@@ -5,7 +5,7 @@ require 'securerandom'
 module V1
   class KitchenJoinsController < ApplicationController
     # 招待者用メソッド
-    api :GET, '/v1/kitchen_joins/show_code', 'Get the current user\'s invitation code or create one if it does not exist'
+    api :GET, '/v1/kitchen_joins/show_code', "Get the current user\'s invitation code or create one if it does not exist"
     def show_code
       @current_user.update!(invitation_code: SecureRandom.alphanumeric(10)) if @current_user.invitation_code.nil?
 

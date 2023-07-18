@@ -16,7 +16,7 @@ module V1
       render_bad_request(e)
     end
 
-    api :PATCH, '/v1/kitchen_joins/refresh_code', 'Update the current user\'s invitation code'
+    api :PATCH, "/v1/kitchen_joins/refresh_code', 'Update the current user\'s invitation code"
     def refresh_code
       @current_user.update!(invitation_code: SecureRandom.alphanumeric(10))
 

@@ -10,12 +10,20 @@ Rails.application.routes.draw do
         get 'current', to: 'kitchens#show_current_kitchen'
       end
     end
-    resources :kitchen_joins, only: [] do
+    resources :kitchen_joins, param: :code, only: %i[create] do
+      member do
+        patch 'verification', to: 'kitchen_joins#verification'
+      end
       collection do
-        get 'show_code', to: 'kitchen_joins#show_code'
-        patch 'refresh_code', to: 'kitchen_joins#refresh_code'
-        get 'verify_code', to: 'kitchen_joins#verify_code'
-        patch 'join', to: 'kitchen_joins#join'
+        patch 'confirm', to: 'kitchen_joins#confirm'
+      end
+    end
+    resources :qr_kitchen_joins, only: [] do
+      collection do
+        get 'show_code', to: 'qr_kitchen_joins#show_code'
+        patch 'refresh_code', to: 'qr_kitchen_joins#refresh_code'
+        get 'verify_code', to: 'qr_kitchen_joins#verify_code'
+        patch 'join', to: 'qr_kitchen_joins#join'
       end
     end
     resources :kitchen_products, only: %i[index create update]

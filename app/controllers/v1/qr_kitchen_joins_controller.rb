@@ -5,7 +5,7 @@ require 'securerandom'
 module V1
   class QrKitchenJoinsController < ApplicationController
     # 招待者用メソッド
-    api :GET, '/v1/qr_kitchen_joins/show_code', 'Get the current user\'s invitation code or create one if it does not exist'
+    api :GET, '/v1/qr_kitchen_joins/show_code', "Get the current user\'s invitation code or create one if it does not exist"
     def show_code
       @current_user.update!(invitation_code: SecureRandom.alphanumeric(10)) if @current_user.invitation_code.nil?
 
@@ -16,7 +16,7 @@ module V1
       render_bad_request(e)
     end
 
-    api :PATCH, '/v1/qr_kitchen_joins/refresh_code', 'Update the current user\'s invitation code'
+    api :PATCH, '/v1/qr_kitchen_joins/refresh_code', "Update the current user\'s invitation code"
     def refresh_code
       @current_user.update!(invitation_code: SecureRandom.alphanumeric(10))
 

@@ -45,6 +45,8 @@ gem 'google-cloud-storage'
 gem 'bcrypt'
 gem 'config'
 gem 'acts_as_list'
+gem "ruby-openai"
+gem "faraday_middleware"
 
 group :development, :test do
   ### Server

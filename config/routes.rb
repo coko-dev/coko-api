@@ -18,7 +18,9 @@ Rails.application.routes.draw do
         patch 'confirm', to: 'kitchen_joins#confirm'
       end
     end
-    resources :kitchen_products, only: %i[index create update]
+    resources :kitchen_products, only: %i[index create update] do
+      post 'recognize', on: :collection
+    end
     delete 'kitchen_products', to: 'kitchen_products#destroy'
     resources :kitchen_product_histories, only: %i[index]
     resource :kitchen_revenuecat, only: %i[update]

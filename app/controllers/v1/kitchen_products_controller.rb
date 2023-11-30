@@ -2,7 +2,7 @@
 
 module V1
   class KitchenProductsController < ApplicationController
-    before_action :set_kitchen,                     only: %i[index create update destroy]
+    before_action :set_kitchen,                     only: %i[index create update destroy recognize]
     before_action :set_kitchen_product,             only: %i[update]
 
     api :GET, '/v1/kitchen_products', 'Show all products in own kitchen'
@@ -11,6 +11,94 @@ module V1
         @kitchen.kitchen_products.order(:created_at),
         include: associations_for_serialization
       ), status: :ok
+    end
+
+    api :POST, '/v1/kitchen_products/recognize'
+    # 音声ファイル(もしくは文字列)を取得
+    # param :note, String, desc: "User's memo"
+    def recognize
+      #2. 取得した食材情報からProductを取得
+      # logger.debug("start")
+
+      client = OpenAI::Client.new(access_token: "")
+      system_prompt = <<"EOS"
+Convert the provided food ingredient information into JSON format. Each "product" should include "hiragana_name," "best_before," and "note."
+
+- "hiragana_name": Name of the ingredient in hiragana, simplified to a common name.
+- "best_before": Expiration date of the ingredient in 'yyyy-mm-dd' format.
+- "note": Additional information such as quantity.
+
+For "hiragana_name," provide a simple common name in hiragana characters. Example: Change "温州ミカン" to "hiragana_name: 'みかん'".
+For "best_before," use parts of today's date, 2023-11-22, to fill in any missing year, month, or day information. Example: Change "11月30" to "2023-11-30".
+If "best_before" is completely missing, use an empty string. Example: "りんご 三個" translates to "hiragana_name: 'りんご', best_before: '', note: '三個'".
+EOS
+
+"""
+今日の日付: 2023-11-22
+入力された食材情報をJSONとして出力して下さい。
+それぞれのproductはhiragana_name, best_before, noteを持ちます。
+
+products: 大枠,
+hiragana_name: 食材の名前(ひらがな表記),
+best_before: 食材の消費期限(fromat: 'yyyy-mm-dd'),
+note: その他の情報(個数など)
+
+「hiragana_name」は、シンプルな一般名に変換してひらがな表記にしてください。例：「温州ミカン」→「みかん」
+「best_before」は、年月日のいずれかが不足する場合は、「今日の日付」の一部を使って適宜補ってください。例：「11月30」 → 「2023-11-30」
+ただし、「best_before」が全く存在しない場合はただの空文字列にしてください。例：「りんご 三個] → 「hiragana_name: 'りんご', best_before: '', note: '三個'」
+"""
+
+"""
+今日の日付: 2023-11-22
+入力された食材情報をJSONとして出力して下さい。
+情報はitems, name, date, memoの4つだけです。
+
+items: 大枠,
+name: 食材の名前(ひらがな表記),
+date: 食材の消費期限(fromat: 'yyyy-mm-dd'),
+memo: その他の情報(個数など)
+
+「name」は、シンプルな一般名に変換してひらがな表記にしてください。例：「温州ミカン」→「みかん」
+「date」は、年月日のいずれかが不足する場合は、「今日の日付」の一部を使って適宜補ってください。例：「11月30」 → 「2023-11-30」
+ただし、「date」が全く存在しない場合はただの空文字列にしてください。例：「りんご 三個] → 「name: 'りんご', date: '', memo: '三個'」
+"""
+      response = client.chat(
+        parameters: {
+            model: "gpt-3.5-turbo-1106",
+            # model: "gpt-4-1106-preview",
+            response_format: { type: "json_object" },
+            temperature: 0,
+            messages: [
+              { role: "system", content: system_prompt}, 
+              { role: "user", content: "キャベツ 1個 なす 2個 おいしい牛乳 来週 キャベツ 1個 なす 2個 おいしい牛乳 来週 キャベツ 1個 なす 2個 おいしい牛乳 来週 キャベツ 1個 なす 2個 おいしい牛乳 来週 キャベツ 1個 なす 2個 おいしい牛乳 来週"}
+            ],
+        })
+
+      # logger.debug(response)
+      finish_reason = response.dig("choices", 0, "finish_reason")
+      if finish_reason == "stop"
+        # contentからnameを一つずつ取り出して、Productを取得する
+        content = response.dig("choices", 0, "message", "content")
+        data_hash = JSON.parse(content)
+        logger.debug(data_hash)
+        kitchen_products = data_hash['products'].each_with_object([]) do |product, list|
+          # dateとmemoは、productから取り出して、KitchenProductを作成する
+          name_hira = Product.find_by(name_hira: product['hiragana_name'])
+          next unless name_hira
+          list << @kitchen.kitchen_products.build(
+            product: name_hira,
+            note: product['note'],
+            best_before: product['best_before']&.to_date
+          )
+        end
+
+        render content_type: 'application/json', json: KitchenProductSerializer.new(
+          kitchen_products,
+          include: associations_for_serialization
+        ), status: :ok
+      end
+
+      # render content_type: 'application/json', json: chats, status: :ok
     end
 
     api :POST, '/v1/kitchen_products', 'Create a kitchen product'

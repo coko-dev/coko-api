@@ -4,7 +4,7 @@ require 'securerandom'
 
 module V1
   class QrKitchenJoinsController < ApplicationController
-    # 招待者用メソッド
+    # 招待者用コード確認メソッド
     api :GET, '/v1/qr_kitchen_joins/show_code', "Get the current user\'s invitation code or create one if it does not exist"
     def show_code
       @current_user.update!(invitation_code: SecureRandom.alphanumeric(10)) if @current_user.invitation_code.nil?
@@ -16,6 +16,7 @@ module V1
       render_bad_request(e)
     end
 
+    # 招待者用リフレッシュコードメソッド
     api :PATCH, '/v1/qr_kitchen_joins/refresh_code', "Update the current user\'s invitation code"
     def refresh_code
       @current_user.update!(invitation_code: SecureRandom.alphanumeric(10))
@@ -25,7 +26,7 @@ module V1
       render_bad_request(e)
     end
 
-    # 被招待者用メソッド
+    # 被招待者用コード認証メソッド
     api :GET, '/v1/qr_kitchen_joins/verify_code', 'Verify the invitation code and return the host name and kitchen name'
     param :invitation_code, String, required: true, desc: 'Invitation code to verify'
     def verify_code
@@ -36,6 +37,7 @@ module V1
       render_bad_request(e)
     end
 
+    # 被招待者用参加確定メソッド
     api :PATCH, '/v1/qr_kitchen_joins/join', 'Join the kitchen using the provided invitation code'
     param :invitation_code, String, required: true, desc: 'Invitation code to join the kitchen'
     def join

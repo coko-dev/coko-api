@@ -347,8 +347,8 @@ create_table 'users', id: :string, force: :cascade do |t|
   t.datetime 'last_sign_in_at'
   t.timestamps
 end
-add_index 'users', %w[code],  name: 'idx_users_on_code',  unique: true
-add_index 'users', %w[email], name: 'idx_users_on_email', unique: true
+add_index 'users', %w[code],            name: 'idx_users_on_code',            unique: true
+add_index 'users', %w[email],           name: 'idx_users_on_email',           unique: true
 add_index 'users', %w[invitation_code], name: 'idx_users_on_invitation_code', unique: true
 
 create_table 'violation_reports', id: :string, force: :cascade do |t|

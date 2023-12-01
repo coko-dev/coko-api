@@ -341,13 +341,15 @@ create_table 'users', id: :string, force: :cascade do |t|
   t.integer  'status_id',              null: false, unsigned: true, default: 1, comment: '{ is_private: 1, published: 2, official: 3 }'
   t.boolean  'is_allowed',             null: false, default: true
   t.string   'password_digest',        null: false, default: ''
+  t.string   'invitation_code'
   t.integer  'following_count',        null: false, unsigned: true, default: 0
   t.integer  'follower_count',         null: false, unsigned: true, default: 0
   t.datetime 'last_sign_in_at'
   t.timestamps
 end
-add_index 'users', %w[code],  name: 'idx_users_on_code',  unique: true
-add_index 'users', %w[email], name: 'idx_users_on_email', unique: true
+add_index 'users', %w[code],            name: 'idx_users_on_code',            unique: true
+add_index 'users', %w[email],           name: 'idx_users_on_email',           unique: true
+add_index 'users', %w[invitation_code], name: 'idx_users_on_invitation_code', unique: true
 
 create_table 'violation_reports', id: :string, force: :cascade do |t|
   t.string 'reporting_user_id', null: false
@@ -361,31 +363,3 @@ add_index       'violation_reports', %w[reporting_user_id],                  nam
 add_index       'violation_reports', %w[reported_user_id],                   name: 'idx_violation_reports_on_reported_user_id'
 add_foreign_key 'violation_reports', 'users',                                name: 'fk_violation_reports_2', column: 'reporting_user_id'
 add_foreign_key 'violation_reports', 'users',                                name: 'fk_violation_reports_1', column: 'reported_user_id'
-
-create_table 'active_storage_blobs', force: :cascade do |t|
-  t.string   :key,          null: false
-  t.string   :filename,     null: false
-  t.string   :content_type
-  t.text     :metadata
-  t.string   :service_name, null: false
-  t.bigint   :byte_size,    null: false
-  t.string   :checksum,     null: false
-  t.datetime :created_at,   null: false
-end
-add_index 'active_storage_blobs', %w[key], name: 'idx_active_storage_blobs_on_key', unique: true
-
-create_table 'active_storage_attachments', force: :cascade do |t|
-  t.string     :name,       null: false
-  t.references :record,     null: false, polymorphic: true, index: false
-  t.references :blob,       null: false
-  t.datetime   :created_at, null: false
-end
-add_index       'active_storage_attachments', %w[record_type record_id blob_id], name: 'index_active_storage_attachments_uniqueness', unique: true
-add_foreign_key 'active_storage_attachments', 'active_storage_blobs',            name: 'fk_active_storage_attachments_1', column: 'blob_id'
-
-create_table 'active_storage_variant_records', force: :cascade do |t|
-  t.belongs_to :blob,             null: false, index: false
-  t.string     :variation_digest, null: false
-end
-add_index       'active_storage_variant_records', %w[blob_id variation_digest], name: 'index_active_storage_variant_records_uniqueness', unique: true
-add_foreign_key 'active_storage_variant_records', 'active_storage_blobs',       name: 'fk_active_storage_variant_records_1', column: 'blob_id'

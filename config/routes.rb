@@ -18,6 +18,14 @@ Rails.application.routes.draw do
         patch 'confirm', to: 'kitchen_joins#confirm'
       end
     end
+    resources :qr_kitchen_joins, only: [] do
+      collection do
+        get 'show_code', to: 'qr_kitchen_joins#show_code'
+        patch 'refresh_code', to: 'qr_kitchen_joins#refresh_code'
+        get 'verify_code', to: 'qr_kitchen_joins#verify_code'
+        patch 'join', to: 'qr_kitchen_joins#join'
+      end
+    end
     resources :kitchen_products, only: %i[index create update]
     delete 'kitchen_products', to: 'kitchen_products#destroy'
     resources :kitchen_product_histories, only: %i[index]

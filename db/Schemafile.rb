@@ -341,13 +341,15 @@ create_table 'users', id: :string, force: :cascade do |t|
   t.integer  'status_id',              null: false, unsigned: true, default: 1, comment: '{ is_private: 1, published: 2, official: 3 }'
   t.boolean  'is_allowed',             null: false, default: true
   t.string   'password_digest',        null: false, default: ''
+  t.string   'invitation_code'
   t.integer  'following_count',        null: false, unsigned: true, default: 0
   t.integer  'follower_count',         null: false, unsigned: true, default: 0
   t.datetime 'last_sign_in_at'
   t.timestamps
 end
-add_index 'users', %w[code],  name: 'idx_users_on_code',  unique: true
-add_index 'users', %w[email], name: 'idx_users_on_email', unique: true
+add_index 'users', %w[code],            name: 'idx_users_on_code',            unique: true
+add_index 'users', %w[email],           name: 'idx_users_on_email',           unique: true
+add_index 'users', %w[invitation_code], name: 'idx_users_on_invitation_code', unique: true
 
 create_table 'violation_reports', id: :string, force: :cascade do |t|
   t.string 'reporting_user_id', null: false

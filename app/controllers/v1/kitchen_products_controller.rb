@@ -14,41 +14,44 @@ module V1
     end
 
     api :POST, '/v1/kitchen_products/recognize'
-    param :ingredients_data, String, desc: "A string containing a list of ingredients, quantities, expiry dates, and notes."
+    param :ingredients_data, String, desc: 'A string containing a list of ingredients, quantities, expiry dates, and notes.'
     def recognize
       client = OpenAI::Client.new(access_token: Rails.application.credentials.openai[:api_key])
-      system_prompt = <<EOS
-今日の日付: 2023-11-22
-入力された食材情報をJSONとして出力して下さい。
-それぞれのproductはhiragana_name, best_before, noteを持ちます。
+      system_prompt = <<~SYSTEM_PROMPT
+        今日の日付: 2023-11-22
+        入力された食材情報をJSONとして出力して下さい。
+        それぞれのproductはhiragana_name, best_before, noteを持ちます。
 
-products: 大枠,
-hiragana_name: 食材の名前(ひらがな表記),
-best_before: 食材の消費期限(fromat: 'yyyy-mm-dd'),
-note: その他の情報(個数など)
+        products: 大枠,
+        hiragana_name: 食材の名前(ひらがな表記),
+        best_before: 食材の消費期限(fromat: 'yyyy-mm-dd'),
+        note: その他の情報(個数など)
 
-「hiragana_name」は、シンプルな一般名に変換してひらがな表記にしてください。例：「温州ミカン」→「みかん」
-「best_before」は、年月日のいずれかが不足する場合は、「今日の日付」の一部を使って適宜補ってください。例：「11月30」 → 「2023-11-30」
-ただし、「best_before」が全く存在しない場合はただの空文字列にしてください。例：「りんご 三個] → 「hiragana_name: 'りんご', best_before: '', note: '三個'」
-EOS
+        「hiragana_name」は、シンプルな一般名に変換してひらがな表記にしてください。例：「温州ミカン」→「みかん」
+        「best_before」は、年月日のいずれかが不足する場合は、「今日の日付」の一部を使って適宜補ってください。例：「11月30」 → 「2023-11-30」
+        ただし、「best_before」が全く存在しない場合はただの空文字列にしてください。例：「りんご 三個] → 「hiragana_name: 'りんご', best_before: '', note: '三個'」
+      SYSTEM_PROMPT
+
       response = client.chat(
         parameters: {
-            model: "gpt-4-1106-preview",
-            response_format: { type: "json_object" },
-            temperature: 0,
-            messages: [
-              { role: "system", content: system_prompt}, 
-              { role: "user", content: params[:ingredients_data]}
-            ],
-        })
-      finish_reason = response.dig("choices", 0, "finish_reason")
-      raise StandardError, 'Failed to recognize' unless finish_reason == "stop"
+          model: 'gpt-4-1106-preview',
+          response_format: { type: 'json_object' },
+          temperature: 0,
+          messages: [
+            { role: 'system', content: system_prompt },
+            { role: 'user', content: params[:ingredients_data] }
+          ]
+        }
+      )
+      finish_reason = response.dig('choices', 0, 'finish_reason')
+      raise StandardError, 'Failed to recognize' unless finish_reason == 'stop'
 
-      content = response.dig("choices", 0, "message", "content")
+      content = response.dig('choices', 0, 'message', 'content')
       data_hash = JSON.parse(content)
       kitchen_products = data_hash['products'].each_with_object([]) do |product, list|
         name_hira = Product.find_by(name_hira: product['hiragana_name'])
         next unless name_hira
+
         list << @kitchen.kitchen_products.build(
           product: name_hira,
           note: product['note'],

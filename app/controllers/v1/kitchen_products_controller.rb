@@ -18,7 +18,7 @@ module V1
     def recognize
       client = OpenAI::Client.new(access_token: Rails.application.credentials.openai[:api_key])
       system_prompt = <<~SYSTEM_PROMPT
-        今日の日付: 2023-11-22
+        今日の日付: #{Time.current.strftime('%Y-%m-%d')}
         入力された食材情報をJSONとして出力して下さい。
         それぞれのproductはhiragana_name, best_before, noteを持ちます。
 

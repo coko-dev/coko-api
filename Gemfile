@@ -42,11 +42,11 @@ gem 'carrierwave'
 gem 'google-cloud-storage'
 
 # Utils
+gem 'acts_as_list'
 gem 'bcrypt'
 gem 'config'
-gem 'acts_as_list'
-gem "ruby-openai"
-gem "faraday_middleware"
+gem 'faraday_middleware'
+gem 'ruby-openai'
 
 group :development, :test do
   ### Server

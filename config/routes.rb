@@ -19,7 +19,7 @@ Rails.application.routes.draw do
       end
     end
     resources :kitchen_products, only: %i[index create update] do
-      post 'recognize', on: :collection
+      get 'recognize', on: :collection
     end
     resources :qr_kitchen_joins, only: [] do
       collection do

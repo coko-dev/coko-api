@@ -115,7 +115,7 @@ module V1
           temperature: 0,
           messages: [
             { role: 'system', content: system_prompt },
-            { role: 'user', content: params[:ingredients_data] }
+            { role: 'user', content: params[:kitchen_products_string] }
           ]
         }
       )

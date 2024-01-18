@@ -16,6 +16,7 @@ module RenderErrorUtil
       errors: {
         status: '400',
         title: 'Bad Request',
+        code: '10001',
         detail: message
       }.compact
     }, status: :bad_request
@@ -26,6 +27,7 @@ module RenderErrorUtil
       errors: {
         status: '401',
         title: 'Unauthorized',
+        code: '10002',
         detail: 'Invalid credentials'
       }
     }, status: :unauthorized
@@ -35,6 +37,7 @@ module RenderErrorUtil
     render content_type: 'application/json', json: {
       errors: {
         status: '403',
+        code: '10003',
         title: 'Forbidden'
       }
     }, status: :forbidden
@@ -44,6 +47,7 @@ module RenderErrorUtil
     render content_type: 'application/json', json: {
       errors: {
         status: '404',
+        code: '10004',
         title: 'User Not Found'
       }
     }, status: :not_found
@@ -53,6 +57,7 @@ module RenderErrorUtil
     render content_type: 'application/json', json: {
       errors: {
         status: '404',
+        code: '10005',
         title: 'Not Found'
       }
     }, status: :not_found
@@ -62,6 +67,7 @@ module RenderErrorUtil
     render content_type: 'application/json', json: {
       errors: {
         status: '405',
+        code: '10006',
         title: 'Method Not Allowed'
       }
     }, status: :method_not_allowed
@@ -71,6 +77,7 @@ module RenderErrorUtil
     render content_type: 'application/json', json: {
       errors: {
         status: '500',
+        code: '20001',
         title: 'Internal Server Error'
       }
     }, status: :internal_server_error

@@ -18,6 +18,9 @@ Rails.application.routes.draw do
         patch 'confirm', to: 'kitchen_joins#confirm'
       end
     end
+    resources :kitchen_products, only: %i[index create update] do
+      get 'recognize', on: :collection
+    end
     resources :qr_kitchen_joins, only: [] do
       collection do
         get 'show_code', to: 'qr_kitchen_joins#show_code'

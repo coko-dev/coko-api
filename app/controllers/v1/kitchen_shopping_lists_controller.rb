@@ -3,7 +3,7 @@
 module V1
   class KitchenShoppingListsController < ApplicationController
     before_action :set_shopping_list, only: %i[update]
-    before_action :set_kitchen, only: %i[index create destroy]
+    before_action :set_kitchen, only: %i[index create destroy add_to_kitchen_products]
 
     api :GET, '/v1/kitchen_shopping_lists', 'Show shopping lists'
     def index
@@ -58,7 +58,37 @@ module V1
       render_bad_request(e)
     end
 
+    api :POST, '/v1/kitchen_shopping_lists/add_to_kitchen_products', 'Delete selected lists and create kitchen products'
+    param :kitchen_shopping_list_ids, Array, required: true, desc: 'Shopping list ids. Ex: [1, 2, 3]'
+    def add_to_kitchen_products
+      ksls = @kitchen.kitchen_shopping_lists.where(id: params[:kitchen_shopping_list_ids])
+      kitchen_products = ksls.map do |ksl|
+        product = Product.find(ksl.product_id)
+        @kitchen.touch_with_history_build(user: @current_user, product: product, status_id: 'added')
+        @kitchen.kitchen_products.build(
+          product: product,
+          note: ksl.note
+        )
+      end
+      ApplicationRecord.transaction do
+        ksls.each(&:destroy!)
+        @kitchen.save!
+      end
+      render content_type: 'application/json', json: KitchenProductSerializer.new(
+        kitchen_products,
+        include: associations_for_serialization
+      ), status: :ok
+    rescue StandardError => e
+      render_bad_request(e)
+    end
+
     private
+
+    def associations_for_serialization
+      %i[
+        product
+      ]
+    end
 
     def set_shopping_list
       @shopping_list = KitchenShoppingList.find(params[:id])

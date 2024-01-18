@@ -33,7 +33,11 @@ Rails.application.routes.draw do
     delete 'kitchen_products', to: 'kitchen_products#destroy'
     resources :kitchen_product_histories, only: %i[index]
     resource :kitchen_revenuecat, only: %i[update]
-    resources :kitchen_shopping_lists, only: %i[index create update]
+    resources :kitchen_shopping_lists, only: %i[index create update] do
+      collection do
+        post :add_to_kitchen_products
+      end
+    end
     delete 'kitchen_shopping_lists', to: 'kitchen_shopping_lists#destroy'
 
     resources :products, only: %i[index]
